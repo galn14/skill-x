@@ -1,0 +1,7 @@
+{
+  "name": "skill-x",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
