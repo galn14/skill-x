@@ -50,19 +50,19 @@ const Tab1: React.FC = () => {
         <Swiper
           modules={[Grid, Keyboard, Pagination, Scrollbar, Zoom]}
           direction="horizontal"
-          keyboard={true}
+          // keyboard={true}
           pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
+          // scrollbar={{ draggable: true }}
           zoom={true}
-          spaceBetween={10}
-          slidesPerView="auto"
+          // spaceBetween={10}
+          slidesPerView={3}
           freeMode={true}
-          grid={{ rows: 1 }} // Menetapkan jumlah baris grid menjadi 1
+          // grid={{ rows: 1 }} // Menetapkan jumlah baris grid menjadi 1
         >
           {categories.map((category) => (
             <SwiperSlide
               key={category.id}
-              style={{ width: 'auto', flexShrink: 0 }}
+              // style={{ width: 'auto', height:'auto',flexShrink: 0 }}
               >
               <IonCard button routerLink={category.link} className="category-card">
                 <IonCardContent className="category-card-content">
@@ -83,7 +83,7 @@ const Tab1: React.FC = () => {
           pagination={{ clickable: true }}
           scrollbar={{ draggable: true }} 
           zoom={true} 
-          spaceBetween={10} 
+          // spaceBetween={10} 
           slidesPerView={'auto'}
           freeMode={true}
           grid={{ rows: 1 }}>   

@@ -9,8 +9,9 @@
   text-align: center;
   background-color: #007bff;
   color: #fff;
-  padding: 15px 0;
-  border-radius: 10px;
+  padding: 5px 5px;
+  border-radius: 20px;
+  margin-left: 10px;
   margin: 10px;
 }
 
@@ -31,10 +32,13 @@
 
 .category-card-content, .service-card-content {
   display: flex;
+  font-size: 0.8em;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 20px;
+  min-height: 230px;
+  max-height: fit-content;
 }
 
 .category-icon, .service-icon {
@@ -44,7 +48,7 @@
 }
 
 .categories {
-    overflow: hidden;
+    /* overflow: hidden; */
   }
   
 .swiper {
@@ -53,10 +57,12 @@
   
 .swiper-wrapper {
     display: flex;
-    flex-wrap: nowrap;
+    /* flex-wrap: nowrap; */
 }
   
 .swiper-slide {
     flex-shrink: 0;
     width: auto;
+    height: auto;
+
 }
