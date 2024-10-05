@@ -1,0 +1,48 @@
+/* Tab1.css */
+
+.header-icon {
+  margin-left: 10px;
+  font-size: 1.5em;
+}
+
+.welcome-banner {
+  text-align: center;
+  background-color: #007bff;
+  color: #fff;
+  padding: 15px 0;
+  border-radius: 20px;
+  margin: 10px;
+}
+
+.categories, .popular-services {
+  padding: 15px;
+}
+
+.category-card, .service-card {
+  border-radius: 20px; /* Consistent rounded corners */
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover, .service-card:hover {
+  transform: scale(1.05);
+}
+
+.category-card-content, .service-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+
+.category-icon, .service-icon {
+  font-size: 3em;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.ion-tab-button {
+  --ripple-color: #007bff;
+}
