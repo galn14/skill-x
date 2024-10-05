@@ -1,0 +1,104 @@
+.custom-header {
+    background-color: #FFFFFF; /* Header background color */
+    padding-top: 30px; /* Adjust spacing */
+}
+
+
+.close-button {
+    color: #000; /* Button text color */
+    font-size: 20px; /* Size of the close button text */
+    margin-right: auto; /* Ensure space is correctly allocated */
+    padding: 0; /* Optional: Reset padding */
+    z-index: 30; /* Ensure it's on top */
+    margin-left: 10px; /* Add space to the left */
+}
+
+ion-toolbar {
+    --background: #FFFFFF;
+  
+    --border-color: #ccc;
+    --border-width: 4px 0;
+    --border-style: double;
+  
+    --min-height: 80px;
+    --padding-top: 20px;
+}
+
+.subtitle{
+    margin: 0; /* Remove default margin */
+    font-size: 20px; /* Adjust title size */    
+    font-weight: normal; /* Set to normal to make it not bold */
+}
+
+/* Profile Section */
+.profile-section {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  margin-right: 15px;
+}
+
+.user-details h3 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-details IonButton {
+  margin-top: 5px;
+}
+
+/* Promotion Section */
+.promotion-section {
+  padding: 20px;
+  text-align: center;
+  background-color: #0094FF;
+}
+
+.promotion-section p{
+  color: #FFFFFF;
+  margin: 10px 0;
+}
+.promotion-section h2{
+    color: #FFFFFF;
+    margin: 10px 0;
+  }
+
+.enroll {
+    --background: #FFD600; /* Yellow background color */
+    --color: #0094FF; /* White text color */
+}
+  
+
+/* Menu List */
+ion-list {
+  margin-top: 20px;
+  background-color: #fff;
+}
+
+ion-item {
+  --padding-start: 20px;
+  --inner-padding-end: 20px;
+  padding-right: 20px;
+}
+
+.custom-divider {
+    height: 1px;
+    background-color: #ccc; /* Color of the line */
+    margin: 10px 10px; /* Spacing above and below the line */
+}
+
+.wishlist{
+    height: 10px;
+}
+  
