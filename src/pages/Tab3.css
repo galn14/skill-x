@@ -1,0 +1,66 @@
+.ion-card-title-tab3 {
+    padding-left: 5%; /* Adjust this value to move the title to the right */
+    padding-top: 20px;  /* Adjust this value to move the title down */
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 16.5px;
+    text-align: left;
+  } 
+.ion-card-subtitle-tab3 {
+    padding-left: 5%;
+    padding-top: 2%;  
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16.5px;
+    text-align: left;
+  }
+.searchtab3{
+    padding-top: 5px;
+}
+.icon1{
+    
+        width: 32px; /* Set a specific width for the image */
+        height: 32px; /* Set a specific height for the image */
+        object-fit: cover; /* Maintain aspect ratio and avoid distortion */
+        border-radius: 4px; /* Optional: Add rounded corners */
+
+    
+}
+.icon2{
+    
+    width: 79px; /* Set a specific width for the image */
+    height: 71px; /* Set a specific height for the image */
+    object-fit: cover; /* Maintain aspect ratio and avoid distortion */
+    border-radius: 12px; /* Optional: Add rounded corners */
+
+
+}
+.text-container1 {
+    width: 100%; /* Adjust the width to allow more space for text */
+    max-width: 100%; /* Set a max-width so it doesn’t become too wide */
+    padding-right: 80px;
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center content vertically */
+    margin-left: 0; /* Add some space from the thumbnail */
+    white-space: normal; /* Allow text to wrap normally */
+    overflow: hidden; /* Prevent overflow of text */
+    text-overflow: ellipsis; /* Add ellipsis (...) if text is too long */
+
+  }
+.status-label {
+    font-family: 'Poppins';
+    display: inline-block; /* Allows padding to take effect */
+    background-color: #00bfff; /* Light blue background color */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Vertical and horizontal padding */
+    border-radius: 20px; /* Rounded corners */
+    text-align: right; /* Center the text */
+    font-size: 8px; /* Font size */
+    font-weight: 400; /* Make the text bold */
+    line-height: 12.5px;
+    margin: 10px; /* Optional: add margin around the label */
+    
+}
