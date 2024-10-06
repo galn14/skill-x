@@ -1,6 +1,29 @@
+
+.kebab-icon {
+  font-size: 20px; /* Adjust the size of the three dots */
+  color: #000;    /* Ensure the color matches the design */
+  display: inline-block;
+  text-align: right; 
+  margin-left: auto;
+  margin-right: 0;
+  padding-left: 10px;
+
+}
+
+
 .ion-card-title-tab3 {
-    padding-left: 5%; /* Adjust this value to move the title to the right */
-    padding-top: 20px;  /* Adjust this value to move the title down */
+    padding-left: 10px; /* Adjust this value to move the title to the right */
+    padding-top: 5px;  /* Adjust this value to move the title down */
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 16.5px;
+    text-align: left;
+
+  } 
+  .ion-card-title2-tab3 {
+    padding-left: 10px; /* Adjust this value to move the title to the right */
+    padding-top: 0px;  /* Adjust this value to move the title down */
     font-family: 'Poppins', sans-serif;
     font-size: 11px;
     font-weight: 700;
@@ -8,10 +31,10 @@
     text-align: left;
   } 
 .ion-card-subtitle-tab3 {
-    padding-left: 5%;
-    padding-top: 2%;  
+    padding-left: 10px;
+    padding-top: 0;  
     font-family: 'Poppins', sans-serif;
-    font-size: 11px;
+    font-size: 8px;
     font-weight: 400;
     line-height: 16.5px;
     text-align: left;
@@ -38,29 +61,114 @@
 
 }
 .text-container1 {
-    width: 100%; /* Adjust the width to allow more space for text */
+    margin-top: 5px;
+    width:100%  ; /* Adjust the width to allow more space for text */
     max-width: 100%; /* Set a max-width so it doesn’t become too wide */
     padding-right: 80px;
     display: flex;
     flex-direction: column; /* Stack items vertically */
     justify-content: center; /* Center content vertically */
-    margin-left: 0; /* Add some space from the thumbnail */
+    margin-left: 5px; /* Add some space from the thumbnail */
+    margin-right: auto;
     white-space: normal; /* Allow text to wrap normally */
     overflow: hidden; /* Prevent overflow of text */
     text-overflow: ellipsis; /* Add ellipsis (...) if text is too long */
-
   }
+  .text-container2 {
+    font-family: 'Poppins', sans-serif;
+    margin-top: 5px;
+      width: 100%; /* Adjust the width to allow more space for text */
+      max-width: 100%; /* Set a max-width so it doesn’t become too wide */
+      padding-right: 0px;
+      display: flex;
+      flex-direction: column; /* Stack items vertically */
+      justify-content: center; /* Center content vertically */
+      margin-left: 10px; /* Add some space from the thumbnail */
+      white-space: normal; /* Allow text to wrap normally */
+      overflow: hidden; /* Prevent overflow of text */
+      text-overflow: ellipsis; /* Add ellipsis (...) if text is too long */
+    }
+    .text-container3 {
+      font-family: 'Poppins', sans-serif;
+      margin-top: 5px;
+        width: 100%; /* Adjust the width to allow more space for text */
+        max-width: 100%; /* Set a max-width so it doesn’t become too wide */
+        padding-right: 0px;
+        padding-left: 0%;
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+        justify-content: center; /* Center content vertically */
+        margin-left: 10px; /* Add some space from the thumbnail */
+        white-space: normal; /* Allow text to wrap normally */
+        overflow: hidden; /* Prevent overflow of text */
+        text-overflow: ellipsis; /* Add ellipsis (...) if text is too long */
+      }
 .status-label {
-    font-family: 'Poppins';
+    margin-right: auto;
+    font-family: 'Poppins', sans-serif;
     display: inline-block; /* Allows padding to take effect */
     background-color: #00bfff; /* Light blue background color */
     color: white; /* White text color */
-    padding: 10px 20px; /* Vertical and horizontal padding */
+    padding: 10px px; /* Vertical and horizontal padding */
     border-radius: 20px; /* Rounded corners */
-    text-align: right; /* Center the text */
-    font-size: 8px; /* Font size */
-    font-weight: 400; /* Make the text bold */
+    text-align: center; 
     line-height: 12.5px;
-    margin: 10px; /* Optional: add margin around the label */
-    
+    margin: 0px; /* Optional: add margin around the label */
+    padding: 5px 10px;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+  margin :15px;
+  margin-right: auto;
+}
+
+.order-details p {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #7d7d7d;
+}
+
+.order-details h2 {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: rgb(56, 114, 153);
+  ;
+}
+
+.button-group {
+  display: flex;
+  justify-content: end;
+  gap: 10px; /* Space between the buttons */
+}
+.button-color{
+  
+}
+
+.status-label {
+  font-family: 'Poppins', sans-serif;
+  background-color: #00bfff;
+  color: white;
+  border-radius: 12px;
+  padding: 5px 10px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.custom-button {
+  
+  color: rgba(0, 148, 255, 1);
+  color: white; /* Ensures the text is readable */
+}
+
+.custom-button-outline {
+  border-color: rgba(0, 148, 255, 1);
+  color: rgba(0, 148, 255, 1);
 }
