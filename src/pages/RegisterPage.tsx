@@ -9,6 +9,8 @@ import {
   IonInput,
   IonButton,
   IonLabel,
+  IonButtons,
+  IonBackButton,
 } from '@ionic/react';
 import { register } from '../api.service'; // Import your API service
 import { useHistory } from 'react-router-dom'; // Import useHistory for routing
@@ -55,6 +57,9 @@ const RegisterPage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+        <IonButtons slot="start">
+            <IonBackButton defaultHref="/" />
+          </IonButtons>
           <IonTitle>Create an Account</IonTitle>
         </IonToolbar>
       </IonHeader>

@@ -2,9 +2,42 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonLis
 import './Tab4.css';
 import { } from '@ionic/react';
 import { heartOutline } from 'ionicons/icons'; 
+import { post } from '../api.service';
+import { useHistory } from 'react-router';
 
 
 const Account: React.FC = () => {
+  const history = useHistory(); // For navigation
+
+  // Logout function to handle token removal and redirect
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('userToken'); // Get the token from localStorage
+
+      if (!token) {
+        throw new Error('No token found'); // Handle the case where no token exists
+      }
+
+      // Make POST request to /api/logout with the Authorization header
+      await post('logout', {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      });
+
+      // Remove the token from localStorage after successful logout
+      localStorage.removeItem('userToken');
+
+      // Redirect the user to the login page
+      history.push('/login');
+      window.location.reload(); // This will reload the app after logout
+    } catch (error) {
+      console.error('Logout failed', error); // Log any errors during logout
+    }
+  };
+
   return (
     <IonPage>
 
@@ -58,6 +91,10 @@ const Account: React.FC = () => {
             <IonLabel>Help and Support</IonLabel>
           </IonItem>
         </IonList>
+         {/* Logout Button */}
+        <IonButton color="danger" expand="block" onClick={handleLogout}>
+          Logout
+        </IonButton>
       </IonContent>
     </IonPage>
   );

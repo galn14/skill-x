@@ -48,6 +48,8 @@ import '@ionic/react/css/palettes/dark.system.css';
 import './theme/variables.css';
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/RegisterPage';
+import PrivateRoute from './components/PrivateRoute'; // Import the private route
+import LogoutPage from './pages/LogoutPage';
 
 setupIonicReact();
 
@@ -71,11 +73,11 @@ const App: React.FC = () => (
           <Route path="/tab3">
             <Tab3 />
           </Route>
-          <Route path="/tab4">
-            <Tab4 />
-          </Route>
+        <PrivateRoute path="/tab4" component={Tab4} exact />
+        <Route path="/logout" component={LogoutPage} exact />
+
           <Route exact path="/">
-            <Redirect to="/tab1" />
+            <Redirect to="/login" />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">

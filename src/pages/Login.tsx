@@ -38,18 +38,27 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     if (data.email && data.password) {
       try {
+        // Send login request to the backend
         const response = await post('login', data);
-        console.log('Login successful', response);
-        setResp(response);
-        localStorage.setItem('userToken', response.token);
 
-        // Navigate to the dashboard if login is successful
-        history.push('/tab1');
+        // If login is successful, the response should include a token
+        if (response.token) {
+          console.log('Login successful', response);
+          localStorage.setItem('userToken', response.token); // Save the token to localStorage
+
+          // Redirect to Tab4 after successful login
+          history.push('/tab4');
+          window.location.reload(); // This will reload the app after logout
+        } else {
+          // Handle failed login attempt (no token received)
+          setError('Login failed: Invalid credentials');
+        }
       } catch (error) {
+        setError('Login failed: ' + (error as any).message);
         console.error('Login failed', error);
       }
     } else {
-      console.error('Email and password are required');
+      setError('Email and password are required');
     }
   };
 
@@ -101,6 +110,13 @@ const LoginPage: React.FC = () => {
               <IonButton type="submit" expand="block">
                 Sign in
               </IonButton>
+
+              <div className="form-options">
+                <a href="/register">Create an account</a>
+                <IonButton fill="clear" routerLink="/register">
+                  Register
+                </IonButton>
+              </div>
             </form>
 
             {resp && <div className="response">Login successful: {JSON.stringify(resp)}</div>}
@@ -113,4 +129,8 @@ const LoginPage: React.FC = () => {
 
 export default LoginPage;
 
+
+function setError(arg0: string) {
+  throw new Error('Function not implemented.');
+}
 

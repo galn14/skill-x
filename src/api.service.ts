@@ -4,13 +4,33 @@ import axios from 'axios';
 const baseUrl = 'http://localhost:8000/api'; // Replace with your API base URL
 
 // POST request function
-export const post = async (endpoint: string, body: any) => {
+// export const post = async (endpoint: string, body: any, options: any = {}) => {
+//   try {
+//     // Merge provided headers (like Authorization) with default headers
+//     const config = {
+//       headers: {
+//         ...options.headers, // Use provided headers
+//       },
+//     };
+
+//     // Perform the POST request with the provided body and config
+//     const response = await axios.post(`${baseUrl}/${endpoint}`, body, config);
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error during POST request', error);
+//     throw error;
+//   }
+// };
+
+// POST request function
+export const post = async (endpoint: string, body: any, config = {}) => {
   try {
-    const response = await axios.post(`${baseUrl}/${endpoint}`, body);
-    return response.data;
+    // Make POST request with the given endpoint, body, and config (headers)
+    const response = await axios.post(`${baseUrl}/${endpoint}`, body, config);
+    return response.data; // Return response data
   } catch (error) {
-    console.error('Error during POST request', error);
-    throw error;
+    console.error('Error during POST request', error); // Log any errors
+    throw error; // Rethrow error for handling in component
   }
 };
 

@@ -46,23 +46,19 @@ const Tab1: React.FC = () => {
 
         
         <div className="categories">
-        <h3>Categories</h3>        
-        <Swiper
-          modules={[Grid, Keyboard, Pagination, Scrollbar, Zoom]}
-          direction="horizontal"
-          // keyboard={true}
-          pagination={{ clickable: true }}
-          // scrollbar={{ draggable: true }}
-          zoom={true}
-          // spaceBetween={10}
-          slidesPerView={3}
-          freeMode={true}
-          // grid={{ rows: 1 }} // Menetapkan jumlah baris grid menjadi 1
-        >
+          <h3>Categories</h3>        
+          <Swiper
+            modules={[Grid, Keyboard, Pagination, Scrollbar, Zoom]}
+            direction="horizontal"
+            pagination={{ clickable: true }}
+            zoom={true}
+            slidesPerView={3}
+            freeMode={true}
+          >
           {categories.map((category) => (
             <SwiperSlide
               key={category.id}
-              // style={{ width: 'auto', height:'auto',flexShrink: 0 }}
+              style={{ width: 'auto', height:'auto',flexShrink: 0 }}
               >
               <IonCard button routerLink={category.link} className="category-card">
                 <IonCardContent className="category-card-content">
@@ -76,28 +72,27 @@ const Tab1: React.FC = () => {
         </div>
 
         <div className="popular-services">
-          <h3>Popular Services</h3>
-          <Swiper modules={[Grid, Keyboard, Pagination, Scrollbar, Zoom]} 
-          direction={'horizontal'} 
-          keyboard={true} 
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }} 
-          zoom={true} 
-          // spaceBetween={10} 
-          slidesPerView={'auto'}
-          freeMode={true}
-          grid={{ rows: 1 }}>   
-            {services.map((service) => (
-              <SwiperSlide key={service.id}
-              style={{ width: 'auto', flexShrink: 0 }}
+          <h3>Popular Services</h3>        
+          <Swiper
+            modules={[Grid, Keyboard, Pagination, Scrollbar, Zoom]}
+            direction="horizontal"
+            pagination={{ clickable: true }}
+            zoom={true}
+            slidesPerView={3}
+            freeMode={true}
+          >
+          {categories.map((services) => (
+            <SwiperSlide
+              key={services.id}
+              style={{ width: 'auto', height:'auto',flexShrink: 0 }}
               >
-                <IonCard button routerLink={service.link} className="service-card">
-                  <IonCardContent className="service-card-content">
-                    <IonIcon icon={service.icon} className="service-icon" />
-                    <IonLabel>{service.name}</IonLabel>
-                  </IonCardContent>
-                </IonCard>
-              </SwiperSlide>
+              <IonCard button routerLink={services.link} className="service-card">
+                <IonCardContent className="service-card-content">
+                  <IonIcon icon={services.icon} className="service-icon" />
+                  <IonLabel>{services.name}</IonLabel>
+                </IonCardContent>
+              </IonCard>
+            </SwiperSlide>
             ))}
           </Swiper>
         </div>
