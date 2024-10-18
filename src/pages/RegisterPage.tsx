@@ -66,12 +66,13 @@ const RegisterPage: React.FC = () => {
       <IonContent className="ion-padding">
         <div className="register-container">
           <div className="form-container">
-            <form onSubmit={doRegister} className="register-form">
+            <form onSubmit={doRegister} className="max-w-sm mx-auto">
               {/* Name Input Field */}
-              <div className="form-group">
-                <IonLabel>Your Name</IonLabel>
+              <div className="mb-5">
+                <IonLabel class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >Your Name</IonLabel>
                 <IonInput
                   name="name"
+                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
                   type="text"
                   placeholder="John Doe"
                   value={data.name}
@@ -80,9 +81,10 @@ const RegisterPage: React.FC = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <IonLabel>Your email</IonLabel>
+              <div className="mb-5">
+                <IonLabel class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</IonLabel>
                 <IonInput
+                class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                   name="email"
                   type="email"
                   placeholder="name@company.com"
@@ -92,9 +94,10 @@ const RegisterPage: React.FC = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <IonLabel>Password</IonLabel>
+              <div className="mb-5">
+                <IonLabel class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</IonLabel>
                 <IonInput
+                class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                   name="password"
                   type="password"
                   placeholder="••••••••"
@@ -104,9 +107,10 @@ const RegisterPage: React.FC = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <IonLabel>Confirm Password</IonLabel>
+              <div className="mb-5">
+                <IonLabel class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >Confirm Password</IonLabel>
                 <IonInput
+                class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                   name="confirmPassword"
                   type="password"
                   placeholder="••••••••"
@@ -115,6 +119,12 @@ const RegisterPage: React.FC = () => {
                   required
                 />
               </div>
+                <div className="flex items-start mb-5">
+                        < div className="flex items-center h-5">
+                      <input id="terms" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" required />
+                      </div>
+                      <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a></label>
+                </div>
 
               <IonButton type="submit" expand="block">
                 Register
