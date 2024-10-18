@@ -145,13 +145,13 @@ const Tab3: React.FC = () => {
           <IonItem lines="none" className="order-section">
       <div className="order-details">
         <p>Total Order</p>
-        <h2>Rp 700.000</h2>
+        <h2>Rp 1.700.000</h2>
       </div>
 
       {/* Buttons */}
       <div className="button-group">
-        <IonButton size="small" fill="outline" className='custom-button-outline'>Request Refund</IonButton>
-        <IonButton size="small" className='custom-button'>complete</IonButton>
+        <IonButton size="small" fill="outline" className='custom-button-outline-c'>Request Refund</IonButton>
+        <IonButton size="small" className='custom-button-c'>complete</IonButton>
       </div>
     </IonItem>
         </IonCard>

@@ -140,7 +140,6 @@
   font-size: 18px;
   font-weight: 700;
   color: rgb(56, 114, 153);
-  ;
 }
 
 .button-group {
@@ -148,9 +147,7 @@
   justify-content: end;
   gap: 10px; /* Space between the buttons */
 }
-.button-color{
-  
-}
+
 
 .status-label {
   font-family: 'Poppins', sans-serif;
@@ -163,12 +160,21 @@
 }
 
 .custom-button {
-  
   color: rgba(0, 148, 255, 1);
   color: white; /* Ensures the text is readable */
 }
 
 .custom-button-outline {
+  border-color: rgba(0, 148, 255, 1);
+  color: rgba(0, 148, 255, 1);
+}
+
+.custom-button-c{
+  color: rgba(0, 148, 255, 1);
+  color: white; /* Ensures the text is readable */
+}
+.custom-button-outline-c {
+  width: 90px;
   border-color: rgba(0, 148, 255, 1);
   color: rgba(0, 148, 255, 1);
 }

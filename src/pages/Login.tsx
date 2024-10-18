@@ -9,10 +9,16 @@ import {
   IonInput,
   IonButton,
   IonCheckbox,
-  IonLabel,
+  IonLabel, 
+  IonCard, 
+  IonCardContent, 
+  IonCardHeader, 
+  IonCardSubtitle, 
+  IonCardTitle, IonItem
 } from '@ionic/react';
 import { post } from '../api.service'; // Import your API service
 import { useHistory } from 'react-router-dom'; // For routing
+import './login.css';  
 
 const LoginPage: React.FC = () => {
   const [data, setData] = useState({ email: '', password: '' });
@@ -70,11 +76,17 @@ const LoginPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <div className="login-container">
-          <div className="form-container">
-            <form onSubmit={doLogin} className="login-form">
-              <div className="form-group">
-                <IonLabel>Your email</IonLabel>
+
+     
+      
+      <img alt="Silhouette of mountains" src=".\public\Frame 2 1.png" className=''/>
+      <IonCardHeader>
+      </IonCardHeader>
+
+      <IonCardContent> <div className="form-container">
+            <form onSubmit={doLogin} className="max-w-sm mx-auto">
+              <div className="mb-5">
+                <IonLabel className='block mb-2 text-sm font-medium text-gray-900 dark:text-white' >Your email</IonLabel>
                 <IonInput
                   name="email"
                   type="email"
@@ -82,32 +94,35 @@ const LoginPage: React.FC = () => {
                   value={data.email}
                   onIonInput={handleInputChange}
                   required
-                />
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  />
               </div>
 
-              <div className="form-group">
-                <IonLabel>Password</IonLabel>
+              <div className="mb-5">
+                <IonLabel class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >Password</IonLabel>
                 <IonInput
                   name="password"
                   type="password"
                   placeholder="••••••••"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   value={data.password}
                   onIonInput={handleInputChange}
                   required
-                />
+                  />
               </div>
 
-              <div className="form-options">
-                <div className="remember-me">
+              <div className="flex items-start mb-">
+                <div className="flex items-center h-5">
                   <IonCheckbox
                     checked={rememberMe}
                     onIonChange={handleCheckboxChange}
-                  />
-                  <IonLabel>Remember me</IonLabel>
+                    class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                    />
+                  <IonLabel class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" >Remember me</IonLabel>
                 </div>
               </div>
 
-              <IonButton type="submit" expand="block">
+              <IonButton type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" expand="block">
                 Sign in
               </IonButton>
 
@@ -121,7 +136,8 @@ const LoginPage: React.FC = () => {
 
             {resp && <div className="response">Login successful: {JSON.stringify(resp)}</div>}
           </div>
-        </div>
+          </IonCardContent>
+      
       </IonContent>
     </IonPage>
   );
