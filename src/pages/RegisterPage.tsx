@@ -129,12 +129,13 @@ const RegisterPage: React.FC = () => {
               <IonButton type="submit" expand="block">
                 Register
               </IonButton>
-
+              
               {/* Display response if registration is successful */}
-              {resp && <div className="response">Registration successful: {JSON.stringify(resp)}</div>}
+              {resp && <div className="response">Registrasi successful: {JSON.stringify(resp)}</div>}
             </form>
           </div>
         </div>
+        
       </IonContent>
     </IonPage>
   );
