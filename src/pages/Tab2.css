@@ -1,96 +1,101 @@
 /* Background biru tanpa border-radius */
 
 .blue-background {
-    background-color: #007bff; /* Warna biru dasar */
-    height: 148px; /* Sesuaikan tinggi sesuai kebutuhan */
-    width: 100%;
-    position: absolute;
-    top: 0;
-    z-index: 1; /* Agar berada di bawah toolbar putih */
-  }
-  
-  /* Toolbar putih dengan border-radius di bagian bawah */
-  .custom-toolbar {
-    background-color: #ffffff; /* Warna putih */
-    border-bottom-left-radius: 30px; /* Radius di bagian bawah kiri */
-    border-bottom-right-radius: 30px; /* Radius di bagian bawah kanan */
-    padding: 10px;
-    position: fixed;
-    z-index: 2; /* Agar toolbar putih berada di atas background biru */
-    width: 100%;
-    margin: 0 auto;
-    height: 102px;
-  }
-  
-  /* Penyesuaian logo */
-  .logo-container {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    z-index: 3;
-  }
-  
-  .logo {
-    height: 40px; /* Ukuran logo */
-  }
-  
-  .header-icon {
-    color: #4285f4; /* Warna icon */
-    font-size: 24px;
-    margin-left: 15px;
-  }
+  background-color: #007bff; /* Warna biru dasar */
+  height: 148px; /* Sesuaikan tinggi sesuai kebutuhan */
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 1; /* Agar berada di bawah toolbar putih */
+}
+
+/* Toolbar putih dengan border-radius di bagian bawah */
+.custom-toolbar {
+  background-color: #ffffff; /* Warna putih */
+  border-bottom-left-radius: 30px; /* Radius di bagian bawah kiri */
+  border-bottom-right-radius: 30px; /* Radius di bagian bawah kanan */
+  padding: 10px;
+  position: fixed;
+  z-index: 2; /* Agar toolbar putih berada di atas background biru */
+  width: 100%;
+  margin: 0 auto;
+  height: 102px;
+}
+
+/* Penyesuaian logo */
+.logo-container {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 3;
+}
+
+.logo {
+  height: 40px; /* Ukuran logo */
+}
+
+.header-icon {
+  color: #4285f4; /* Warna icon */
+  font-size: 24px;
+  margin-left: 15px;
+  z-index: 2;
+}
 
 /* Ubah latar belakang body menjadi putih */
 body {
-    background-color: #ffffff !important;
-  }
-  
-  /* Styling untuk konten yang ada di IonContent */
-  /* Styling untuk konten di IonContent */
-.custom-content {
-    background-color: #ffffff; /* Pastikan latar belakang IonContent putih */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 20px; /* Anda bisa menyesuaikan padding sesuai kebutuhan */
-  }
-  
-  /* Styling untuk teks Experience */
-  .experience-text {
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    font-weight: 900;
-    line-height: 24px;
-    text-align: center;
-    width: 316px; /* Anda bisa menyesuaikan lebar sesuai kebutuhan */
-    height: 26px; /* Anda bisa menyesuaikan tinggi sesuai kebutuhan */
-    position: absolute; /* Menggunakan absolute untuk mengatur posisinya */
-    top: 175px; /* Mengatur posisi dari atas */
-    left: 51px; /* Mengatur posisi dari kiri */
-    opacity: 1; /* Pastikan opacity 1 agar terlihat */
-  }
-  
-  /* Tombol Monthly */
+  background-color: #ffffff !important;
+}
 
-  /* CSS untuk memastikan monthly berada di tengah IonContent */
-  .monthly {
-    width: 348px; /* Sesuaikan dengan lebar yang diinginkan */
-    height: 82.67px; /* Sesuaikan dengan tinggi yang diinginkan */
-    background: #397BAA; /* Warna latar belakang */
-    border-radius: 18px; /* Radius sudut */
-    display: flex; /* Menggunakan flexbox */
-    flex-direction: column; /* Mengatur arah flex menjadi kolom */
-    justify-content: center; /* Memusatkan konten secara vertikal */
-    align-items: flex-start; /* Memindahkan teks ke sebelah kiri */
-    position: absolute; /* Menggunakan absolute untuk mengatur posisi */
-    top: 55%; /* Mengatur posisi dari atas */
-    left: 50%; /* Mengatur posisi dari kiri */
-    transform: translate(-50%, -50%); /* Memusatkan elemen */
-    color: white; /* Warna teks */
-    text-align: left; /* Mengatur teks agar rata kiri */
-    padding-left: 16px; /* Menambahkan padding kiri untuk memberikan jarak */
+/* Styling untuk konten yang ada di IonContent */
+/* Styling untuk konten di IonContent */
+.custom-content {
+  background-color: #ffffff; /* Latar belakang IonContent putih */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  padding-top: 200px; /* Beri jarak untuk toolbar dan teks Experience */
+  position: relative;
+  z-index: 2; /* Pastikan IonContent berada di atas footer */
+}
+
+/* Styling untuk teks Experience */
+.experience-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 25px; /* Sesuai dengan ketentuan */
+  font-weight: 800; /* Sesuai dengan ketentuan */
+  line-height: normal; /* Sesuai dengan ketentuan */
+  text-align: center;
+  color: #FFF; /* Warna teks sesuai ketentuan */
+  width: 291px; /* Sesuai dengan ketentuan */
+  height: 105px; /* Sesuai dengan ketentuan */
+  position: absolute; /* Untuk mengatur posisinya */
+  top: 175px; /* Sesuaikan nilai ini sesuai kebutuhan */
+  left: 50%; /* Posisi di tengah */
+  transform: translateX(-50%); /* Untuk memusatkan teks secara horizontal */
+}
+
+
+/* Tombol Monthly */
+
+/* CSS untuk memastikan monthly berada di tengah IonContent */
+.monthly {
+  width: 348px; /* Sesuaikan dengan lebar yang diinginkan */
+  height: 82.67px; /* Sesuaikan dengan tinggi yang diinginkan */
+  background: #397BAA; /* Warna latar belakang */
+  border-radius: 18px; /* Radius sudut */
+  display: flex; /* Menggunakan flexbox */
+  flex-direction: column; /* Mengatur arah flex menjadi kolom */
+  justify-content: center; /* Memusatkan konten secara vertikal */
+  align-items: flex-start; /* Memindahkan teks ke sebelah kiri */
+  position: absolute; /* Menggunakan absolute untuk mengatur posisi */
+  top: 55%; /* Mengatur posisi dari atas */
+  left: 50%; /* Mengatur posisi dari kiri */
+  transform: translate(-50%, -50%); /* Memusatkan elemen */
+  color: white; /* Warna teks */
+  text-align: left; /* Mengatur teks agar rata kiri */
+  padding-left: 16px; /* Menambahkan padding kiri untuk memberikan jarak */
 }
 
 .subscription-card {
@@ -103,69 +108,78 @@ body {
   align-items: flex-start;
   padding-left: 16px;
   color: white;
-  margin-bottom: 16px;
-  text-align: left;
+  margin-bottom: 16px; /* Jarak antar kartu */
+  background-color: #0094FF; /* Default warna untuk Monthly, bisa diubah lewat inline style */
 }
 
 .subscription-card h4 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 24px;
-  font-weight: 900;
-  margin: 0;
+font-family: 'Poppins', sans-serif;
+font-size: 24px;
+font-weight: 900;
+margin: 0;
 }
 
 .subscription-card h5 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  color: #FFF;
-  margin-top: 4px;
+font-family: 'Poppins', sans-serif;
+font-size: 12px;
+font-weight: 600;
+color: #FFF;
+margin-top: 4px;
 }
 
 .subscriptions {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 350px; /* Sesuaikan nilai ini untuk mengatur posisi lebih ke bawah */
-    width: 100%;
-    padding: 50px;
-  }
-  
-  .footer-rectangle {
-    width: 430px;
-    height: 300px;
-    flex-shrink: 0;
-    border-radius: 30px;
-    background: linear-gradient(180deg, rgba(0, 148, 255, 0.34) 0%, rgba(0, 148, 254, 0.34) 4.57%, rgba(0, 144, 249, 0.34) 51.5%, rgba(0, 89, 153, 0.34) 100%);
-    margin-top: 5px;
-    position: relative;
-    z-index: 0; /* Pastikan footer berada di bawah tombol */
-  }
-  
-  .subscribe-button {
-    width: 348px;
-    height: 59px;
-    flex-shrink: 0;
-    border-radius: 18px;
-    background-color: #FFD600;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #406580;
-    text-align: center;
-    font-family: 'Poppins', sans-serif;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
-    letter-spacing: 0.72px;
-    position: absolute; /* Posisi absolute untuk memastikan berada di atas footer */
-    bottom: 60px; /* Atur jarak tombol dari bawah IonContent */
-    left: 50%;
-    transform: translateX(-50%); /* Memusatkan tombol secara horizontal */
-    z-index: 2; /* Pastikan tombol berada di atas footer */
-  }
-  
-  
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 450px; /* Sesuaikan dengan posisi yang diinginkan */
+  width: 100%;
+  padding: 30px;
+  z-index: 5;
+}
+
+.footer-rectangle {
+  width: 100%;
+  height: 450px;
+  border-radius: 24.946px;
+  background: linear-gradient(180deg, #FFF 43.6%, #FFF 99.89%);
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1; /* Pastikan z-index lebih rendah agar footer berada di belakang */
+}
+
+.subscribe-button {
+  width: 348px;
+  height: 59px;
+  border-radius: 18px;
+  background-color: #FFD600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #406580;
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  text-align: center;
+  position: absolute;
+  bottom: 140px; /* Sesuaikan agar tidak tertabrak oleh Swiper */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2; /* Pastikan tombol Subscribe berada di atas footer */
+}
+
+.terms-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: #406580;
+  position: absolute;
+  bottom: 80px; /* Disesuaikan agar berada di bawah tombol Subscribe */
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 2;
+}
+
+
