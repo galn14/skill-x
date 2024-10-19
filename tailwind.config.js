@@ -16,7 +16,8 @@
 module.exports = {
   content: [
     "./src/**/*.{html,ts}", // Look for classes in HTML and TypeScript files
-    "./node_modules/flowbite/**/*.js" // Include Flowbite components
+    "./index.html", "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.{js,ts,jsx,tsx}",// Include Flowbite components
   ],
   darkMode: 'class', // Enable dark mode using the class strategy
   theme: {
@@ -73,6 +74,6 @@ module.exports = {
     }
   },
   plugins: [
-    require('flowbite/plugin') // Include the Flowbite plugin
+    require('flowbite/plugin'), // Include the Flowbite plugin
   ],
 };
