@@ -178,3 +178,13 @@
   border-color: rgba(0, 148, 255, 1);
   color: rgba(0, 148, 255, 1);
 }
+
+.blurred-content {
+  filter: blur(4px);
+  opacity: 0.5;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.blurred-content * {
+  pointer-events: none; /* Prevent interaction with blurred content */
+}

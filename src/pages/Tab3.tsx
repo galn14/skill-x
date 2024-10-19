@@ -1,12 +1,28 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar ,IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonItem,
-  IonLabel, IonIcon, IonList, IonThumbnail,IonSearchbar } from '@ionic/react';
+  IonLabel, IonIcon, IonList, IonThumbnail,IonSearchbar ,} from '@ionic/react';
 
+  
 
+  import React, { useState } from 'react';
+  import Modal from '../components/modal'; // Adjust the import based on your file structure
 import ExploreContainer from '../components/ExploreContainer';
 import './Tab3.css';  
 
 const Tab3: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
+    
+
+
     <IonPage>
       <IonHeader>
         <IonToolbar>
@@ -14,8 +30,12 @@ const Tab3: React.FC = () => {
         </IonToolbar>
 
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen className={`${isModalOpen ? 'blurred-content' : ''} `}>
+
+
+        
       <IonSearchbar></IonSearchbar>
+      
 
         {/* card  completed status */}
       
@@ -30,10 +50,10 @@ const Tab3: React.FC = () => {
       </div>
       
       <h1 className="status-label">Completed</h1>
-      <IonButton className="kebab-icon"fill='clear' >
+      <IonButton className="kebab-icon" onClick={openModal} fill='clear' >
       ︙
     </IonButton>
-
+   
       </IonItem>
       
       <IonCardContent>
@@ -108,6 +128,8 @@ const Tab3: React.FC = () => {
       </div>
     </IonItem>
         </IonCard>
+
+    
 
       {/* card pending order */}
 
@@ -201,8 +223,12 @@ const Tab3: React.FC = () => {
         </IonCard>
 
       </IonContent>
+      {/* Render the modal and pass the required props */}
+    
+    <Modal isOpen={isModalOpen} closeModal={closeModal} />
     </IonPage>
   );
 };
+
 
 export default Tab3;
