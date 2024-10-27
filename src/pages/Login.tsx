@@ -50,11 +50,11 @@ const LoginPage: React.FC = () => {
         // If login is successful, the response should include a token
         if (response.token) {
           console.log('Login successful', response);
-          localStorage.setItem('userToken', response.token); // Save the token to localStorage
+          localStorage.setItem('userToken', response.token);
 
           // Redirect to Tab4 after successful login
           history.push('/tab4');
-          window.location.reload(); // This will reload the app after logout
+          window.location.reload();
         } else {
           // Handle failed login attempt (no token received)
           setError('Login failed: Invalid credentials');
@@ -76,72 +76,73 @@ const LoginPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-
-
-
-        <IonCardHeader>
-        </IonCardHeader>
-
+  
+        <IonCardHeader></IonCardHeader>
+  
         <IonCardContent>
-          <img alt="Silhouette of mountains" src=".\public\Frame 2 1.png" className='' />
-          <div className=','>
-            <form onSubmit={doLogin} className="max-w-sm mx-auto">
+          <img alt="Silhouette of mountains" src="./Frame 2 1.png" className="w-full h-auto mb-5" />
+          <div className="max-w-sm mx-auto">
+            <form onSubmit={doLogin} className="space-y-5">
               <div className="mb-5">
                 <IonInput
                   name="email"
                   type="email"
-                  placeholder="email"
+                  placeholder="Email"
                   value={data.email}
                   onIonInput={handleInputChange}
                   required
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
-
+  
               <div className="mb-5">
-                <IonLabel class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >Password</IonLabel>
+                <IonLabel className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Password
+                </IonLabel>
                 <IonInput
                   name="password"
                   type="password"
                   placeholder="••••••••"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   value={data.password}
                   onIonInput={handleInputChange}
                   required
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
-
-              <div className="flex items-start mb-">
-                <div className="flex items-center h-5">
-                  <IonCheckbox
-                    checked={rememberMe}
-                    onIonChange={handleCheckboxChange}
-                    class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                  />
-                  <IonLabel class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300" >Remember me</IonLabel>
-                </div>
+  
+              <div className="flex items-center mb-5">
+                <IonCheckbox
+                  checked={rememberMe}
+                  onIonChange={handleCheckboxChange}
+                  className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                />
+                <IonLabel className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Remember me
+                </IonLabel>
               </div>
 
-              <IonButton type="submit"
-                className="text-white bg-blue-700 font-medium rounded-lg text-sm text-center"
-                expand="block">
-              </IonButton>
 
-              <div className="form-options">
-                <a href="/register">Create an account</a>
-                <IonButton fill="clear" routerLink="/register">
+
+              <IonButton type="submit" expand="block" className="bg-blue-700 text-white rounded-lg text-sm">
+                Sign In
+              </IonButton>
+              <div className="flex flex-col items-center mt-5 space-y-2 justify-between mt-5">
+                <a href="/register" className="text-sm text-center text-blue-500">Create an account</a>
+                <IonButton fill="clear" routerLink="/register" className="text-sm text-blue-500">
                   Register
                 </IonButton>
               </div>
-            </form>
 
-            {resp && <div className="response">Login successful: {JSON.stringify(resp)}</div>}
+            </form>
+  
+            {resp && <div className="mt-5 text-green-500">Login successful: {JSON.stringify(resp)}</div>}
           </div>
         </IonCardContent>
-
+  
       </IonContent>
     </IonPage>
   );
+  
 };
 
 export default LoginPage;

@@ -1,24 +1,48 @@
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonList, IonItem, IonLabel, IonAvatar, IonImg, IonIcon } from '@ionic/react';
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButton,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonAvatar,
+  IonImg,
+  IonIcon,
+} from '@ionic/react';
 import './Tab4.css';
-import { } from '@ionic/react';
-import { heartOutline } from 'ionicons/icons'; 
+import { heartOutline } from 'ionicons/icons';
 import { post } from '../api.service';
 import { useHistory } from 'react-router';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Preferences } from '@capacitor/preferences';
 
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { useEffect, useState } from 'react';
 
 const Account: React.FC = () => {
-  const history = useHistory(); // For navigation
+  const history = useHistory();
+  const [image, setImage] = useState<string | undefined>(undefined);
 
-  // Logout function to handle token removal and redirect
+  // Load saved image on component mount
+  useEffect(() => {
+    const loadImage = async () => {
+      const { value } = await Preferences.get({ key: 'profileImage' });
+      if (value) {
+        setImage(value);
+      }
+    };
+    loadImage();
+  }, []);
+
   const handleLogout = async () => {
     try {
-      const token = localStorage.getItem('userToken'); // Get the token from localStorage
+      const token = localStorage.getItem('userToken');
+      if (!token) throw new Error('No token found');
 
-      if (!token) {
-        throw new Error('No token found'); // Handle the case where no token exists
-      }
-
-      // Make POST request to /api/logout with the Authorization header
       await post('logout', {}, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -27,32 +51,53 @@ const Account: React.FC = () => {
         },
       });
 
-      // Remove the token from localStorage after successful logout
       localStorage.removeItem('userToken');
-
-      // Redirect the user to the login page
       history.push('/login');
-      window.location.reload(); // This will reload the app after logout
+      window.location.reload();
     } catch (error) {
-      console.error('Logout failed', error); // Log any errors during logout
+      console.error('Logout failed', error);
+    }
+  };
+
+  // Updated captureImage function with parameters similar to Angular code
+  const captureImage = async () => {
+    try {
+      const photo = await Camera.getPhoto({
+        quality: 100,
+        allowEditing: false,
+        source: CameraSource.Camera,
+        resultType: CameraResultType.DataUrl, // Get image as Data URL
+      });
+
+      const imageUrl = photo.dataUrl;
+      setImage(imageUrl); // Update IonAvatar with the new image URL
+
+      // Save image URL to Preferences for persistence
+      if (imageUrl) {
+        await Preferences.set({
+          key: 'profileImage',
+          value: imageUrl,
+        });
+      }
+    } catch (error) {
+      console.error('Error capturing image', error);
     }
   };
 
   return (
     <IonPage>
-
-    <IonHeader translucent={true} className="custom-header">
+      <IonHeader translucent={true} className="custom-header">
         <IonToolbar>
-        <IonButton className="close-button" slot="start" fill="clear">x</IonButton>
-        <IonTitle className="subtitle">Main Menu</IonTitle>
+          <IonButton className="close-button" slot="start" fill="clear">x</IonButton>
+          <IonTitle className="subtitle">Main Menu</IonTitle>
         </IonToolbar>
-    </IonHeader>
+      </IonHeader>
 
       <IonContent fullscreen>
         {/* User Profile Section */}
         <div className="profile-section">
-          <IonAvatar className="avatar">
-            <IonImg src="path_to_profile_image" alt="User Avatar" />
+          <IonAvatar className="avatar" onClick={captureImage}>
+            <IonImg src={image || 'path_to_profile_image'} alt="User Avatar" />
           </IonAvatar>
           <div className="user-details">
             <h3>Ailin</h3>
@@ -73,7 +118,7 @@ const Account: React.FC = () => {
             <IonLabel>Transaction List</IonLabel>
           </IonItem>
           <IonItem>
-            <IonIcon icon={heartOutline} slot="start" aria-label="Wishlist" /> 
+            <IonIcon icon={heartOutline} slot="start" aria-label="Wishlist" />
             <IonLabel>Wishlist</IonLabel>
           </IonItem>
           <IonItem>
@@ -91,7 +136,7 @@ const Account: React.FC = () => {
             <IonLabel>Help and Support</IonLabel>
           </IonItem>
         </IonList>
-         {/* Logout Button */}
+        {/* Logout Button */}
         <IonButton color="danger" expand="block" onClick={handleLogout}>
           Logout
         </IonButton>
@@ -100,4 +145,5 @@ const Account: React.FC = () => {
   );
 };
 
+defineCustomElements(window);
 export default Account;
