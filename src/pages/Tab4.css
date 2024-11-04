@@ -146,27 +146,48 @@ ion-modal {
 
 
 /* Section titles */
+/* Full-width background for the message */
 .CompletePurchaseWrapper {
-  width: 100%;
-  background-color: #FF4D00; /* Background color for the full width */
-  padding: 0 0; /* Vertical padding */
+  width: 100%; /* Full width of the screen */
+  background-color: #FF4D00; /* Background color */
+  margin: 0; /* Remove any margin */
+  padding: 0; /* Remove any padding */
+  
 }
 
+/* Section title styles */
 .CompletePurchase h3 {
+  font-size: 13;
+  font-weight: bold;
   color: white; /* Ensure text is readable */
   text-align: left; /* Center the text */
   margin: 0; /* Reset margins */
+  padding: 2px 17px; 
 }
 
 
+
 /* "Complete your purchase now!" section */
+.scrollable-grid {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent wrapping of child elements */
+}
+
+.flex-row {
+  display: flex; /* Use flexbox for horizontal layout */
+}
+
+.flex-row .ion-col {
+  flex: 0 0 auto; /* Prevent flex-grow and allow items to keep their width */
+  margin-right: 10px; /* Optional: Add some space between columns */
+}
+
 .product-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: 8px;
 }
 
@@ -190,26 +211,42 @@ ion-modal {
 }
 
 /* "On Progress" Section */
-.on-progress-title {
-  color: #4caf50; /* green color */
+
+.OnProgressWrapper {
+  width: 100%; /* Full width of the screen */
+  background-color: #3CB232; /* Background color */
+  margin: 0; /* Remove any margin */
+  padding: 0; /* Remove any padding */
+  
 }
 
-.on-progress-item {
-  background-color: #e0f7e9; /* light green background */
-  border-radius: 8px;
-  margin: 8px;
-  padding: 8px;
+.OnProgress h3 {
+  font-size: 13;
+  font-weight: bold;
+  color: white; /* Ensure text is readable */
+  text-align: left; /* Center the text */
+  padding: 2px 17px; 
 }
+
 
 .on-progress-item h5 {
-  font-size: 1em;
+  font-size: 1em; /* Keep the font size consistent */
   font-weight: 600;
   color: #333;
+  
 }
 
-.on-progress-item p {
-  font-size: 0.85em;
-  color: #555;
+.on-progress-item{
+  border: 1px solid #ABABAB; /* Add border with light gray color */
+  border-radius: 9.15px; /* Optional: rounded corners */
+  padding: 10px;
+  width: 150px;
+}
+
+.progress-card p {
+   /* Optional: add padding inside the card */
+  margin-top: 10px;
+  
 }
 
 /* Menu list styling */

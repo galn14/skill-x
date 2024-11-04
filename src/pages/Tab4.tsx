@@ -186,44 +186,67 @@ const Tab4: React.FC = () => {
 
 
 
+        <div className="CompletePurchaseWrapper">
+      <IonText className="CompletePurchase">
+        <h3>Complete your purchase now!</h3>
+      </IonText>
+    </div>
 
         {/* Complete Your Purchase Section */}
-        <IonCard>
-          <IonCardContent>
-          <div className="CompletePurchaseWrapper">
-            <IonText className="CompletePurchase">
-              <h3>Complete your purchase now!</h3>
-            </IonText>
-          </div>
-          <IonGrid>
-              <IonRow>
-                <IonCol size="6">
-                  <IonCard className="product-card">
-                    <img src="/path_to_package_image.png" alt="Package Portfolio Website" />
-                    <IonCardContent>
-                      <h5>Package Portfolio Website</h5>
-                      <p>by Aileniusluci</p>
-                    </IonCardContent>
-                  </IonCard>
-                </IonCol>
-                {/* Repeat IonCol for each additional product */}
-              </IonRow>
-            </IonGrid>
-          </IonCardContent>
-        </IonCard>
+      <IonCardContent>
+        <div className="scrollable-grid">
+          {/* Wrap the columns in a div that uses flexbox */}
+          <div className="flex-row">
+            <IonCol size="6">
+              <IonCard className="product-card">
+                <img src="/path_to_package_image.png" alt="Package Portfolio Website" />
+                <IonCardContent>
+                  <h5>Package Portfolio Website</h5>
+                  <p>by Aileniusluci</p>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
 
-        {/* On Progress Section */}
-        <IonCard>
-          <IonCardContent>
-            <IonText color="success"><h3>On Progress</h3></IonText>
+            {/* Repeat IonCol for each additional product */}
+            <IonCol size="6">
+              <IonCard className="product-card">
+                <img src="/path_to_package_image.png" alt="Another Package" />
+                <IonCardContent>
+                  <h5>Another Package</h5>
+                  <p>by Someone Else</p>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+
+            <IonCol size="6">
+              <IonCard className="product-card">
+                <img src="/path_to_package_image.png" alt="Third Package" />
+                <IonCardContent>
+                  <h5>Third Package</h5>
+                  <p>by Another Creator</p>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+
+            {/* Add more IonCol as needed */}
+          </div>
+        </div>
+      </IonCardContent>
+
+        <div className="OnProgressWrapper">
+          <IonText className="OnProgress">
+            <h3>On Progress</h3>
+          </IonText>
+        </div>
+          <IonCardContent className="progress-card">
             <IonItem lines="none">
-              <IonLabel>
+              <IonLabel className="on-progress-item">
                 <h5>Package Database Website</h5>
-                <p>Next Meeting: 09-29-2024<br />Completion in: 09-30-2024</p>
+                <p>Next Meeting: 09-29-2024</p>
+                <p>Completion in: 09-30-2024</p>
               </IonLabel>
             </IonItem>
           </IonCardContent>
-        </IonCard>
 
         {/* Menu List */}
         <IonList>
