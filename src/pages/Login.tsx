@@ -80,7 +80,7 @@ const LoginPage: React.FC = () => {
         <IonCardHeader></IonCardHeader>
   
         <IonCardContent>
-          <img alt="Silhouette of mountains" src="./Frame 2 1.png" className="w-full h-auto mb-5" />
+          <img alt="SkillX Logo" src="public/SkillXLogo.png" className="w-full h-auto mb-5" />
           <div className="max-w-sm mx-auto">
             <form onSubmit={doLogin} className="space-y-5">
               <div className="mb-5">

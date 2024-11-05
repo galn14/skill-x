@@ -180,6 +180,7 @@ ion-modal {
 .flex-row .ion-col {
   flex: 0 0 auto; /* Prevent flex-grow and allow items to keep their width */
   margin-right: 10px; /* Optional: Add some space between columns */
+
 }
 
 .product-card {
@@ -189,12 +190,32 @@ ion-modal {
   border-radius: 12px;
   overflow: hidden;
   margin: 8px;
+  width: 90%; /* Ensures the card takes full width of the column */
+  padding: 100 10px; 
+  box-sizing: border-box;
+  border-color: #ABABAB;
 }
 
-.product-card img {
-  width: 100%;
-  height: auto;
-  border-bottom: 1px solid #eee;
+
+.productcontent{
+  padding-left: 25px;
+}
+
+.image-wrapper {
+  width: 125px; /* Width of the container */
+  height: 100px; /* Height of the container */
+  margin-right: 10px;
+  display: flex;
+  justify-content: center; /* Center-align horizontally */
+  align-items: center; /* Center-align vertically */
+  overflow: hidden; /* Ensures image doesn't overflow */
+  border-radius: 8px; /* Optional: Add rounded corners */
+}
+
+.image-wrapper img {
+  width: 100%; /* Ensure the image takes up the full width */
+  height: auto; /* Keep aspect ratio */
+  object-fit: cover; /* Cover the container while maintaining aspect ratio */
 }
 
 .product-card h5 {
@@ -202,12 +223,21 @@ ion-modal {
   font-weight: 500;
   color: #333;
   margin: 4px 0;
+  padding: 0 10px; /* Fixed padding on the left and right */
+  white-space: nowrap; /* Prevents text from wrapping to the next line */
+  overflow: hidden; /* Hides overflow text */
+  text-overflow: ellipsis; /* Adds ellipsis for overflow */
+  
 }
 
 .product-card p {
   font-size: 0.8em;
   color: #888;
   margin: 0;
+  padding: 0 10px; /* Fixed padding on the left and right */
+  white-space: nowrap; /* Prevents text from wrapping to the next line */
+  overflow: hidden; /* Hides overflow text */
+  text-overflow: ellipsis; /* Adds ellipsis for overflow */
 }
 
 /* "On Progress" Section */
@@ -226,15 +256,29 @@ ion-modal {
   color: white; /* Ensure text is readable */
   text-align: left; /* Center the text */
   padding: 2px 17px; 
+  margin: 0; /* Reset margins */
+
 }
 
+.progress-card {
+  border: 1px solid #ccc; /* Add border with light gray color */
+  border-radius: 5px; /* Optional: rounded corners */
+  padding: 10px; /* Optional: add padding inside the card */
+  margin-top: 10px; /* Optional: space between title and card */
+}
 
 .on-progress-item h5 {
   font-size: 1em; /* Keep the font size consistent */
   font-weight: 600;
   color: #333;
-  
 }
+
+.next-meeting p {
+  font-size: 0.8em;
+  color: #888;
+  margin: 0;
+}
+
 
 .on-progress-item{
   border: 1px solid #ABABAB; /* Add border with light gray color */

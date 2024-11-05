@@ -197,12 +197,15 @@ const Tab4: React.FC = () => {
         <div className="scrollable-grid">
           {/* Wrap the columns in a div that uses flexbox */}
           <div className="flex-row">
+
             <IonCol size="6">
               <IonCard className="product-card">
-                <img src="/path_to_package_image.png" alt="Package Portfolio Website" />
-                <IonCardContent>
-                  <h5>Package Portfolio Website</h5>
-                  <p>by Aileniusluci</p>
+                  <div className="image-wrapper">
+                    <img src="public\web-design-internet-website-responsive-software-concept 1.png" alt="Package Portfolio Website" />
+                  </div>                
+                  <IonCardContent className="productcontent">
+                  <h5> Package Portfolio Website</h5>
+                  <p> by Aileniusluci</p>
                 </IonCardContent>
               </IonCard>
             </IonCol>
@@ -210,9 +213,11 @@ const Tab4: React.FC = () => {
             {/* Repeat IonCol for each additional product */}
             <IonCol size="6">
               <IonCard className="product-card">
-                <img src="/path_to_package_image.png" alt="Another Package" />
-                <IonCardContent>
-                  <h5>Another Package</h5>
+                  <div className="image-wrapper">
+                     <img src="/path_to_package_image.png" alt="Package Portfolio Website" />
+                  </div>                 
+                  <IonCardContent  className="productcontent">
+                  <h5>Another Package website </h5>
                   <p>by Someone Else</p>
                 </IonCardContent>
               </IonCard>
@@ -220,8 +225,10 @@ const Tab4: React.FC = () => {
 
             <IonCol size="6">
               <IonCard className="product-card">
-                <img src="/path_to_package_image.png" alt="Third Package" />
-                <IonCardContent>
+              <div className="image-wrapper">
+                     <img src="/path_to_package_image.png" alt="Package Portfolio Website" />
+                  </div>   
+                <IonCardContent  className="productcontent">
                   <h5>Third Package</h5>
                   <p>by Another Creator</p>
                 </IonCardContent>
@@ -237,16 +244,22 @@ const Tab4: React.FC = () => {
           <IonText className="OnProgress">
             <h3>On Progress</h3>
           </IonText>
-        </div>
+          </div>
           <IonCardContent className="progress-card">
-            <IonItem lines="none">
-              <IonLabel className="on-progress-item">
+        <IonItem lines="none">
+          <IonLabel className="on-progress-item">
+            <IonRow>
+              <IonCol size="6">
                 <h5>Package Database Website</h5>
-                <p>Next Meeting: 09-29-2024</p>
-                <p>Completion in: 09-30-2024</p>
-              </IonLabel>
-            </IonItem>
-          </IonCardContent>
+              </IonCol>
+              <IonCol size="6" className="next-meeting">
+                <p>Next Meeting: 09-29-2024<br />Completion in: 09-30-2024</p>
+              </IonCol>
+            </IonRow>
+          </IonLabel>
+        </IonItem>
+      </IonCardContent>
+    
 
         {/* Menu List */}
         <IonList>

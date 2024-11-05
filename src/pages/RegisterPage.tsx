@@ -64,7 +64,7 @@ const RegisterPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-      <img alt="Silhouette of mountains" src=".\Frame 2 1.png" className='logo' />
+      <img alt="SkillX Logo" src="public/SkillXLogo.png" className='logo' />
         <div className="register-container">
           <div className="form-container">
             <form onSubmit={doRegister} className="max-w-sm mx-auto">
