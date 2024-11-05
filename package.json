@@ -23,6 +23,7 @@
     "@capacitor/status-bar": "6.0.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@iconify/react": "^5.0.2",
     "@ionic/pwa-elements": "^3.3.0",
     "@ionic/react": "^8.0.0",
     "@ionic/react-router": "^8.0.0",

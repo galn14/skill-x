@@ -230,6 +230,8 @@ ion-modal {
   
 }
 
+
+
 .product-card p {
   font-size: 0.8em;
   color: #888;
@@ -260,6 +262,7 @@ ion-modal {
 
 }
 
+
 .progress-card {
   border: 1px solid #ccc; /* Add border with light gray color */
   border-radius: 5px; /* Optional: rounded corners */
@@ -271,6 +274,25 @@ ion-modal {
   font-size: 1em; /* Keep the font size consistent */
   font-weight: 600;
   color: #333;
+  align-items: center;
+  padding: 0 10px;
+   }
+
+.on-progress-item .center-content{
+  align-items: center;
+  display: flex;
+  align-items: center;      /* Center vertically */
+  justify-content: center;
+}
+
+.next-meeting h4 {
+  font-size: 1em; /* Keep the font size consistent */
+  font-weight: 600;
+  color: #007aff;
+  padding: 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .next-meeting p {

@@ -28,7 +28,7 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Preferences } from '@capacitor/preferences';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { useEffect, useState } from 'react';
-import { cart, heartOutline, notificationsOutline, mailOutline, menuOutline } from 'ionicons/icons';
+import { helpCircleOutline, chatboxOutline, personCircleOutline, cart, heartOutline, notificationsOutline, mailOutline, menuOutline, headsetOutline, listOutline } from 'ionicons/icons';
 
 const Tab4: React.FC = () => {
   const history = useHistory();
@@ -249,11 +249,14 @@ const Tab4: React.FC = () => {
         <IonItem lines="none">
           <IonLabel className="on-progress-item">
             <IonRow>
-              <IonCol size="6">
+              <IonCol size="6" className="center-content">
                 <h5>Package Database Website</h5>
               </IonCol>
               <IonCol size="6" className="next-meeting">
-                <p>Next Meeting: 09-29-2024<br />Completion in: 09-30-2024</p>
+                <p>Next Meeting: </p>
+                <h4>09-29-2024</h4>
+                <p>Completion in: </p>
+                <h4>09-31-2024</h4>
               </IonCol>
             </IonRow>
           </IonLabel>
@@ -264,6 +267,7 @@ const Tab4: React.FC = () => {
         {/* Menu List */}
         <IonList>
           <IonItem>
+          <IonIcon icon={listOutline} slot="start" aria-label="Wishlist" />
             <IonLabel>Transaction List</IonLabel>
           </IonItem>
           <IonItem>
@@ -271,20 +275,29 @@ const Tab4: React.FC = () => {
             <IonLabel>Wishlist</IonLabel>
           </IonItem>
           <IonItem>
-            <IonLabel>Following Seller</IonLabel>
+          <IonIcon icon={personCircleOutline} slot="start" aria-label="Following Seller" />          
+          <IonLabel>Following Seller</IonLabel>
           </IonItem>
           <IonItem>
+             <IonIcon icon={chatboxOutline} slot="start" aria-label="Following Seller" />          
             <IonLabel>Review</IonLabel>
           </IonItem>
           <IonItem>
+          <IonIcon icon={headsetOutline} slot="start" aria-label="Following Seller" />          
             <IonLabel>Complained Order</IonLabel>
           </IonItem>
           <IonItem>
+          
+          <IonIcon icon={helpCircleOutline} slot="start" aria-label="Following Seller" />          
+
             <IonLabel>Help and Support</IonLabel>
           </IonItem>
         </IonList>
 
-        {/* Logout Button */}
+  {/* Logout Button */}
+            <br></br>
+
+            <br></br>
         <IonButton color="danger" expand="block" onClick={handleLogout}>
           Logout
         </IonButton>
