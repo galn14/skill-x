@@ -11,23 +11,31 @@ import {
   IonLabel,
   IonButtons,
   IonBackButton,
+  IonCardContent,
+  IonCardHeader
 } from '@ionic/react';
 import { register } from '../api.service'; // Import your API service
+import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google'; // Import icon Google
 import { useHistory } from 'react-router-dom'; // Import useHistory for routing
 
 const RegisterPage: React.FC = () => {
   const [data, setData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [termsAccepted, setTermsAccepted] = useState(false); // Tambahkan state untuk termsAccepted
   const [resp, setResp] = useState<any>(null);
   const history = useHistory(); // Initialize useHistory for navigation
 
   // Handle form input changes (real-time input)
-  const handleInputChange = (e: CustomEvent) => {
-    const name = (e.target as HTMLInputElement).name;
-    const value = (e.detail as any).value;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTermsAccepted(e.target.checked);
   };
 
   // Handle registration action
@@ -55,88 +63,217 @@ const RegisterPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-        <IonButtons slot="start">
-            <IonBackButton defaultHref="/" />
-          </IonButtons>
-          <IonTitle>Create an Account</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <AppBar
+        position="fixed"
+        style={{
+          backgroundColor: 'white',
+          borderBottomLeftRadius: '30px',
+          borderBottomRightRadius: '30px',
+          height: '82px',
+          paddingTop: '25px'
+        }}
+      >
+        <Toolbar style={{ height: '100%', paddingBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box>
+            <IonButton fill="clear" routerLink="/register" className="text-mg text-gray-500">
+              Register
+            </IonButton>
+          </Box>
+          <div style={{ marginLeft: 'auto' }}>
+            <IonButton fill="clear" routerLink="/login" className="text-mg text-blue-500">
+              Login
+            </IonButton>
+          </div>
+        </Toolbar>
+      </AppBar>
       <IonContent className="ion-padding">
-      <img alt="SkillX Logo" src="public/SkillXLogo.png" className='logo' />
-        <div className="register-container">
-          <div className="form-container">
-            <form onSubmit={doRegister} className="max-w-sm mx-auto">
+
+      <IonCardHeader></IonCardHeader>
+          <IonCardContent style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '150px'}}>
+            {/* Membuat logo lebih kecil dan posisinya terpusat */}
+            <img alt="SkillX Logo" src="public/SkillXLogo.png" style={{ width: '250px', height: 'auto' }} />
+          </IonCardContent>
+
+          <div className="register-container max-w-sm mx-auto">
+            <form onSubmit={doRegister} className="space-y-5">
               {/* Name Input Field */}
-              <div className="mb-5">
-                <IonLabel class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >Your Name</IonLabel>
-                <IonInput
+              <div className="mb-5 flex justify-center">
+                <TextField
                   name="name"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
+                  label="Your Name"
                   type="text"
                   placeholder="John Doe"
                   value={data.name}
-                  onIonInput={handleInputChange}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
                   required
+                  size="medium"
+                  sx={{
+                    maxWidth: '80%',
+                    marginBottom: '10px',
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '10px',
+                    },
+                  }}
                 />
               </div>
 
-              <div className="mb-5">
-                <IonLabel class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</IonLabel>
-                <IonInput
-                class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+              {/* Email Input Field */}
+              <div className="mb-5 flex justify-center">
+                <TextField
                   name="email"
+                  label="Your email"
                   type="email"
                   placeholder="name@company.com"
                   value={data.email}
-                  onIonInput={handleInputChange}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
                   required
+                  size="medium"
+                  sx={{
+                    maxWidth: '80%',
+                    marginBottom: '10px',
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '10px',
+                    },
+                  }}
                 />
               </div>
 
-              <div className="mb-5">
-                <IonLabel class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</IonLabel>
-                <IonInput
-                class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+              {/* Password Input Field */}
+              <div className="mb-5 flex justify-center">
+                <TextField
                   name="password"
+                  label="Password"
                   type="password"
                   placeholder="••••••••"
                   value={data.password}
-                  onIonInput={handleInputChange}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
                   required
+                  size="medium"
+                  sx={{
+                    maxWidth: '80%',
+                    marginBottom: '10px',
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '10px',
+                    },
+                  }}
                 />
               </div>
 
-              <div className="mb-5">
-                <IonLabel class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >Confirm Password</IonLabel>
-                <IonInput
-                class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+              {/* Confirm Password Input Field */}
+              <div className="mb-5 flex justify-center">
+                <TextField
                   name="confirmPassword"
+                  label="Confirm Password"
                   type="password"
                   placeholder="••••••••"
                   value={data.confirmPassword}
-                  onIonInput={handleInputChange}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
                   required
+                  size="medium"
+                  sx={{
+                    maxWidth: '80%',
+                    marginBottom: '10px',
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '10px',
+                    },
+                  }}
                 />
               </div>
-                <div className="flex items-start mb-5">
-                        < div className="flex items-center h-5">
-                      <input id="terms" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" required />
-                      </div>
-                      <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a></label>
-                </div>
 
-              <IonButton type="submit" expand="block">
-                Register
-              </IonButton>
-              
+              {/* Terms and Conditions Checkbox */}
+              <div className="flex justify-center items-center mb-5">
+                <div style={{ maxWidth: '80%', width: '100%' }}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={termsAccepted}
+                        onChange={handleCheckboxChange}
+                        color="primary"
+                        required
+                      />
+                    }
+                    label={
+                      <span>
+                        I agree with the{' '}
+                        <a href="#" className="text-blue-600 hover:underline">
+                          terms and conditions
+                        </a>
+                      </span>
+                    }
+                    sx={{
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Register Button */}
+              <div className="flex justify-center items-center mb-5">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  size="large"
+                  sx={{
+                    maxWidth: '80%',
+                    borderRadius: '10px',
+                    paddingY: '12px',
+                    fontSize: '1.1rem',
+                  }}
+                >
+                  Register
+                </Button>
+              </div>
+
               {/* Display response if registration is successful */}
-              {resp && <div className="response">Registrasi successful: {JSON.stringify(resp)}</div>}
+              {resp && (
+                <div className="mt-5 text-green-500">
+                  Registrasi berhasil: {JSON.stringify(resp)}
+                </div>
+              )}
+
+                {/* Google Login Button */}
+            <div className="flex justify-center items-center mb-5">
+              <Button
+                variant="outlined"
+                fullWidth
+                size="large"
+                sx={{
+                  marginTop: '10px',
+                  maxWidth: '80%',
+                  borderRadius: '10px',
+                  paddingY: '12px',
+                  fontSize: '1.1rem',
+                  color: 'black',
+                  backgroundColor: 'white',
+                  borderColor: '#dddddd',
+                  textTransform: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  '&:hover': {
+                    backgroundColor: '#f5f5f5',
+                  },
+                }}
+                startIcon={<GoogleIcon style={{ color: '#4285F4' }} />}
+              >
+                Google
+              </Button>
+            </div>
+
             </form>
           </div>
-        </div>
-        
       </IonContent>
     </IonPage>
   );

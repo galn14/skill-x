@@ -19,6 +19,7 @@ import {
 import { post } from '../api.service'; // Import your API service
 import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import { useHistory } from 'react-router-dom'; // For routing
+import GoogleIcon from '@mui/icons-material/Google'; // Import icon Google
 import './login.css';
 
 const LoginPage: React.FC = () => {
@@ -186,6 +187,35 @@ const LoginPage: React.FC = () => {
                 Sign In
               </Button>
             </div>
+
+              {/* Google Login Button */}
+              <div className="flex justify-center items-center mb-5">
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  size="large"
+                  sx={{
+                    marginTop: '10px',
+                    maxWidth: '80%',
+                    borderRadius: '10px',
+                    paddingY: '12px',
+                    fontSize: '1.1rem',
+                    color: 'black',
+                    backgroundColor: 'white',
+                    borderColor: '#dddddd',
+                    textTransform: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    '&:hover': {
+                      backgroundColor: '#f5f5f5',
+                    },
+                  }}
+                  startIcon={<GoogleIcon style={{ color: '#4285F4' }} />}
+                >
+                  Google
+                </Button>
+              </div>
             </form>
 
             {resp && <div className="mt-5 text-green-500">Login successful: {JSON.stringify(resp)}</div>}
