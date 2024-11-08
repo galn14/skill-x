@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonIcon, IonCard, IonCardContent, IonFooter } from '@ionic/react';
-import { notificationsOutline, mailOutline, menuOutline } from 'ionicons/icons';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Keyboard, Pagination, Scrollbar, Zoom } from 'swiper/modules';
+import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button } from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import MailIcon from '@mui/icons-material/Mail';
+import MenuIcon from '@mui/icons-material/Menu';
+import { IonPage, IonContent } from '@ionic/react';
 import './Tab2.css';
 
 const Tab2: React.FC = () => {
@@ -18,44 +19,106 @@ const Tab2: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <div className="blue-background"></div>
-        <IonToolbar className="custom-toolbar">
-          <div className="logo-container">
-            <img src="path_to_your_logo.png" alt="SkillEx Logo" className="logo" />
-          </div>
-          <IonIcon icon={notificationsOutline} slot="end" className="header-icon" />
-          <IonIcon icon={mailOutline} slot="end" className="header-icon" />
-          <IonIcon icon={menuOutline} slot="end" className="header-icon" />
-        </IonToolbar>
-      </IonHeader>
+      {/* Header */}
+      <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
+        <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
+          <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
+            <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' }} />
+            <IconButton color="primary">
+              <NotificationsIcon />
+            </IconButton>
+            <IconButton color="primary">
+              <MailIcon />
+            </IconButton>
+            <IconButton color="primary">
+              <MenuIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
 
-      <IonContent fullscreen className="custom-content" color="white">
-        <div className="experience-text">
-          Experience the different with pro
-        </div>
+      {/* Main Content */}
+      <IonContent>
+        <Box display="flex" flexDirection="column" alignItems="center" pt={15} className="custom-content" >
+          <Typography variant="h6" fontWeight="bold" color="white" align="center" mt={1} marginBottom="150px">
+            Experience the different with pro
+          </Typography>
 
-        {/* Swiper Section */}
-        <div className="subscriptions">
-          <IonCard button routerLink="/subscribe/monthly" className="subscription-card">
-            <IonCardContent className="subscription-card-content">
-              <h4>Monthly</h4>
-              <h5>Rp. 50.000 / month</h5>
-            </IonCardContent>
-          </IonCard>
+          <Box className="logo-container" mt={20}>
+            <img src="../public/SubscribeLogo2.png" alt="Logo" className="blur-logo" />
+          </Box>
 
-          <IonCard button routerLink="/subscribe/yearly" className="subscription-card">
-            <IonCardContent className="subscription-card-content">
-              <h4>Yearly</h4>
-              <h5>Rp. 450.000 / year</h5>
-            </IonCardContent>
-          </IonCard>
-        </div>
+          {/* Subscription Cards */}
+          <Box className="subscriptions" mt={15}>
+            {subscriptions.map((subscription) => (
+              <Card
+                key={subscription.id}
+                onClick={() => window.location.href = subscription.link}
+                sx={{
+                  backgroundColor: subscription.background,
+                  width: '348px',
+                  height: '82px',
+                  borderRadius: '18px',
+                  marginBottom: '16px',
+                  color: 'white',
+                  cursor: 'pointer',
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                  },
+                }}
+              >
+                <CardContent sx={{ paddingLeft: '16px' }}>
+                  <Typography variant="h5" fontWeight="bold">
+                    {subscription.name}
+                  </Typography>
+                  <Typography variant="body2">
+                    {subscription.price}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
 
-        {/* Footer and Subscribe Button */}
-        <div className="subscribe-button">Subscribe</div>
-        <div className="terms-text">Terms Apply | Cancel Anytime</div>
-        <div className="footer-rectangle"></div>
+          {/* Subscribe Button */}
+          <Button
+            variant="contained"
+            sx={{
+              width: '348px',
+              height: '59px',
+              borderRadius: '18px',
+              marginTop: '8px',
+              backgroundColor: '#FFD600',
+              transition: 'background-color 0.3s ease, transform 0.3s ease',
+              '&:hover': {
+                backgroundColor: '#ffc107',
+                transform: 'scale(1.05)',
+              },
+            }}
+          >
+            <Typography fontWeight="bold">Subscribe</Typography>
+          </Button>
+
+          {/* Terms Text */}
+          <Typography variant="body2" color="#406580" align="center" mt={2}>
+            Terms Apply | Cancel Anytime
+          </Typography>
+
+          {/* Footer */}
+          <Box 
+            className="footer-rectangle" 
+            style={{ 
+              position: 'absolute', 
+              bottom: 0, 
+              width: '100%', 
+              height: '450px', 
+              borderTopLeftRadius: '24.946px', // Hanya bagian atas yang memiliki border-radius
+              borderTopRightRadius: '24.946px', // Hanya bagian atas yang memiliki border-radius
+              background: 'linear-gradient(180deg, #FFF 43.6%, #FFF 99.89%)' 
+            }} 
+          />
+        </Box>
       </IonContent>
     </IonPage>
   );
