@@ -17,6 +17,7 @@ import {
   IonCardTitle, IonItem
 } from '@ionic/react';
 import { post } from '../api.service'; // Import your API service
+import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import { useHistory } from 'react-router-dom'; // For routing
 import './login.css';
 
@@ -26,18 +27,18 @@ const LoginPage: React.FC = () => {
   const [resp, setResp] = useState<any>(null);
   const history = useHistory(); // Initialize useHistory for navigation
 
-  const handleInputChange = (e: CustomEvent) => {
-    const name = (e.target as HTMLInputElement).name;
-    const value = (e.detail as any).value;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.name;
+    const value = e.target.value;
     setData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const handleCheckboxChange = (e: CustomEvent) => {
-    setRememberMe(e.detail.checked);
-  };
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRememberMe(e.target.checked);
+  };  
 
   // Handle login action
   const doLogin = async (e: React.FormEvent) => {
@@ -70,76 +71,126 @@ const LoginPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Sign in to your account</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <AppBar
+        position="fixed"
+        style={{
+          backgroundColor: 'white',
+          borderBottomLeftRadius: '30px',
+          borderBottomRightRadius: '30px',
+          height: '82px',
+          paddingTop: '25px'
+        }}
+      >
+        <Toolbar style={{ height: '100%', paddingBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box>
+            <IonButton fill="clear" routerLink="/login" className="text-mg text-gray-500">
+              Login
+            </IonButton>
+          </Box>
+          <div style={{ marginLeft: 'auto' }}>
+            <IonButton fill="clear" routerLink="/register" className="text-mg text-blue-500">
+              Sign Up
+            </IonButton>
+          </div>
+        </Toolbar>
+      </AppBar>
       <IonContent className="ion-padding">
   
         <IonCardHeader></IonCardHeader>
-  
-        <IonCardContent>
-          <img alt="SkillX Logo" src="public/SkillXLogo.png" className="w-full h-auto mb-5" />
+          <IonCardContent style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '150px'}}>
+            {/* Membuat logo lebih kecil dan posisinya terpusat */}
+            <img alt="SkillX Logo" src="public/SkillXLogo.png" style={{ width: '250px', height: 'auto' }} />
+          </IonCardContent>
+
           <div className="max-w-sm mx-auto">
-            <form onSubmit={doLogin} className="space-y-5">
-              <div className="mb-5">
-                <IonInput
-                  name="email"
-                  type="email"
-                  placeholder="Email"
-                  value={data.email}
-                  onIonInput={handleInputChange}
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          <form onSubmit={doLogin} className="space-y-5">
+            <div className="mb-5 flex justify-center">
+              {/* Email input using Material UI TextField */}
+              <TextField
+                name="email"
+                label="Email"
+                type="email"
+                value={data.email}
+                onChange={handleInputChange}
+                fullWidth
+                variant="outlined"
+                required
+                size="medium"
+                sx={{
+                  maxWidth: '80%',
+                  marginBottom: '10px',
+                  '& .MuiOutlinedInput-root': { // Akses root input untuk border radius
+                    borderRadius: '10px',
+                  },
+                }}
+              />
+            </div>
+
+            <div className="mb-5 flex justify-center">
+              {/* Password input using Material UI TextField */}
+              <TextField
+                name="password"
+                label="Password"
+                type="password"
+                value={data.password}
+                onChange={handleInputChange}
+                fullWidth
+                variant="outlined"
+                required
+                size="medium"
+                sx={{
+                  maxWidth: '80%',
+                  '& .MuiOutlinedInput-root': { // Akses root input untuk border radius
+                    borderRadius: '10px',
+                  },
+                }}
+              />
+            </div>
+
+            <div className="flex justify-center items-center mb-5">
+              <div style={{ maxWidth: '80%', width: '100%' }}>
+                {/* Checkbox input using Material UI FormControlLabel and Checkbox */}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={rememberMe}
+                      onChange={handleCheckboxChange}
+                      color="primary"
+                    />
+                  }
+                  label="Remember me"
+                  sx={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'flex-start', // Menempatkan label di kiri
+                  }}
                 />
               </div>
-  
-              <div className="mb-5">
-                <IonLabel className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Password
-                </IonLabel>
-                <IonInput
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={data.password}
-                  onIonInput={handleInputChange}
-                  required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                />
-              </div>
-  
-              <div className="flex items-center mb-5">
-                <IonCheckbox
-                  checked={rememberMe}
-                  onIonChange={handleCheckboxChange}
-                  className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                />
-                <IonLabel className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Remember me
-                </IonLabel>
-              </div>
+            </div>
 
-
-
-              <IonButton type="submit" expand="block" className="bg-blue-700 text-white rounded-lg text-sm">
+            <div className="flex justify-center items-center mb-5">
+              {/* Sign in button using Material UI Button */}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                size="large"
+                sx={{
+                  maxWidth: '80%', // Membuatnya penuh dalam kotak pembungkus
+                  borderRadius: '10px', // Menerapkan border radius langsung
+                  paddingY: '12px', // Membuat tombol lebih tinggi
+                  fontSize: '1.1rem', // Menambah ukuran teks untuk membuat tombol lebih besar
+                }}
+              >
                 Sign In
-              </IonButton>
-              <div className="flex flex-col items-center mt-5 space-y-2 justify-between mt-5">
-                <a href="/register" className="text-sm text-center text-blue-500">Create an account</a>
-                <IonButton fill="clear" routerLink="/register" className="text-sm text-blue-500">
-                  Register
-                </IonButton>
-              </div>
-
+              </Button>
+            </div>
             </form>
-  
+
             {resp && <div className="mt-5 text-green-500">Login successful: {JSON.stringify(resp)}</div>}
           </div>
-        </IonCardContent>
-  
-      </IonContent>
+        </IonContent>
     </IonPage>
   );
   
