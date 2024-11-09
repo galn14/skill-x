@@ -39,24 +39,24 @@ const Tab2: React.FC = () => {
 
       {/* Main Content */}
       <IonContent>
-        <Box display="flex" flexDirection="column" alignItems="center" pt={15} className="custom-content" >
-          <Typography variant="h6" fontWeight="bold" color="white" align="center" mt={1} marginBottom="150px">
+        <Box display="flex" flexDirection="column" alignItems="center" pt={{ xs:10, md:10, lg:10, xl:20 }} className="custom-content" >
+          <Typography variant="h6" fontWeight="bold" color="white" align="center" mt={{ xs:1, md:2, lg:10, xl:20 }} marginBottom="17vh">
             Experience the different with pro
           </Typography>
 
-          <Box className="logo-container" mt={20}>
+          <Box className="logo-container" mt={{xs: 13, md:13, lg:25, xl:25}}>
             <img src="../public/SubscribeLogo2.png" alt="Logo" className="blur-logo" />
           </Box>
 
           {/* Subscription Cards */}
-          <Box className="subscriptions" mt={15}>
+          <Box className="subscriptions">
             {subscriptions.map((subscription) => (
               <Card
                 key={subscription.id}
                 onClick={() => window.location.href = subscription.link}
                 sx={{
                   backgroundColor: subscription.background,
-                  width: '348px',
+                  width: '100%',
                   height: '82px',
                   borderRadius: '18px',
                   marginBottom: '16px',
@@ -82,23 +82,25 @@ const Tab2: React.FC = () => {
           </Box>
 
           {/* Subscribe Button */}
-          <Button
-            variant="contained"
-            sx={{
-              width: '348px',
-              height: '59px',
-              borderRadius: '18px',
-              marginTop: '8px',
-              backgroundColor: '#FFD600',
-              transition: 'background-color 0.3s ease, transform 0.3s ease',
-              '&:hover': {
-                backgroundColor: '#ffc107',
-                transform: 'scale(1.05)',
-              },
-            }}
-          >
-            <Typography fontWeight="bold">Subscribe</Typography>
-          </Button>
+          <div className='subscribe-button-container'>
+            <Button
+              variant="contained"
+              sx={{
+                width: '100%',
+                height: '59px',
+                borderRadius: '18px',
+                marginTop: '8px',
+                backgroundColor: '#FFD600',
+                transition: 'background-color 0.3s ease, transform 0.3s ease',
+                '&:hover': {
+                  backgroundColor: '#ffc107',
+                  transform: 'scale(1.05)',
+                },
+              }}
+            >
+              <Typography fontWeight="bold">Subscribe</Typography>
+            </Button>
+          </div>
 
           {/* Terms Text */}
           <Typography variant="body2" color="#406580" align="center" mt={2}>
@@ -108,11 +110,17 @@ const Tab2: React.FC = () => {
           {/* Footer */}
           <Box 
             className="footer-rectangle" 
-            style={{ 
+            sx={{ 
+              marginTop: '10vh',
               position: 'absolute', 
               bottom: 0, 
               width: '100%', 
-              height: '450px', 
+              height: {
+                xs: '44vh',
+                sm: '50vh',
+                md: '47vh',
+                lg: '40vh',
+              },
               borderTopLeftRadius: '24.946px', // Hanya bagian atas yang memiliki border-radius
               borderTopRightRadius: '24.946px', // Hanya bagian atas yang memiliki border-radius
               background: 'linear-gradient(180deg, #FFF 43.6%, #FFF 99.89%)' 
