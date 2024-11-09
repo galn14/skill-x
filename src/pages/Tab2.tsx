@@ -3,6 +3,7 @@ import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { IonPage, IonContent } from '@ionic/react';
 import './Tab2.css';
 
@@ -25,13 +26,13 @@ const Tab2: React.FC = () => {
           <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
             <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' }} />
             <IconButton color="primary">
+              <ShoppingCartIcon />
+            </IconButton>
+            <IconButton color="primary">
               <NotificationsIcon />
             </IconButton>
             <IconButton color="primary">
               <MailIcon />
-            </IconButton>
-            <IconButton color="primary">
-              <MenuIcon />
             </IconButton>
           </Box>
         </Toolbar>
