@@ -22,7 +22,9 @@ import {
   IonButtons,
 } from '@ionic/react';
 import './Tab4.css';
-import { post } from '../api.service';
+
+import { Button, Menu, MenuItem, Typography } from '@mui/material';
+import { get, post, getSkills, getUserSkills } from '../api.service';
 import { useHistory } from 'react-router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Preferences } from '@capacitor/preferences';
@@ -31,10 +33,16 @@ import { useEffect, useState } from 'react';
 import { helpCircleOutline, chatboxOutline, personCircleOutline, cart, heartOutline, notificationsOutline, mailOutline, menuOutline, headsetOutline, listOutline } from 'ionicons/icons';
 
 const Tab4: React.FC = () => {
+  
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // For controlling menu open/close
+  const [selectedSkill, setSelectedSkill] = useState<string | null>(null); // Store the selected skill
   const history = useHistory();
   const [image, setImage] = useState<string | undefined>(undefined);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [skills, setSkills] = useState<any[]>([]); // State to store skills data
+  const [userSkills, setUserSkills] = useState<any[]>([]); // State to store user skills
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
+  const [isSkillsListVisible, setIsSkillsListVisible] = useState<boolean>(false); // State for toggling the skills dropdown
 
   // Load saved image on component mount
   useEffect(() => {
@@ -47,6 +55,52 @@ const Tab4: React.FC = () => {
     };
     loadImage();
   }, []);
+
+ // Handle opening the menu
+ const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  console.log('Menu button clicked'); // Log when the menu button is clicked
+  setAnchorEl(event.currentTarget);
+};
+
+// Handle closing the menu
+const handleClose = () => {
+  console.log('Menu closed'); // Log when the menu is closed
+  setAnchorEl(null);
+};
+
+// Handle selecting a skill from the dropdown
+const handleSelectSkill = (skillTitle: string) => {
+  console.log(`Skill selected: ${skillTitle}`); // Log the selected skill
+  setSelectedSkill(skillTitle); // Set the selected skill
+  handleClose(); // Close the menu
+};
+
+// Log the skills data each time it updates
+useEffect(() => {
+  console.log('Skills data updated:', skills); // Log skills whenever the state updates
+}, [skills]);
+
+useEffect(() => {
+  const fetchSkillsData = async () => {
+    try {
+      console.log('Fetching skills data...'); // Log before fetching
+      const skillsData = await get('skills/fetch', {});
+      console.log('Fetched skills data:', skillsData); // Log the fetched data
+      
+      // Check if skills data is an object and contains the 'data' array
+      if (skillsData && Array.isArray(skillsData.data)) {
+        setSkills(skillsData.data); // Set the skills data from the 'data' property
+      } else {
+        console.error('Fetched skills data is not in the expected format:', skillsData);
+      }
+    } catch (error) {
+      console.error('Error fetching skills data:', error); // Log any errors during fetch
+    }
+  };
+
+  fetchSkillsData();
+}, []); // Empty dependency array means this will run once on mount
+
 
   const handleLogout = async () => {
     try {
@@ -68,7 +122,6 @@ const Tab4: React.FC = () => {
       console.error('Logout failed', error);
     }
   };
-
 
   const captureImage = () => {
     setModalOpen(true);
@@ -107,6 +160,7 @@ const Tab4: React.FC = () => {
       console.error('Error selecting image from gallery', error);
     }
   };
+
   const confirmImage = async () => {
     if (previewImage) {
       setImage(previewImage); // Set the confirmed image as the profile image
@@ -120,7 +174,6 @@ const Tab4: React.FC = () => {
       setModalOpen(false); // Close modal after confirming
     }
   };
-
 
   return (
     <IonPage>
@@ -159,7 +212,33 @@ const Tab4: React.FC = () => {
             <IonButton fill="outline"  size="small">Join as Seller</IonButton>
           </div>
         </div>
+        <div>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleClick}
+        sx={{ marginBottom: 2 }} // Add some margin for better spacing
+      >
+        {selectedSkill ? selectedSkill : 'Select a Skill'} {/* Display selected skill */}
+      </Button>
 
+      {/* Dropdown Menu */}
+      <Menu
+        anchorEl={anchorEl} // Menu's anchor element (the button)
+        open={Boolean(anchorEl)} // Open the menu if anchorEl is not null
+        onClose={handleClose} // Close the menu when clicked outside
+      >
+        {skills.length > 0 ? (
+          skills.map((skill, index) => (
+            <MenuItem key={index} onClick={() => handleSelectSkill(skill.TitleSkills)}>
+              {skill.TitleSkills}
+            </MenuItem>
+          ))
+        ) : (
+          <MenuItem disabled>No skills available</MenuItem>
+        )}
+      </Menu>
+    </div>
         <IonModal className="modal-content" isOpen={modalOpen} onDidDismiss={() => setModalOpen(false)}>
           <IonHeader className="modal-header">
             <IonToolbar>

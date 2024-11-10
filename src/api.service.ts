@@ -37,7 +37,16 @@ export const post = async (endpoint: string, body: any, config = {}) => {
 // GET request for token validation
 export const get = async (endpoint: string, params: any) => {
   try {
-    const response = await axios.get(`${baseUrl}/${endpoint}`, { params });
+    // Retrieve token from localStorage or wherever it's stored
+    const token = localStorage.getItem('userToken'); // Or from your session, cookies, etc.
+    
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`, // Add the token here
+      },
+    };
+
+    const response = await axios.get(`${baseUrl}/${endpoint}`, { params, ...config });
     return response.data;
   } catch (error) {
     console.error('Error during GET request', error);
@@ -63,6 +72,35 @@ export const register = async (body: any) => {
     return response.data;
   } catch (error) {
     console.error('Error during registration', error);
+    throw error;
+  }
+};
+
+// Function to get list of skills
+export const getSkills = async () => {
+  try {
+    const token = localStorage.getItem('userToken');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include token here
+      },
+    };
+
+    const response = await axios.get(`${baseUrl}/skills/fetch`, config);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching skills', error);
+    throw error;
+  }
+};
+
+// Function to get user's skills
+export const getUserSkills = async () => {
+  try {
+    const response = await get('user/skills/view', {}); // 'user/skills/view' API endpoint
+    return response;
+  } catch (error) {
+    console.error('Error fetching user skills', error);
     throw error;
   }
 };
