@@ -1,4 +1,5 @@
 // src/services/api.service.ts
+import { auth, provider, signInWithPopup } from './firebaseConfig';
 import axios from 'axios';
 
 const baseUrl = 'http://localhost:8000/api'; // Replace with your API base URL
@@ -104,3 +105,102 @@ export const getUserSkills = async () => {
     throw error;
   }
 };
+
+// export const getBuyerProfile = async () => {
+//   try {
+//     const token = localStorage.getItem('userToken');
+//     const config = {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     };
+//     const response = await axios.get(`${baseUrl}/buyer`, config);
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error fetching buyer profile', error);
+//     throw error;
+//   }
+// };
+
+export const getUser = async () => {
+  try {
+    const token = localStorage.getItem('userToken');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(`${baseUrl}/user`, config);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user data', error);
+    throw error;
+  }
+};
+
+export const createBuyerProfile = async (data: any) => {
+  try {
+    const token = localStorage.getItem('userToken');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await axios.post(`${baseUrl}/buyer`, data, config);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating buyer profile', error);
+    throw error;
+  }
+};
+
+export const updateBuyerProfile = async (data: any) => {
+  try {
+    const token = localStorage.getItem('userToken');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await axios.put(`${baseUrl}/buyer`, data, config);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating buyer profile', error);
+    throw error;
+  }
+};
+
+// Function for Google Login
+export const loginWithGoogle = async () => {
+  try {
+    // Open Google sign-in popup
+    const result = await signInWithPopup(auth, provider);
+    const idToken = await result.user.getIdToken();
+
+    // Send ID token to the backend
+    const response = await axios.post(`${baseUrl}/google-login`, { idToken });
+    return response.data;
+  } catch (error) {
+    console.error('Google login error:', error);
+    throw error;
+  }
+};
+
+// // Fungsi untuk menghapus profil buyer
+// export const deleteBuyerProfile = async () => {
+//   try {
+//     const token = localStorage.getItem('userToken');
+//     const config = {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     };
+//     const response = await axios.delete(`${baseUrl}/buyer`, config);
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error deleting buyer profile', error);
+//     throw error;
+//   }
+// };

@@ -16,7 +16,7 @@ import {
   IonCardSubtitle,
   IonCardTitle, IonItem
 } from '@ionic/react';
-import { post } from '../api.service'; // Import your API service
+import { post, loginWithGoogle } from '../api.service'; // Import your API service
 import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import { useHistory } from 'react-router-dom'; // For routing
 import GoogleIcon from '@mui/icons-material/Google'; // Import icon Google
@@ -67,6 +67,20 @@ const LoginPage: React.FC = () => {
       }
     } else {
       setError('Email and password are required');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      // Trigger Google login through Firebase and get backend response
+      const response = await loginWithGoogle();
+      localStorage.setItem('userToken', response.token);
+
+      // Redirect to Tab4 after successful login
+      history.push('/tab4');
+      window.location.reload();
+    } catch (error) {
+      console.error('Google login failed', error);
     }
   };
 
@@ -190,7 +204,7 @@ const LoginPage: React.FC = () => {
 
               {/* Google Login Button */}
               <div className="flex justify-center items-center mb-5">
-                <Button
+                <Button 
                   variant="outlined"
                   fullWidth
                   size="large"
@@ -212,7 +226,7 @@ const LoginPage: React.FC = () => {
                     },
                   }}
                   startIcon={<GoogleIcon style={{ color: '#4285F4' }} />}
-                >
+                  onClick={handleGoogleLogin}>
                   Google
                 </Button>
               </div>

@@ -25,6 +25,7 @@ import './Tab4.css';
 
 import { Button, Menu, MenuItem, Typography } from '@mui/material';
 import { get, post, getSkills, getUserSkills } from '../api.service';
+import { getUser, createBuyerProfile, updateBuyerProfile} from '../api.service';
 import { useHistory } from 'react-router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Preferences } from '@capacitor/preferences';
@@ -34,6 +35,8 @@ import { helpCircleOutline, chatboxOutline, personCircleOutline, cart, heartOutl
 
 const Tab4: React.FC = () => {
   
+  const [userName, setUserName] = useState<string | null>(null);
+  const [buyerData, setBuyerData] = useState<any>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // For controlling menu open/close
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null); // Store the selected skill
   const history = useHistory();
@@ -43,6 +46,19 @@ const Tab4: React.FC = () => {
   const [userSkills, setUserSkills] = useState<any[]>([]); // State to store user skills
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
   const [isSkillsListVisible, setIsSkillsListVisible] = useState<boolean>(false); // State for toggling the skills dropdown
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userData = await getUser();
+        setUserName(userData.name); // Mengambil variabel 'name' dari user data
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   // Load saved image on component mount
   useEffect(() => {
@@ -175,6 +191,10 @@ useEffect(() => {
     }
   };
 
+  function editProfile(event: React.MouseEvent<HTMLButtonElement>): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -202,16 +222,23 @@ useEffect(() => {
 </IonHeader>
 
       <IonContent fullscreen>
-        <div className="profile-section">
+      <div className="profile-section">
+        <div className="avatar-container">
           <IonAvatar className="avatar" onClick={captureImage}>
             <IonImg src={image || '/path_to_profile_image'} alt="User Avatar" />
           </IonAvatar>
-          <div className="user-details">
-            <h3>Ailin</h3>
-            <p>BINUS University, Computer Science<br />Indonesia, English, Chinese</p>
-            <IonButton fill="outline"  size="small">Join as Seller</IonButton>
-          </div>
+          <button className="edit-button" onClick={editProfile}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
+              <path fill="currentColor" fill-rule="evenodd" d="M11.423 1A3.577 3.577 0 0 1 15 4.577c0 .27-.108.53-.3.722l-.528.529l-1.971 1.971l-5.059 5.059a3 3 0 0 1-1.533.82l-2.638.528a1 1 0 0 1-1.177-1.177l.528-2.638a3 3 0 0 1 .82-1.533l5.059-5.059l2.5-2.5c.191-.191.451-.299.722-.299m-2.31 4.009l-4.91 4.91a1.5 1.5 0 0 0-.41.766l-.38 1.903l1.902-.38a1.5 1.5 0 0 0 .767-.41l4.91-4.91a2.08 2.08 0 0 0-1.88-1.88m3.098.658a3.6 3.6 0 0 0-1.878-1.879l1.28-1.28c.995.09 1.788.884 1.878 1.88z" clip-rule="evenodd"/>
+            </svg>
+          </button>
         </div>
+  <div className="user-details">
+    <h3>{userName || 'Nama Pengguna'}</h3>
+    <p>{buyerData?.Universitas || 'Universitas'}<br />{buyerData?.Language || 'Bahasa'}</p>
+    <IonButton fill="outline" size="small">Join as Seller</IonButton>
+  </div>
+</div>
         <div>
       <Button
         variant="contained"
