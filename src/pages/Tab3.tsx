@@ -49,7 +49,7 @@ const Tab3: React.FC = () => {
       <IonCardSubtitle class="ion-card-subtitle-tab3">AileenLiexiuai</IonCardSubtitle>
       </div>
       
-      <h1 className="status-label">Completed</h1>
+      <h1 className="status-label">Complete</h1>
       <IonButton className="kebab-icon" onClick={openModal} fill='clear' >
       ︙
     </IonButton>
