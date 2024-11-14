@@ -1,28 +1,17 @@
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonButton,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonAvatar,
-  IonImg,
-  IonIcon,
-  IonText,
-  IonCard,
-  IonCardContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonBadge,
-  IonModal,
-  IonButtons,
 } from '@ionic/react';
-import './Tab4.css';
-import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, Menu, MenuItem } from '@mui/material';
+import '@fontsource/poppins';
+import EditIcon from '@mui/icons-material/Edit';
+import LanguageIcon from '@mui/icons-material/Language';
+
+//import './Tab4.css';
+import { Divider, List, ListItemButton, ListItemIcon, ListItemText, Avatar, Grid, AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, Menu, MenuItem } from '@mui/material' ;
+import { List as ListIcon, FavoriteBorder as WishlistIcon, PersonOutline as FollowingSellerIcon, ChatBubbleOutline as ReviewIcon, HeadsetMic as ComplainedOrderIcon, HelpOutline as HelpIcon } from '@mui/icons-material';
+
+
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
@@ -33,8 +22,8 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Preferences } from '@capacitor/preferences';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { useEffect, useState } from 'react';
-import { helpCircleOutline, chatboxOutline, personCircleOutline, cart, heartOutline, notificationsOutline, mailOutline, menuOutline, headsetOutline, listOutline } from 'ionicons/icons';
-
+import { Dialog, DialogTitle, DialogContent, DialogActions} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 const Tab4: React.FC = () => {
   
   const [userName, setUserName] = useState<string | null>(null);
@@ -147,16 +136,18 @@ useEffect(() => {
 
   const handleCamera  = async () => {
     try {
+      setModalOpen(false); // Close the modal immediately before opening the camera
+  
       const photo = await Camera.getPhoto({
         quality: 100,
         allowEditing: false,
         source: CameraSource.Camera,
         resultType: CameraResultType.DataUrl,
       });
-
+  
       const imageUrl = photo.dataUrl;
       setPreviewImage(imageUrl); // Set the preview image for validation
-      setModalOpen(true); // Open modal to show the preview
+      setModalOpen(true); // Reopen modal to show the preview
     } catch (error) {
       console.error('Error capturing image', error);
     }
@@ -216,192 +207,533 @@ useEffect(() => {
         </Toolbar>
       </AppBar>
 
-      <IonContent fullscreen>
-      <div className="profile-section">
-        <div className="avatar-container">
-          <IonAvatar className="avatar" onClick={captureImage}>
-            <IonImg src={image || '/path_to_profile_image'} alt="User Avatar" />
-          </IonAvatar>
-          <button className="edit-button" onClick={editProfile}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
-              <path fill="currentColor" fill-rule="evenodd" d="M11.423 1A3.577 3.577 0 0 1 15 4.577c0 .27-.108.53-.3.722l-.528.529l-1.971 1.971l-5.059 5.059a3 3 0 0 1-1.533.82l-2.638.528a1 1 0 0 1-1.177-1.177l.528-2.638a3 3 0 0 1 .82-1.533l5.059-5.059l2.5-2.5c.191-.191.451-.299.722-.299m-2.31 4.009l-4.91 4.91a1.5 1.5 0 0 0-.41.766l-.38 1.903l1.902-.38a1.5 1.5 0 0 0 .767-.41l4.91-4.91a2.08 2.08 0 0 0-1.88-1.88m3.098.658a3.6 3.6 0 0 0-1.878-1.879l1.28-1.28c.995.09 1.788.884 1.878 1.88z" clip-rule="evenodd"/>
-            </svg>
-          </button>
-        </div>
-  <div className="user-details">
-    <h3>{userName || 'Nama Pengguna'}</h3>
-    <p>{buyerData?.Universitas || 'Universitas'}<br />{buyerData?.Language || 'Bahasa'}</p>
-    <IonButton fill="outline" size="small">Join as Seller</IonButton>
-  </div>
-</div>
-        <div>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleClick}
-        sx={{ marginBottom: 2 }} // Add some margin for better spacing
-      >
-        {selectedSkill ? selectedSkill : 'Select a Skill'} {/* Display selected skill */}
-      </Button>
+    <IonContent fullscreen>
+    <Grid container spacing={3} sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+    <Grid container item xs={12} sm={12} md={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', position: 'relative' }}>
+      
+      {/* Avatar Section */}
+      <Grid item xs="auto"  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px', marginLeft: '25px' }}>
+        <Avatar
+          src={image || '/path_to_profile_image'}
+          alt="User Avatar"
+          sx={{ width: 85, height: 85, cursor: 'pointer' }}
+          onClick={captureImage}
+        />
+      </Grid>
 
-      {/* Dropdown Menu */}
-      <Menu
-        anchorEl={anchorEl} // Menu's anchor element (the button)
-        open={Boolean(anchorEl)} // Open the menu if anchorEl is not null
-        onClose={handleClose} // Close the menu when clicked outside
-      >
-        {skills.length > 0 ? (
-          skills.map((skill, index) => (
-            <MenuItem key={index} onClick={() => handleSelectSkill(skill.TitleSkills)}>
-              {skill.TitleSkills}
-            </MenuItem>
-          ))
-        ) : (
-          <MenuItem disabled>No skills available</MenuItem>
+        <Grid item xs sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left', marginTop: '150px', marginLeft: '16px', height: '80px' }}>
+          
+          {/* User Name */}
+          <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '2px' }}>
+            {userName || 'Nama Pengguna'}
+          </Typography>
+
+          {/* University and Major */}
+          <Typography variant="body2" color="textSecondary" sx={{ marginBottom: '6px' }}>
+            {buyerData?.Universitas || 'Universitas'} | {buyerData?.Major || 'Jurusan'}
+          </Typography>
+
+          {/* Language */}
+          <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+            <LanguageIcon fontSize="small" sx={{ marginRight: 0.5 }} />
+            <Typography variant="body2" color="textSecondary">
+              {buyerData?.Language || 'Bahasa'}
+            </Typography>
+          </Box> 
+
+          {/* Join as Seller Button */}
+          <Button 
+            variant="contained" 
+            size="small" 
+            sx={{
+              width: '120px',
+              backgroundColor: '#2196f3', 
+              color: '#fff', 
+              borderRadius: '20px', 
+              textTransform: 'none', 
+              padding: '5px 15px',
+              marginTop: '6px'
+            }}
+          >
+            Join as Seller
+          </Button>
+        </Grid>
+
+        {/* Edit Button */}
+        <Grid item xs="auto" sx={{ position: 'relative' }}>
+          <IconButton
+            onClick={editProfile}
+            sx={{
+              position: 'absolute',
+              marginTop :'30px',
+              right: '15px',
+              transform: 'translateY(-50%)', // Adjust to perfectly center the button vertically
+              zIndex: 2,
+            }}
+            size="small"
+          >
+            <EditIcon />
+          </IconButton>
+        </Grid>
+    </Grid>
+  </Grid>
+
+  <br></br>
+      <br></br>
+
+
+        <Dialog open={modalOpen} onClose={() => setModalOpen(false)} fullWidth>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <DialogTitle>Select Image Source</DialogTitle>
+        <IconButton edge="end" color="inherit" onClick={() => setModalOpen(false)} aria-label="close">
+          <CloseIcon />
+        </IconButton>
+      </Toolbar>
+      
+      <DialogContent dividers>
+        {previewImage && (
+          <img
+            src={previewImage}
+            alt="Preview"
+            style={{ width: '100%', height: 'auto', marginBottom: '16px' }}
+          />
         )}
-      </Menu>
-    </div>
-        <IonModal className="modal-content" isOpen={modalOpen} onDidDismiss={() => setModalOpen(false)}>
-          <IonHeader className="modal-header">
-            <IonToolbar>
-              <IonTitle>Select Image Source</IonTitle>
-              <IonButtons slot="end">
-                <IonButton onClick={() => setModalOpen(false)}>Close</IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
-            {previewImage && (  // Display the preview image
-              <IonImg className="preview-image" src={previewImage} alt="Preview" />
-            )}
-            <IonButton expand="full" onClick={handleCamera}>Take Photo with Camera</IonButton>
-            <IonButton expand="full" onClick={handleGallery}>Upload from Gallery</IonButton>
-            
-            {previewImage && (  // Show confirm button only if there's a preview
-              <>
-                <IonButton expand="full" color="success" onClick={confirmImage}>Confirm Profile Picture</IonButton>
-                </>
-            )}
-          </IonContent>
-        </IonModal>
+        <Button variant="contained" fullWidth onClick={handleCamera} sx={{ mb: 2 }}>
+          Take Photo with Camera
+        </Button>
+        <Button variant="contained" fullWidth onClick={handleGallery} sx={{ mb: 2 }}>
+          Upload from Gallery
+        </Button>
+        {previewImage && (
+          <Button variant="contained" color="success" fullWidth onClick={confirmImage}>
+            Confirm Profile Picture
+          </Button>
+        )}
+      </DialogContent>
+    </Dialog>
 
 
 
-        <div className="CompletePurchaseWrapper">
-      <IonText className="CompletePurchase">
-        <h3>Complete your purchase now!</h3>
-      </IonText>
-    </div>
+    <div className="CompletePurchaseWrapper" style={{ width: '100%' }}>
+      {/* Red background section only for the message */}
+      <Typography
+        variant="h6"
+        style={{
+          color: 'white',
+          textAlign: 'left',
+          padding: '2px 17px',
+          backgroundColor: '#FF4D00', // Red background only for the text
+        }}
+      >
+        Complete your purchase now!
+      </Typography>
 
-        {/* Complete Your Purchase Section */}
-      <IonCardContent>
-        <div className="scrollable-grid">
+      <CardContent>
+        <div className="scrollable-grid" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
           {/* Wrap the columns in a div that uses flexbox */}
-          <div className="flex-row">
+          <div style={{ display: 'flex' }}>
+            <Grid item xs={6}>
+              <Card
+                className="product-card"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  margin: '8px',
+                  width: '125px',
+                  height: '200px',
+                  padding: '10px',
+                  borderColor: '#ABABAB',
+                  backgroundColor: 'white', // Keeping the card white
+                }}
+              >
+                <Box
+                  className="image-wrapper"
+                  sx={{
+                    width: '100%',
+                    height: '120px',
+                    marginBottom: '10px',
+                    display: 'flex',
+                    justifyContent: 'left',
+                    alignItems: 'left',
+                    overflow: 'hidden',
+                    borderRadius: '8px',
+                  }}
+                >
+                  <img
+                    src="public\\web-design-internet-website-responsive-software-concept 1.png"
+                    alt="Package Portfolio Website"
+                    style={{ width: '100%', // Make the image width fill the card's width
+                      height: '100%', // Make the image height fill the card's height
+                      objectFit: 'cover'}}
+                  />
+                </Box>
+                <CardContent className="productcontent" sx={{ padding: '0', 
+                    textAlign: 'left', 
+                    paddingBottom: '0',  }}>
+                  <Typography variant="h6" sx={{  textAlign: 'left', wordBreak: 'break-word', whiteSpace: 'normal',fontSize: '14px', fontWeight: 'bold' }}>
+                    Package Portfolio Website</Typography>
+                  <Typography variant="body2"sx={{ textAlign: 'left', fontSize: '12px', color: 'textSecondary' }}>by AileenLiexiuai</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={6}>
+              <Card
+                className="product-card"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  margin: '8px',
+                  width: '125px',
+                  height: '200px',
+                  padding: '10px',
+                  borderColor: '#ABABAB',
+                  backgroundColor: 'white', // Keeping the card white
+                }}
+              >
+                <Box
+                  className="image-wrapper"
+                  sx={{
+                    width: '100%',
+                    height: '120px',
+                    marginBottom: '10px',
+                    display: 'flex',
+                    justifyContent: 'left',
+                    alignItems: 'left',
+                    overflow: 'hidden',
+                    borderRadius: '8px',
+                  }}
+                >
+                  <img
+                    src="public\image 1.png"
+                    alt="Package Portfolio Website"
+                    style={{ width: '100%', // Make the image width fill the card's width
+                      height: '100%', // Make the image height fill the card's height
+                      objectFit: 'cover'}}
+                  />
+                </Box>
+                <CardContent className="productcontent" sx={{ padding: '0', 
+                    textAlign: 'left', 
+                    paddingBottom: '0',  }}>
+                  <Typography variant="h6" sx={{  textAlign: 'left', wordBreak: 'break-word', whiteSpace: 'normal',fontSize: '14px', fontWeight: 'bold' }}>
+                    Package Powerpoint</Typography>
+                  <Typography variant="body2"sx={{ textAlign: 'left', fontSize: '12px', color: 'textSecondary' }}>by dikadika</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
 
-            <IonCol size="6">
-              <IonCard className="product-card">
-                  <div className="image-wrapper">
-                    <img src="public\web-design-internet-website-responsive-software-concept 1.png" alt="Package Portfolio Website" />
-                  </div>                
-                  <IonCardContent className="productcontent">
-                  <h5> Package Portfolio Website</h5>
-                  <p> by Aileniusluci</p>
-                </IonCardContent>
-              </IonCard>
-            </IonCol>
+            <Grid item xs={6}>
+              <Card
+                className="product-card"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  margin: '8px',
+                  width: '125px',
+                  height: '200px',
+                  padding: '10px',
+                  borderColor: '#ABABAB',
+                  backgroundColor: 'white', // Keeping the card white
+                }}
+              >
+                <Box
+                  className="image-wrapper"
+                  sx={{
+                    width: '100%',
+                    height: '120px',
+                    marginBottom: '10px',
+                    display: 'flex',
+                    justifyContent: 'left',
+                    alignItems: 'left',
+                    overflow: 'hidden',
+                    borderRadius: '8px',
+                  }}
+                >
+                  <img
+                    src="public\high-angle-hand-correcting-grammar-mistakes 1.png"
+                    alt="Another Package Website"
+                    style={{ width: '100%',height: '100%',  objectFit: 'cover'}}  
+                  />
+                </Box>
+                <CardContent className="productcontent" sx={{ padding: '0', 
+                    textAlign: 'left', 
+                    paddingBottom: '0'  }}>
+                  <Typography variant="h6" sx= {{ textAlign: 'left', wordBreak: 'break-word', whiteSpace: 'normal',fontSize: '14px', fontWeight: 'bold' }}>
+                    Copywriting (Caption)</Typography>
+                  <Typography variant="body2" sx={{ textAlign: 'left', fontSize: '12px', color: 'textSecondary' }}>by galn</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
 
-            {/* Repeat IonCol for each additional product */}
-            <IonCol size="6">
-              <IonCard className="product-card">
-                  <div className="image-wrapper">
-                     <img src="/path_to_package_image.png" alt="Package Portfolio Website" />
-                  </div>                 
-                  <IonCardContent  className="productcontent">
-                  <h5>Another Package website </h5>
-                  <p>by Someone Else</p>
-                </IonCardContent>
-              </IonCard>
-            </IonCol>
-
-            <IonCol size="6">
-              <IonCard className="product-card">
-              <div className="image-wrapper">
-                     <img src="/path_to_package_image.png" alt="Package Portfolio Website" />
-                  </div>   
-                <IonCardContent  className="productcontent">
-                  <h5>Third Package</h5>
-                  <p>by Another Creator</p>
-                </IonCardContent>
-              </IonCard>
-            </IonCol>
-
-            {/* Add more IonCol as needed */}
+            <Grid item xs={6}>
+              <Card
+                className="product-card"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  margin: '8px',
+                  width: '125px',
+                  height: '200px',
+                  padding: '10px',
+                  borderColor: '#ABABAB',
+                  backgroundColor: 'white', // Keeping the card white
+                }}
+              >
+                <Box
+                  className="image-wrapper"
+                  sx={{
+                    width: '100%',
+                    height: '120px',
+                    marginBottom: '10px',
+                    display: 'flex',
+                    justifyContent: 'left',
+                    alignItems: 'left',
+                    overflow: 'hidden',
+                    borderRadius: '8px',
+                  }}
+                >
+                  <img
+                    src="/path_to_package_image.png"
+                    alt="Third Package"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </Box>
+                <CardContent className="productcontent" sx={{ padding: '0', 
+                    textAlign: 'left', 
+                    paddingBottom: '0'   }}>
+                  <Typography variant="h6" sx= {{ textAlign: 'left', wordBreak: 'break-word', whiteSpace: 'normal',fontSize: '14px', fontWeight: 'bold' }}>Third Package</Typography>
+                  <Typography variant="body2"  sx={{ textAlign: 'left', fontSize: '12px', color: 'textSecondary' }}>by Another Creator</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            {/* Add more Grid items as needed */}
           </div>
         </div>
-      </IonCardContent>
+      </CardContent>
+    </div>
 
-        <div className="OnProgressWrapper">
-          <IonText className="OnProgress">
-            <h3>On Progress</h3>
-          </IonText>
-          </div>
-          <IonCardContent className="progress-card">
-        <IonItem lines="none">
-          <IonLabel className="on-progress-item">
-            <IonRow>
-              <IonCol size="6" className="center-content">
-                <h5>Package Database Website</h5>
-              </IonCol>
-              <IonCol size="6" className="next-meeting">
-                <p>Next Meeting: </p>
-                <h4>09-29-2024</h4>
-                <p>Completion in: </p>
-                <h4>09-31-2024</h4>
-              </IonCol>
-            </IonRow>
-          </IonLabel>
-        </IonItem>
-      </IonCardContent>
-    
+    <div className="OnProgressWrapper" style={{ width: '100%' }}>
+  <Typography
+    variant="h6"
+    style={{
+      color: 'white',
+      textAlign: 'left',
+      padding: '2px 17px',
+      backgroundColor: '#3CB232',
+    }}
+  >
+    On Progress
+  </Typography>
+
+  <CardContent>
+    <div className="scrollable-grid" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
+      <div style={{ display: 'flex', gap: '10px' }}>
+        {/* Card 1 */}
+        <Card
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            overflow: 'hidden',
+            border: '1px solid #ABABAB',
+            borderRadius: '8px',
+            margin: '10px',
+            width: 200, // Ensure the width remains fixed for each card
+            flexShrink: 0, // Prevents shrinking when scrolling
+          }}
+        >
+          <CardContent className="progress-card" sx={{ padding: '8px' }}>
+            {/* Left Column (Package Info) */}
+            <Grid container spacing={0}>
+              <Grid
+                item
+                xs={6}
+                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ fontSize: '14px', marginLeft: '2px', wordBreak: 'break-word', whiteSpace: 'normal' }}
+                >
+                  Package Database Website
+                </Typography>
+              </Grid>
+
+              {/* Right Column (Next Meeting / Completion) */}
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  marginTop: '1px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start',
+                }}
+              >
+                <Box>
+                  <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
+                    Next Meeting:
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}>
+                    09-29-2024
+                  </Typography>
+                </Box>
+                <Box mt={1}>
+                  <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
+                    Completion in:
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}>
+                    09-31-2024
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+
+        {/* Card 2 */}
+        <Card
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            overflow: 'hidden',
+            border: '1px solid #ABABAB',
+            borderRadius: '8px',
+            margin: '10px',
+            width: 200, // Ensure the width remains fixed for each card
+            flexShrink: 0, // Prevents shrinking when scrolling
+          }}
+        >
+          <CardContent className="progress-card" sx={{ padding: '8px' }}>
+            {/* Left Column (Package Info) */}
+            <Grid container spacing={0}>
+              <Grid
+                item
+                xs={6}
+                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ fontSize: '14px', marginLeft: '2px', wordBreak: 'break-word', whiteSpace: 'normal' }}
+                >
+                  Package Database Website
+                </Typography>
+              </Grid>
+
+              {/* Right Column (Next Meeting / Completion) */}
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  marginTop: '1px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start',
+                }}
+              >
+                <Box>
+                  <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
+                    Next Meeting:
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}>
+                    09-29-2024
+                  </Typography>
+                </Box>
+                <Box mt={1}>
+                  <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
+                    Completion in:
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}>
+                    09-31-2024
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+
+        {/* Add more Cards here if needed */}
+      </div>
+    </div>
+  </CardContent>
+</div>
+
 
         {/* Menu List */}
-        <IonList>
-          <IonItem>
-          <IonIcon icon={listOutline} slot="start" aria-label="Wishlist" />
-            <IonLabel>Transaction List</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonIcon icon={heartOutline} slot="start" aria-label="Wishlist" />
-            <IonLabel>Wishlist</IonLabel>
-          </IonItem>
-          <IonItem>
-          <IonIcon icon={personCircleOutline} slot="start" aria-label="Following Seller" />          
-          <IonLabel>Following Seller</IonLabel>
-          </IonItem>
-          <IonItem>
-             <IonIcon icon={chatboxOutline} slot="start" aria-label="Following Seller" />          
-            <IonLabel>Review</IonLabel>
-          </IonItem>
-          <IonItem>
-          <IonIcon icon={headsetOutline} slot="start" aria-label="Following Seller" />          
-            <IonLabel>Complained Order</IonLabel>
-          </IonItem>
-          <IonItem>
-          
-          <IonIcon icon={helpCircleOutline} slot="start" aria-label="Following Seller" />          
-
-            <IonLabel>Help and Support</IonLabel>
-          </IonItem>
-        </IonList>
+        <List>
+      <ListItemButton component="li">
+        <ListItemIcon>
+          <ListIcon />
+        </ListItemIcon>
+        <ListItemText primary="Transaction List" />
+      </ListItemButton>
+      <Divider />
+      <ListItemButton component="li">
+        <ListItemIcon>
+          <WishlistIcon />
+        </ListItemIcon>
+        <ListItemText primary="Wishlist" />
+      </ListItemButton>
+      <Divider />
+      <ListItemButton component="li">
+        <ListItemIcon>
+          <FollowingSellerIcon />
+        </ListItemIcon>
+        <ListItemText primary="Following Seller" />
+      </ListItemButton>
+      <Divider />
+      <ListItemButton component="li">
+        <ListItemIcon>
+          <ReviewIcon />
+        </ListItemIcon>
+        <ListItemText primary="Review" />
+      </ListItemButton>
+      <Divider />
+      <ListItemButton component="li">
+        <ListItemIcon>
+          <ComplainedOrderIcon />
+        </ListItemIcon>
+        <ListItemText primary="Complained Order" />
+      </ListItemButton>
+      <Divider />
+      <ListItemButton component="li">
+        <ListItemIcon>
+          <HelpIcon />
+        </ListItemIcon>
+        <ListItemText primary="Help and Support" />
+      </ListItemButton>
+    </List>
 
   {/* Logout Button */}
             <br></br>
 
             <br></br>
-        <IonButton color="danger" expand="block" onClick={handleLogout}>
-          Logout
-        </IonButton>
+      <Button
+      variant="contained"
+      color="error"
+      fullWidth
+      onClick={handleLogout}
+      sx={{
+        width: 'calc(100% - 32px)',  // Full width minus margin
+        margin: '0 16px',  // Horizontal margin to prevent touching screen edges
+        padding: '10px',  // Padding inside the button
+      }}
+    >
+      Logout
+    </Button>
       </IonContent>
     </IonPage>
   );

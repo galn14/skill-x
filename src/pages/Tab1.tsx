@@ -12,6 +12,7 @@ import BrushIcon from '@mui/icons-material/Brush';
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import { Autoplay, Grid, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper/modules';
 import './Tab1.css';
+import '@fontsource/poppins';
 
 const Tab1: React.FC = () => {
   const [categories, setCategories] = useState<any[]>([]);

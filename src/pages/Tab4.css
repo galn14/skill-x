@@ -180,7 +180,9 @@ ion-modal {
   padding: 2px 17px; 
 }
 
-
+.ion-content{
+  background-color: #f7f7f7;
+}
 
 /* "Complete your purchase now!" section */
 .scrollable-grid {
