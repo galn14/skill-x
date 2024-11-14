@@ -22,8 +22,10 @@ import {
   IonButtons,
 } from '@ionic/react';
 import './Tab4.css';
-
-import { Button, Menu, MenuItem, Typography } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, Menu, MenuItem } from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import MailIcon from '@mui/icons-material/Mail';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { get, post, getSkills, getUserSkills } from '../api.service';
 import { getUser, createBuyerProfile, updateBuyerProfile} from '../api.service';
 import { useHistory } from 'react-router';
@@ -197,29 +199,22 @@ useEffect(() => {
 
   return (
     <IonPage>
-      <IonHeader>
-  <IonToolbar className="custom-toolbar">
-    <div className="logo-container">
-      <img src="public/SkillXLogo.png" alt="SkillX Logo" className="logo" />
-    </div>
-    <div className="spacer"></div>
-    <div className="icon-container">
-      <IonButton fill="clear">
-        <IonIcon icon={cart} />
-        <IonBadge color="danger">5</IonBadge>
-      </IonButton>
-      <IonButton fill="clear">
-        <IonIcon icon={notificationsOutline} />
-      </IonButton>
-      <IonButton fill="clear">
-        <IonIcon icon={mailOutline} />
-      </IonButton>
-      <IonButton fill="clear">
-        <IonIcon icon={menuOutline} />
-      </IonButton>
-    </div>
-  </IonToolbar>
-</IonHeader>
+       <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
+        <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
+          <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
+            <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' }} />
+            <IconButton color="primary">
+              <ShoppingCartIcon />
+            </IconButton>
+            <IconButton color="primary">
+              <NotificationsIcon />
+            </IconButton>
+            <IconButton color="primary">
+              <MailIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
 
       <IonContent fullscreen>
       <div className="profile-section">

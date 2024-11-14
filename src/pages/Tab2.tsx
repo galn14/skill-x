@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
-import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { IonPage, IonContent } from '@ionic/react';
 import './Tab2.css';
