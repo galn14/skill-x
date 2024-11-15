@@ -6,12 +6,12 @@ import {
 import '@fontsource/poppins';
 import EditIcon from '@mui/icons-material/Edit';
 import LanguageIcon from '@mui/icons-material/Language';
-
+import * as React from 'react';
 //import './Tab4.css';
-import { Divider, List, ListItemButton, ListItemIcon, ListItemText, Avatar, Grid, AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, Menu, MenuItem } from '@mui/material' ;
+import {Stack, FormControl, FormLabel, Input, TextField, Modal, Divider, List, ListItemButton, ListItemIcon, ListItemText, Avatar, Grid, AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, Menu, MenuItem } from '@mui/material' ;
 import { List as ListIcon, FavoriteBorder as WishlistIcon, PersonOutline as FollowingSellerIcon, ChatBubbleOutline as ReviewIcon, HeadsetMic as ComplainedOrderIcon, HelpOutline as HelpIcon } from '@mui/icons-material';
 
-
+import ModalDialog from '@mui/joy/ModalDialog';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
@@ -108,6 +108,18 @@ useEffect(() => {
   fetchSkillsData();
 }, []); // Empty dependency array means this will run once on mount
 
+  // Function to handle cancel action
+  const handleCancel = () => {
+    // Reset any form fields, close modal, or any other cleanup
+    handleCloseEdit(); // This closes the modal, for example
+    console.log("Cancel action triggered.");
+  };
+
+  const [open, setOpenEdit] = useState(false);// Function to open modal
+const handleOpenEdit = () => setOpenEdit(true);
+
+// Function to close modal
+const handleCloseEdit = () => setOpenEdit(false);
 
   const handleLogout = async () => {
     try {
@@ -262,7 +274,7 @@ useEffect(() => {
         {/* Edit Button */}
         <Grid item xs="auto" sx={{ position: 'relative' }}>
           <IconButton
-            onClick={editProfile}
+             onClick={handleOpenEdit}
             sx={{
               position: 'absolute',
               marginTop :'30px',
@@ -278,10 +290,81 @@ useEffect(() => {
     </Grid>
   </Grid>
 
+  <Modal open={open} onClose={() => setOpenEdit(false)}>
+        <ModalDialog>
+          <DialogTitle sx={{ 
+            position: 'absolute',  
+            top: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: '#0094FF', 
+          color: 'white',  
+          borderRadius: '10px',  // Rounded top corners
+          display: 'flex',
+          alignItems: 'left',  // Vertically center the text
+          justifyContent: 'left'}}
+          >Edit Profile</DialogTitle>
+          <form
+            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+              setOpenEdit(false);
+            }}
+          >
+            <Box sx={{ display: 'flex', marginTop:'20px' ,flexDirection: 'column', width:'100%', alignItems: 'flex-start' }}>
+                <FormControl sx={{ marginBottom: 2, marginTop:'50px',  }}>
+                  <FormLabel>Name*</FormLabel>
+                  <TextField sx={{ marginLeft: 0, width: '300px' }} autoFocus required />
+                </FormControl>
+
+                <FormControl sx={{ marginBottom: 2 }}>
+                  <FormLabel>Organization*</FormLabel>
+                  <TextField sx={{ marginLeft: 0, width: '300px' }} autoFocus required />
+                </FormControl>
+
+                <FormControl sx={{ marginBottom: 2 }}>
+                  <FormLabel>Major*</FormLabel>
+                  <TextField sx={{ marginLeft: 0, width: '300px' }} autoFocus required />
+                </FormControl>
+
+                <FormControl sx={{ marginBottom: 10 }}>
+                  <FormLabel>Language*</FormLabel>
+                  <TextField sx={{ marginLeft: 0, width: '300px' }} autoFocus required />
+                </FormControl>
+                
+                {/* Box with left alignment */}
+                <Box display="flex" justifyContent="space-between" mt={1}>
+                <Button 
+                  variant="contained" 
+                  color="error" 
+                  onClick={handleCloseEdit}
+                 sx={{
+                  width:'150px'
+                 }}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  type="submit"
+                  sx={{
+                    marginLeft: '10px',
+                    width:'150px'
+                   }}
+                >
+                  Submit
+                </Button>
+              </Box>
+              </Box>
+            
+          </form>
+        </ModalDialog>
+      </Modal>
+
+
+
   <br></br>
       <br></br>
-
-
         <Dialog open={modalOpen} onClose={() => setModalOpen(false)} fullWidth>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>Select Image Source</DialogTitle>
