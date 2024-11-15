@@ -203,27 +203,31 @@ const handleCloseEdit = () => setOpenEdit(false);
   function editProfile(event: React.MouseEvent<HTMLButtonElement>): void {
     throw new Error('Function not implemented.');
   }
+  const theme = createTheme({
+    typography: {
+      fontFamily: '"Poppins", sans-serif', // Pastikan font didefinisikan dengan benar
+    },
+  });
+  
   const globalStyles = {
     '*': {
-      fontFamily: 'Poppins',
+      fontFamily: 'Poppins, sans-serif',  // Sesuaikan font global dengan tema
       margin: 0,
       padding: 0,
       boxSizing: 'border-box',
     },
-    ':root': {
-      '--ion-font-family': 'Poppins',
-    },
   };
-  const theme = createTheme({
-    typography: {
-      fontFamily: '"Poppins"',  // Set font di tema
-    },
-  });
   
+  useEffect(() => {
+    document.body.style.fontFamily = 'Poppins, sans-serif';
+  }, []);
+
+  const modalStyles = {
+    zIndex: 1300,  // pastikan modal memiliki z-index yang cukup tinggi
+  };
 
   return (
-    <ThemeProvider theme={theme}>
-    <CssBaseline />
+ 
     <IonPage>
        <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
         <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
@@ -313,77 +317,96 @@ const handleCloseEdit = () => setOpenEdit(false);
     </Grid>
   </Grid>
 
-  <Modal open={open} onClose={() => setOpenEdit(false)}>
-        <ModalDialog>
-          <DialogTitle sx={{ 
-            position: 'absolute',  
-            top: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: '#0094FF', 
-          color: 'white',  
-          borderRadius: '10px',  // Rounded top corners
+  <Modal
+        open={open}
+        onClose={handleCloseEdit}
+        sx={{
           display: 'flex',
-          alignItems: 'left',  // Vertically center the text
-          justifyContent: 'left'}}
-          >Edit Profile</DialogTitle>
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            width: '350px',
+            borderRadius: '8px',
+            
+            boxShadow: 24,
+          }}
+        >
+          <Box
+      sx={{
+        backgroundColor: '#0094FF',  // Blue background
+        borderRadius: '10px 10px 0 0',  // Rounded top corners
+        display: 'flex',
+        justifyContent: 'center',
+        padding: '20px',
+        margin: 0,
+        paddingLeft: 0,
+            paddingRight:0,
+        marginBottom: '20px',  // Adjust space below the blue bar
+      }}
+    >
+      <DialogTitle
+        sx={{
+          padding: 0,  // Remove padding around text
+          color: 'white',
+          fontSize: '18px', // Adjust font size if necessary
+        }}
+      >
+        Edit Profile
+      </DialogTitle>
+      </Box>
+
           <form
             onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
               setOpenEdit(false);
             }}
           >
-            <Box sx={{ display: 'flex', marginTop:'20px' ,flexDirection: 'column', width:'100%', alignItems: 'flex-start' }}>
-                <FormControl sx={{ marginBottom: 2, marginTop:'50px',  }}>
-                  <FormLabel>Name*</FormLabel>
-                  <TextField sx={{ marginLeft: 0, width: '300px' }} autoFocus required />
-                </FormControl>
-
-                <FormControl sx={{ marginBottom: 2 }}>
-                  <FormLabel>Organization*</FormLabel>
-                  <TextField sx={{ marginLeft: 0, width: '300px' }} autoFocus required />
-                </FormControl>
-
-                <FormControl sx={{ marginBottom: 2 }}>
-                  <FormLabel>Major*</FormLabel>
-                  <TextField sx={{ marginLeft: 0, width: '300px' }} autoFocus required />
-                </FormControl>
-
-                <FormControl sx={{ marginBottom: 10 }}>
-                  <FormLabel>Language*</FormLabel>
-                  <TextField sx={{ marginLeft: 0, width: '300px' }} autoFocus required />
-                </FormControl>
-                
-                {/* Box with left alignment */}
-                <Box display="flex" justifyContent="space-between" mt={1}>
-                <Button 
-                  variant="contained" 
-                  color="error" 
+            <Box sx={{ paddingLeft: '20px',
+            paddingRight:'20px',
+            paddingBottom: '20px',
+            display: 'flex', marginTop:'20px', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <FormControl sx={{ marginBottom: 2 }}>
+                <FormLabel>Name*</FormLabel>
+                <TextField sx={{width: '300px' }} autoFocus required />
+              </FormControl>
+              <FormControl sx={{ marginBottom: 2 }}>
+                <FormLabel>Organization*</FormLabel>
+                <TextField sx={{ width: '300px' }} autoFocus required />
+              </FormControl>
+              <FormControl sx={{ marginBottom: 2 }}>
+                <FormLabel>Major*</FormLabel>
+                <TextField sx={{ width: '300px' }} autoFocus required />
+              </FormControl>
+              <FormControl sx={{ marginBottom: 10 }}>
+                <FormLabel>Language*</FormLabel>
+                <TextField sx={{ width: '300px' }} autoFocus required />
+              </FormControl>
+              <Box display="flex" justifyContent="space-between" mt={1}>
+                <Button
+                  variant="contained"
+                  color="error"
                   onClick={handleCloseEdit}
-                 sx={{
-                  width:'150px'
-                 }}
+                  sx={{ width: '150px' }}
                 >
                   Cancel
                 </Button>
-                <Button 
-                  variant="contained" 
-                  color="primary" 
+                <Button
+                  variant="contained"
+                  color="primary"
                   type="submit"
-                  sx={{
-                    marginLeft: '10px',
-                    width:'150px'
-                   }}
+                  sx={{ marginLeft: '10px', width: '150px' }}
                 >
                   Submit
                 </Button>
               </Box>
-              </Box>
-            
+            </Box>
           </form>
-        </ModalDialog>
+        </Box>
       </Modal>
-
 
 
   <br></br>
@@ -842,7 +865,6 @@ const handleCloseEdit = () => setOpenEdit(false);
     </Button>
       </IonContent>
     </IonPage>
-    </ThemeProvider>
   );
 };
 
