@@ -337,6 +337,7 @@ const handleCloseEdit = () => setOpenEdit(false);
         >
           <Box
       sx={{
+        
         backgroundColor: '#0094FF',  // Blue background
         borderRadius: '10px 10px 0 0',  // Rounded top corners
         display: 'flex',

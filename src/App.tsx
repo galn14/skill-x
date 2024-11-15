@@ -22,6 +22,8 @@ import PrivateRoute from './components/PrivateRoute'; // Import the private rout
 import { createTheme, ThemeProvider } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeIcon from '@mui/icons-material/Home'; 
+import VerifiedIcon from '@mui/icons-material/Verified';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import '@fontsource/poppins';  // Import the font
 
 import '@ionic/react/css/core.css';
@@ -35,6 +37,7 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import { CssBaseline, GlobalStyles } from '@mui/material';
+import { VerifiedOutlined } from '@mui/icons-material';
 
 setupIonicReact();
 const theme = createTheme({
@@ -84,12 +87,14 @@ const App: React.FC = () => (
             </div>
           </IonTabButton>
           <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon aria-hidden="true" icon={ellipse} />
-            <IonLabel>Tab 2</IonLabel>
+          <div style={{ fontSize: 30 }}>
+              <VerifiedIcon />
+            </div>
           </IonTabButton>
           <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon aria-hidden="true" icon={square} />
-            <IonLabel>Tab 3</IonLabel>
+          <div style={{ fontSize: 30 }}>
+              <ListAltIcon />
+            </div>
           </IonTabButton>
           <IonTabButton tab="tab4" href="/tab4">
             <div style={{ fontSize: 30 }}>
