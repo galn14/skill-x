@@ -16,7 +16,8 @@ import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 import Tab4 from './pages/Tab4';
 import Tab5 from './pages/Tab5';
-
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme'; 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
@@ -54,6 +55,7 @@ import LogoutPage from './pages/LogoutPage';
 setupIonicReact();
 
 const App: React.FC = () => (
+  <ThemeProvider theme={theme}>
   <IonApp>
     <IonReactRouter>
       <IonTabs>
@@ -101,6 +103,8 @@ const App: React.FC = () => (
       </IonTabs>
     </IonReactRouter>
   </IonApp>
+  </ThemeProvider>
+
 );
 
 export default App;
