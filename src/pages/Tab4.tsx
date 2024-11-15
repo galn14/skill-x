@@ -11,6 +11,8 @@ import * as React from 'react';
 import {Stack, FormControl, FormLabel, Input, TextField, Modal, Divider, List, ListItemButton, ListItemIcon, ListItemText, Avatar, Grid, AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, Menu, MenuItem } from '@mui/material' ;
 import { List as ListIcon, FavoriteBorder as WishlistIcon, PersonOutline as FollowingSellerIcon, ChatBubbleOutline as ReviewIcon, HeadsetMic as ComplainedOrderIcon, HelpOutline as HelpIcon } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CssBaseline, GlobalStyles } from '@mui/material';
+import '@fontsource/poppins';  // Import the font
 
 import ModalDialog from '@mui/joy/ModalDialog';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -201,8 +203,27 @@ const handleCloseEdit = () => setOpenEdit(false);
   function editProfile(event: React.MouseEvent<HTMLButtonElement>): void {
     throw new Error('Function not implemented.');
   }
+  const globalStyles = {
+    '*': {
+      fontFamily: 'Poppins',
+      margin: 0,
+      padding: 0,
+      boxSizing: 'border-box',
+    },
+    ':root': {
+      '--ion-font-family': 'Poppins',
+    },
+  };
+  const theme = createTheme({
+    typography: {
+      fontFamily: '"Poppins"',  // Set font di tema
+    },
+  });
+  
 
   return (
+    <ThemeProvider theme={theme}>
+    <CssBaseline />
     <IonPage>
        <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
         <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
@@ -821,6 +842,7 @@ const handleCloseEdit = () => setOpenEdit(false);
     </Button>
       </IonContent>
     </IonPage>
+    </ThemeProvider>
   );
 };
 

@@ -5,9 +5,28 @@ import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { IonPage, IonContent } from '@ionic/react';
 import './Tab2.css';
+import { CssBaseline, GlobalStyles } from '@mui/material';
+import '@fontsource/poppins';  // Import the font
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const Tab2: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
+  const globalStyles = {
+    '*': {
+      fontFamily: 'Poppins',
+      margin: 0,
+      padding: 0,
+      boxSizing: 'border-box',
+    },
+    ':root': {
+      '--ion-font-family': 'Poppins',
+    },
+  };
+  const theme = createTheme({
+    typography: {
+      fontFamily: '"Poppins"',  // Set font di tema
+    },
+  });
 
   useEffect(() => {
     // Set data subscription
@@ -18,6 +37,8 @@ const Tab2: React.FC = () => {
   }, []);
 
   return (
+    <ThemeProvider theme={theme}>
+    <CssBaseline />
     <IonPage>
       {/* Header */}
       <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
@@ -129,6 +150,7 @@ const Tab2: React.FC = () => {
         </Box>
       </IonContent>
     </IonPage>
+    </ThemeProvider>
   );
 };
 

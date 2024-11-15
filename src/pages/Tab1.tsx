@@ -13,10 +13,29 @@ import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import { Autoplay, Grid, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper/modules';
 import './Tab1.css';
 import '@fontsource/poppins';
+import { CssBaseline, GlobalStyles } from '@mui/material';
+import '@fontsource/poppins';  // Import the font
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const Tab1: React.FC = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [services, setServices] = useState<any[]>([]);
+  const globalStyles = {
+    '*': {
+      fontFamily: 'Poppins',
+      margin: 0,
+      padding: 0,
+      boxSizing: 'border-box',
+    },
+    ':root': {
+      '--ion-font-family': 'Poppins',
+    },
+  };
+  const theme = createTheme({
+    typography: {
+      fontFamily: '"Poppins"',  // Set font di tema
+    },
+  });
 
   useEffect(() => {
     // Fetch categories from the database
@@ -41,6 +60,8 @@ const Tab1: React.FC = () => {
   }, []);
 
   return (
+    <ThemeProvider theme={theme}>
+    <CssBaseline />
     <IonPage>
       <Box
         sx={{
@@ -301,6 +322,7 @@ const Tab1: React.FC = () => {
         </div>
       </IonContent>
     </IonPage>
+    </ThemeProvider>
   );
 };
 

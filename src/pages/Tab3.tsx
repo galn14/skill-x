@@ -9,6 +9,9 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Modal from '../components/modal'; // Adjust the import based on your file structure
 import ExploreContainer from '../components/ExploreContainer';
 import './Tab3.css';  
+import { CssBaseline, GlobalStyles } from '@mui/material';
+import '@fontsource/poppins';  // Import the font
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const Tab3: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -16,6 +19,23 @@ const Tab3: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [categoryFilter, setCategoryFilter] = useState('All Categories');
   const [dateFilter, setDateFilter] = useState('All Dates');
+
+  const globalStyles = {
+    '*': {
+      fontFamily: 'Poppins',
+      margin: 0,
+      padding: 0,
+      boxSizing: 'border-box',
+    },
+    ':root': {
+      '--ion-font-family': 'Poppins',
+    },
+  };
+  const theme = createTheme({
+    typography: {
+      fontFamily: '"Poppins"',  // Set font di tema
+    },
+  });
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -27,6 +47,8 @@ const Tab3: React.FC = () => {
   };
 
   return (
+    <ThemeProvider theme={theme}>
+    <CssBaseline />
     <IonPage>
         <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
           <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
@@ -695,6 +717,7 @@ const Tab3: React.FC = () => {
     
     <Modal isOpen={isModalOpen} closeModal={closeModal} />
     </IonPage>
+    </ThemeProvider>
   );
 };
 

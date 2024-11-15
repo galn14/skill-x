@@ -15,11 +15,12 @@ import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 import Tab4 from './pages/Tab4';
-import Tab5 from './pages/Tab5';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme'; 
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HomeIcon from '@mui/icons-material/Home'; 
+import '@fontsource/poppins';  // Import the font
 
 /* Basic CSS for apps built with Ionic */
 import '@ionic/react/css/normalize.css';
@@ -33,7 +34,7 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
-
+import { CssBaseline, GlobalStyles } from '@mui/material';
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
@@ -53,10 +54,24 @@ import PrivateRoute from './components/PrivateRoute'; // Import the private rout
 import LogoutPage from './pages/LogoutPage';
 
 setupIonicReact();
-
+const globalStyles = {
+  '*': {
+    fontFamily: '"Poppins"',  // Pastikan font diterapkan ke semua elemen
+    margin: 0,
+    padding: 0,
+    boxSizing: 'border-box',
+  },
+  body: {
+    fontFamily: '"Poppins"',  // Menambahkan font ke elemen body
+  },
+  ':root': {
+    '--ion-font-family': '"Poppins"',
+  },
+};
 const App: React.FC = () => (
-  <ThemeProvider theme={theme}>
   <IonApp>
+    <CssBaseline />
+    <GlobalStyles styles={globalStyles} />
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
@@ -84,8 +99,9 @@ const App: React.FC = () => (
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon aria-hidden="true" icon={triangle} />
-            <IonLabel>Tab 1</IonLabel>
+          <div style={{ fontSize: 30 }}>
+                <HomeIcon  />
+              </div>          
           </IonTabButton>
           <IonTabButton tab="tab2" href="/tab2">
             <IonIcon aria-hidden="true" icon={ellipse} />
@@ -96,14 +112,14 @@ const App: React.FC = () => (
             <IonLabel>Tab 3</IonLabel>
           </IonTabButton>
           <IonTabButton tab="tab4" href="/tab4">
-            <IonIcon aria-hidden="true" icon={square} />
-            <IonLabel>Tab 4</IonLabel>
-          </IonTabButton>
+              <div style={{ fontSize: 30 }}>
+                <AccountCircleIcon />
+              </div>
+            </IonTabButton>
         </IonTabBar>
       </IonTabs>
     </IonReactRouter>
   </IonApp>
-  </ThemeProvider>
 
 );
 
