@@ -10,6 +10,7 @@ import * as React from 'react';
 //import './Tab4.css';
 import {Stack, FormControl, FormLabel, Input, TextField, Modal, Divider, List, ListItemButton, ListItemIcon, ListItemText, Avatar, Grid, AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, Menu, MenuItem } from '@mui/material' ;
 import { List as ListIcon, FavoriteBorder as WishlistIcon, PersonOutline as FollowingSellerIcon, ChatBubbleOutline as ReviewIcon, HeadsetMic as ComplainedOrderIcon, HelpOutline as HelpIcon } from '@mui/icons-material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import ModalDialog from '@mui/joy/ModalDialog';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -37,6 +38,7 @@ const Tab4: React.FC = () => {
   const [userSkills, setUserSkills] = useState<any[]>([]); // State to store user skills
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
   const [isSkillsListVisible, setIsSkillsListVisible] = useState<boolean>(false); // State for toggling the skills dropdown
+
 
   useEffect(() => {
     const fetchUserData = async () => {
