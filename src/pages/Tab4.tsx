@@ -228,6 +228,13 @@ useEffect(() => {
     console.log('Navigating to Wishlist');
     history.push('/wishlist');
   };
+
+
+  const handlefollowSellerClick= () => {
+    console.log('Navigating to Wishlist');
+    history.push('/followingSeller');
+  };
+
   const [ completePurchase, setCompletePurchase] = useState<any[]>([]);
 
   useEffect(() => {
@@ -702,7 +709,7 @@ useEffect(() => {
         <ListItemText primary="Wishlist" />
       </ListItemButton>
       <Divider />
-      <ListItemButton component="li">
+      <ListItemButton onClick={handlefollowSellerClick} component="li">
         <ListItemIcon>
           <FollowingSellerIcon />
         </ListItemIcon>

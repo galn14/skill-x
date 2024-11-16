@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import MenuIcon from '@mui/icons-material/Menu';
 import { IonPage, IonContent } from '@ionic/react';
 import './Tab2.css';
 import { CssBaseline, GlobalStyles } from '@mui/material';
@@ -11,6 +11,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const Tab2: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Set data subscription
+    setSubscriptions([
+      { id: 1, name: 'Monthly', price: 'Rp. 50.000 / month', background: '#397BAA', link: '/subscribe/monthly' },
+      { id: 2, name: 'Yearly', price: 'Rp. 450.000 / year', background: '#0094FF', link: '/subscribe/yearly' }
+    ]);
+  }, []);
   const globalStyles = {
     '*': {
       fontFamily: 'Poppins',
@@ -27,15 +35,6 @@ const Tab2: React.FC = () => {
       fontFamily: '"Poppins"',  // Set font di tema
     },
   });
-
-  useEffect(() => {
-    // Set data subscription
-    setSubscriptions([
-      { id: 1, name: 'Monthly', price: 'Rp. 50.000 / month', background: '#397BAA', link: '/subscribe/monthly' },
-      { id: 2, name: 'Yearly', price: 'Rp. 450.000 / year', background: '#0094FF', link: '/subscribe/yearly' }
-    ]);
-  }, []);
-
   return (
     <ThemeProvider theme={theme}>
     <CssBaseline />
@@ -46,13 +45,13 @@ const Tab2: React.FC = () => {
           <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
             <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' }} />
             <IconButton color="primary">
-              <ShoppingCartIcon />
-            </IconButton>
-            <IconButton color="primary">
               <NotificationsIcon />
             </IconButton>
             <IconButton color="primary">
               <MailIcon />
+            </IconButton>
+            <IconButton color="primary">
+              <MenuIcon />
             </IconButton>
           </Box>
         </Toolbar>
@@ -60,24 +59,24 @@ const Tab2: React.FC = () => {
 
       {/* Main Content */}
       <IonContent>
-        <Box display="flex" flexDirection="column" alignItems="center" pt={{ xs:10, md:10, lg:10, xl:20 }} className="custom-content" >
-          <Typography variant="h6" fontWeight="bold" color="white" align="center" mt={{ xs:1, md:2, lg:10, xl:20 }} marginBottom="17vh">
+        <Box display="flex" flexDirection="column" alignItems="center" pt={15} className="custom-content" >
+          <Typography variant="h6" fontWeight="bold" color="white" align="center" mt={1} marginBottom="150px">
             Experience the different with pro
           </Typography>
 
-          <Box className="logo-container" mt={{xs: 13, md:13, lg:25, xl:25}}>
+          <Box className="logo-container" mt={20}>
             <img src="../public/SubscribeLogo2.png" alt="Logo" className="blur-logo" />
           </Box>
 
           {/* Subscription Cards */}
-          <Box className="subscriptions">
+          <Box className="subscriptions" mt={15}>
             {subscriptions.map((subscription) => (
               <Card
                 key={subscription.id}
                 onClick={() => window.location.href = subscription.link}
                 sx={{
                   backgroundColor: subscription.background,
-                  width: '100%',
+                  width: '348px',
                   height: '82px',
                   borderRadius: '18px',
                   marginBottom: '16px',
@@ -103,25 +102,23 @@ const Tab2: React.FC = () => {
           </Box>
 
           {/* Subscribe Button */}
-          <div className='subscribe-button-container'>
-            <Button
-              variant="contained"
-              sx={{
-                width: '100%',
-                height: '59px',
-                borderRadius: '18px',
-                marginTop: '8px',
-                backgroundColor: '#FFD600',
-                transition: 'background-color 0.3s ease, transform 0.3s ease',
-                '&:hover': {
-                  backgroundColor: '#ffc107',
-                  transform: 'scale(1.05)',
-                },
-              }}
-            >
-              <Typography fontWeight="bold">Subscribe</Typography>
-            </Button>
-          </div>
+          <Button
+            variant="contained"
+            sx={{
+              width: '348px',
+              height: '59px',
+              borderRadius: '18px',
+              marginTop: '8px',
+              backgroundColor: '#FFD600',
+              transition: 'background-color 0.3s ease, transform 0.3s ease',
+              '&:hover': {
+                backgroundColor: '#ffc107',
+                transform: 'scale(1.05)',
+              },
+            }}
+          >
+            <Typography fontWeight="bold">Subscribe</Typography>
+          </Button>
 
           {/* Terms Text */}
           <Typography variant="body2" color="#406580" align="center" mt={2}>
@@ -131,17 +128,11 @@ const Tab2: React.FC = () => {
           {/* Footer */}
           <Box 
             className="footer-rectangle" 
-            sx={{ 
-              marginTop: '10vh',
+            style={{ 
               position: 'absolute', 
               bottom: 0, 
               width: '100%', 
-              height: {
-                xs: '44vh',
-                sm: '50vh',
-                md: '47vh',
-                lg: '40vh',
-              },
+              height: '450px', 
               borderTopLeftRadius: '24.946px', // Hanya bagian atas yang memiliki border-radius
               borderTopRightRadius: '24.946px', // Hanya bagian atas yang memiliki border-radius
               background: 'linear-gradient(180deg, #FFF 43.6%, #FFF 99.89%)' 

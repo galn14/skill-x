@@ -1,90 +1,81 @@
-// src/pages/LoginPage.tsx
 import React, { useState } from 'react';
 import {
   IonPage,
-  IonHeader,
   IonContent,
-  IonTitle,
-  IonToolbar,
-  IonInput,
-  IonButton,
-  IonCheckbox,
-  IonLabel,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle, IonItem
+  IonButton
 } from '@ionic/react';
-import { post, loginWithGoogle } from '../api.service'; // Import your API service
-import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
-import { useHistory } from 'react-router-dom'; // For routing
-import GoogleIcon from '@mui/icons-material/Google'; // Import icon Google
-import './login.css';
+import { post, loginWithGoogle } from '../api.service';
+import { AppBar, Toolbar, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
+import { useHistory } from 'react-router-dom';
+import GoogleIcon from '@mui/icons-material/Google';
+import { CssBaseline, GlobalStyles } from '@mui/material';
+import '@fontsource/poppins';  // Import the font
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const LoginPage: React.FC = () => {
   const [data, setData] = useState({ email: '', password: '' });
   const [rememberMe, setRememberMe] = useState(false);
-  const [resp, setResp] = useState<any>(null);
-  const history = useHistory(); // Initialize useHistory for navigation
+  const history = useHistory();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    const { name, value } = e.target;
+    setData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRememberMe(e.target.checked);
-  };  
+  };
 
-  // Handle login action
   const doLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (data.email && data.password) {
       try {
-        // Send login request to the backend
         const response = await post('login', data);
-
-        // If login is successful, the response should include a token
         if (response.token) {
-          console.log('Login successful', response);
           localStorage.setItem('userToken', response.token);
-
-          // Redirect to Tab4 after successful login
           history.push('/tab4');
           window.location.reload();
         } else {
-          // Handle failed login attempt (no token received)
-          setError('Login failed: Invalid credentials');
+          alert('Login failed: Invalid credentials');
         }
       } catch (error) {
-        setError('Login failed: ' + (error as any).message);
-        console.error('Login failed', error);
+        console.error('Login failed:', error);
       }
     } else {
-      setError('Email and password are required');
+      alert('Email and password are required');
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
-      // Trigger Google login through Firebase and get backend response
       const response = await loginWithGoogle();
       localStorage.setItem('userToken', response.token);
-
-      // Redirect to Tab4 after successful login
       history.push('/tab4');
       window.location.reload();
     } catch (error) {
-      console.error('Google login failed', error);
+      console.error('Google login failed:', error);
     }
   };
+  const globalStyles = {
+    '*': {
+      fontFamily: 'Poppins',
+      margin: 0,
+      padding: 0,
+      boxSizing: 'border-box',
+    },
+    ':root': {
+      '--ion-font-family': 'Poppins',
+    },
+  };
+  const theme = createTheme({
+    typography: {
+      fontFamily: '"Poppins"',  // Set font di tema
+    },
+  });
 
   return (
+    <ThemeProvider theme={theme}>
+    <CssBaseline />
     <IonPage>
       <AppBar
         position="fixed"
@@ -93,157 +84,154 @@ const LoginPage: React.FC = () => {
           borderBottomLeftRadius: '30px',
           borderBottomRightRadius: '30px',
           height: '82px',
-          paddingTop: '25px'
+          paddingTop: '25px',
         }}
       >
-        <Toolbar style={{ height: '100%', paddingBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box>
-            <IonButton fill="clear" routerLink="/login" className="text-mg text-gray-500">
+            <IonButton fill="clear" routerLink="/login" className="text-gray-500">
               Login
             </IonButton>
           </Box>
-          <div style={{ marginLeft: 'auto' }}>
-            <IonButton fill="clear" routerLink="/register" className="text-mg text-blue-500">
-              Sign Up
-            </IonButton>
-          </div>
+          <IonButton fill="clear" routerLink="/register" className="text-blue-500">
+            Sign Up
+          </IonButton>
         </Toolbar>
       </AppBar>
+
       <IonContent className="ion-padding">
-  
-        <IonCardHeader></IonCardHeader>
-          <IonCardContent style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '150px'}}>
-            {/* Membuat logo lebih kecil dan posisinya terpusat */}
-            <img alt="SkillX Logo" src="public/SkillXLogo.png" style={{ width: '250px', height: 'auto' }} />
-          </IonCardContent>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            height: '100vh',
+            textAlign: 'center',
+          }}
+        >
+          {/* Logo */}
+          <img
+            alt="SkillX Logo"
+            src="public/SkillXLogo.png"
+            style={{
+              width: '250px',
+              height: 'auto',
+              marginBottom: '20px',
+            }}
+          />
 
-          <div className="max-w-sm mx-auto">
-          <form onSubmit={doLogin} className="space-y-5">
-            <div className="mb-5 flex justify-center">
-              {/* Email input using Material UI TextField */}
-              <TextField
-                name="email"
-                label="Email"
-                type="email"
-                value={data.email}
-                onChange={handleInputChange}
-                fullWidth
-                variant="outlined"
-                required
-                size="medium"
-                sx={{
-                  maxWidth: '80%',
-                  marginBottom: '10px',
-                  '& .MuiOutlinedInput-root': { // Akses root input untuk border radius
-                    borderRadius: '10px',
-                  },
-                }}
-              />
-            </div>
+          {/* Form Login */}
+          <form
+            onSubmit={doLogin}
+            style={{
+              width: '80%',
+              maxWidth: '400px',
+            }}
+          >
+            {/* Email Field */}
+            <TextField
+              name="email"
+              label="Email"
+              type="email"
+              value={data.email}
+              onChange={handleInputChange}
+              fullWidth
+              variant="outlined"
+              required
+              size="medium"
+              sx={{
+                marginBottom: '16px',
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '10px',
+                },
+              }}
+            />
 
-            <div className="mb-5 flex justify-center">
-              {/* Password input using Material UI TextField */}
-              <TextField
-                name="password"
-                label="Password"
-                type="password"
-                value={data.password}
-                onChange={handleInputChange}
-                fullWidth
-                variant="outlined"
-                required
-                size="medium"
-                sx={{
-                  maxWidth: '80%',
-                  '& .MuiOutlinedInput-root': { // Akses root input untuk border radius
-                    borderRadius: '10px',
-                  },
-                }}
-              />
-            </div>
+            {/* Password Field */}
+            <TextField
+              name="password"
+              label="Password"
+              type="password"
+              value={data.password}
+              onChange={handleInputChange}
+              fullWidth
+              variant="outlined"
+              required
+              size="medium"
+              sx={{
+                marginBottom: '16px',
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '10px',
+                },
+              }}
+            />
 
-            <div className="flex justify-center items-center mb-5">
-              <div style={{ maxWidth: '80%', width: '100%' }}>
-                {/* Checkbox input using Material UI FormControlLabel and Checkbox */}
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={rememberMe}
-                      onChange={handleCheckboxChange}
-                      color="primary"
-                    />
-                  }
-                  label="Remember me"
-                  sx={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'flex-start', // Menempatkan label di kiri
-                  }}
+            {/* Remember Me Checkbox */}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={rememberMe}
+                  onChange={handleCheckboxChange}
+                  color="primary"
                 />
-              </div>
-            </div>
+              }
+              label="Remember me"
+              sx={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'flex-start' }}
+            />
 
-            <div className="flex justify-center items-center mb-5">
-              {/* Sign in button using Material UI Button */}
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                size="large"
-                sx={{
-                  maxWidth: '80%', // Membuatnya penuh dalam kotak pembungkus
-                  borderRadius: '10px', // Menerapkan border radius langsung
-                  paddingY: '12px', // Membuat tombol lebih tinggi
-                  fontSize: '1.1rem', // Menambah ukuran teks untuk membuat tombol lebih besar
-                }}
-              >
-                Sign In
-              </Button>
-            </div>
+            {/* Login Button */}
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              size="large"
+              sx={{
+                borderRadius: '10px',
+                paddingY: '12px',
+                fontSize: '1.1rem',
+                marginBottom: '16px',
+              }}
+            >
+              Sign In
+            </Button>
 
-              {/* Google Login Button */}
-              <div className="flex justify-center items-center mb-5">
-                <Button 
-                  variant="outlined"
-                  fullWidth
-                  size="large"
-                  sx={{
-                    marginTop: '10px',
-                    maxWidth: '80%',
-                    borderRadius: '10px',
-                    paddingY: '12px',
-                    fontSize: '1.1rem',
-                    color: 'black',
-                    backgroundColor: 'white',
-                    borderColor: '#dddddd',
-                    textTransform: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    '&:hover': {
-                      backgroundColor: '#f5f5f5',
-                    },
-                  }}
-                  startIcon={<GoogleIcon style={{ color: '#4285F4' }} />}
-                  onClick={handleGoogleLogin}>
-                  Google
-                </Button>
-              </div>
-            </form>
-
-            {resp && <div className="mt-5 text-green-500">Login successful: {JSON.stringify(resp)}</div>}
-          </div>
-        </IonContent>
+            {/* Google Login Button */}
+            <Button
+              variant="outlined"
+              fullWidth
+              size="large"
+              sx={{
+                borderRadius: '10px',
+                paddingY: '12px',
+                fontSize: '1.1rem',
+                color: 'black',
+                backgroundColor: 'white',
+                borderColor: '#dddddd',
+                textTransform: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                '&:hover': {
+                  backgroundColor: '#f5f5f5',
+                },
+              }}
+              startIcon={<GoogleIcon style={{ color: '#4285F4' }} />}
+              onClick={handleGoogleLogin}
+            >
+              Google
+            </Button>
+          </form>
+        </div>
+      </IonContent>
     </IonPage>
+    </ThemeProvider>
+
   );
-  
 };
 
 export default LoginPage;
-
-
-function setError(arg0: string) {
-  throw new Error('Function not implemented.');
-}
-
