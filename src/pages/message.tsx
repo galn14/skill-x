@@ -1,6 +1,23 @@
 import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Box, Button, Menu, MenuItem, ListItemIcon, Tab, Tabs, Card, CardContent, Avatar, TextField, Rating } from '@mui/material';
-import { IonPage, IonContent } from '@ionic/react';
+import {
+    AppBar,
+    Toolbar,
+    IconButton,
+    Typography,
+    Box,
+    Button,
+    Menu,
+    MenuItem,
+    Grid,
+    Card,
+    CardContent,
+    TextField,
+} from '@mui/material';
+import StarRatings from 'react-star-ratings';
+import {
+    IonPage,
+    IonContent,
+} from '@ionic/react';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -8,7 +25,6 @@ import ChatIcon from '@mui/icons-material/Chat';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
-
 
 const sellers = [
     {
@@ -34,12 +50,52 @@ const sellers = [
     },
 ];
 
+const buyers = [
+    {
+        id: 1,
+        name: 'John Doe',
+        slogan: 'I want to place a bulk order.',
+        profileImage: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
+        unreadMessages: 4,
+    },
+    {
+        id: 2,
+        name: 'Jane Smith',
+        slogan: 'Let’s discuss further about your offer.',
+        profileImage: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
+        unreadMessages: 1,
+    },
+];
+
+const reviews = [
+    {
+        id: 1,
+        reviewer: 'Alice Johnson',
+        comment: 'Excellent service, highly recommend!',
+        rating: 5,
+    },
+    {
+        id: 2,
+        reviewer: 'Bob Smith',
+        comment: 'Very responsive and delivered on time.',
+        rating: 4,
+    },
+    {
+        id: 3,
+        reviewer: 'Charlie Brown',
+        comment: 'Good quality work, will use again!',
+        rating: 5,
+    },
+];
+
 const MessagePage: React.FC = () => {
     const history = useHistory();
     const handleBack = () => history.goBack();
     const [anchorElSeller, setAnchorElSeller] = React.useState<null | HTMLElement>(null);
     const [anchorElBuyer, setAnchorElBuyer] = React.useState<null | HTMLElement>(null);
+    const [anchorElReview, setAnchorElReview] = React.useState<null | HTMLElement>(null);
 
+    const openReview = Boolean(anchorElReview);
     const openSeller = Boolean(anchorElSeller);
     const openBuyer = Boolean(anchorElBuyer);
 
@@ -49,6 +105,10 @@ const MessagePage: React.FC = () => {
 
     const handleClickBuyer = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElBuyer(anchorElBuyer ? null : event.currentTarget);
+    };
+
+    const handleClickReview = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElReview(anchorElReview ? null : event.currentTarget);
     };
 
     const handleClose = () => {
@@ -78,9 +138,9 @@ const MessagePage: React.FC = () => {
                     }}
                 >
                     <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
-                    <IconButton onClick={handleBack} color="primary">
-                        <ArrowBackIcon />
-                    </IconButton>
+                        <IconButton onClick={handleBack} color="primary">
+                            <ArrowBackIcon />
+                        </IconButton>
                         <Typography
                             variant="h6"
                             component="div"
@@ -123,10 +183,10 @@ const MessagePage: React.FC = () => {
                             justifyContent: 'space-between',
                             borderRadius: '5px',
                             width: '100vw',
-                            height:'5vh',
+                            height: '5vh',
                             maxWidth: '100%',
                             padding: '5px 16px',
-                            marginTop: '10px'
+                            marginTop: '10px',
                         }}
                     >
                         <Box display="flex" alignItems="center">
@@ -151,10 +211,6 @@ const MessagePage: React.FC = () => {
                                 color: 'black',
                                 borderRadius: '8px',
                                 padding: 0,
-                                margin: 0,
-                                left: 0, // Memastikan posisi mulai dari kiri layar
-                                right: 0, // Memastikan posisi sampai ke kanan layar
-                                position: 'absolute', // Mengunci menu pada layar
                             },
                         }}
                         anchorOrigin={{
@@ -179,7 +235,7 @@ const MessagePage: React.FC = () => {
                                     padding: '8px 16px',
                                     backgroundColor: 'white',
                                     borderBottom: index === sellers.length - 1 ? 'none' : '1px solid #E0E0E0',
-                                    margin: 0
+                                    margin: 0,
                                 }}
                             >
                                 <Box
@@ -247,7 +303,7 @@ const MessagePage: React.FC = () => {
                             height: '5vh',
                             maxWidth: '100%',
                             padding: '5px 16px',
-                            marginTop: openSeller ? '205px' : '5px', // Dynamic margin based on Seller dropdown state
+                            marginTop: openSeller ? `${62 * sellers.length + 16}px` : '10px', // Dinamis berdasarkan seller
                         }}
                     >
                         <Box display="flex" alignItems="center">
@@ -267,7 +323,7 @@ const MessagePage: React.FC = () => {
                         }}
                         PaperProps={{
                             style: {
-                                width: '100%',
+                                width: '100vw',
                                 backgroundColor: '#FFFFFF',
                                 color: 'black',
                                 borderRadius: '8px',
@@ -283,11 +339,235 @@ const MessagePage: React.FC = () => {
                             horizontal: 'center',
                         }}
                     >
-                        {/* Empty dropdown items for Buyer */}
-                        <MenuItem disabled style={{ justifyContent: 'center', padding: '16px' }}>
-                            No buyers available
-                        </MenuItem>
+                        {buyers.map((buyer, index) => (
+                            <MenuItem
+                                key={index}
+                                onClick={handleClose}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    height: '62px',
+                                    width: '100%',
+                                    padding: '8px 16px',
+                                    backgroundColor: 'white',
+                                    borderBottom: index === buyers.length - 1 ? 'none' : '1px solid #E0E0E0',
+                                    margin: 0,
+                                }}
+                            >
+                                <Box
+                                    component="img"
+                                    src={buyer.profileImage}
+                                    alt={buyer.name}
+                                    style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        borderRadius: '50%',
+                                        marginRight: '12px',
+                                    }}
+                                />
+                                <Box style={{ flexGrow: 1 }}>
+                                    <Box style={{
+                                        fontWeight: 600,
+                                        fontSize: '14px',
+                                        color: '#000',
+                                        marginBottom: '4px',
+                                    }}>
+                                        {buyer.name}
+                                    </Box>
+                                    <Box style={{
+                                        fontSize: '9px',
+                                        color: '#666',
+                                        wordWrap: 'break-word',
+                                        lineHeight: '14px',
+                                    }}>
+                                        {buyer.slogan}
+                                    </Box>
+                                </Box>
+                                <Box
+                                    style={{
+                                        backgroundColor: '#0094FF',
+                                        color: 'white',
+                                        borderRadius: '50%',
+                                        width: '24px',
+                                        height: '24px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        fontSize: '12px',
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    {buyer.unreadMessages}
+                                </Box>
+                            </MenuItem>
+                        ))}
                     </Menu>
+
+                    {/* Button for Review */}
+                    <Button
+                        variant="contained"
+                        onClick={handleClickReview}
+                        style={{
+                            backgroundColor: '#0094FF',
+                            color: 'white',
+                            textTransform: 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            borderRadius: '5px',
+                            width: '100vw',
+                            height: '5vh',
+                            maxWidth: '100%',
+                            padding: '5px 16px',
+                            marginTop: openBuyer ? `${62 * buyers.length + 16}px` : '10px', // Dinamis berdasarkan seller
+                        }}
+                    >
+                        <Box display="flex" alignItems="center">
+                            <ChatIcon style={{ marginRight: '8px' }} />
+                            Review
+                        </Box>
+                        <ArrowDropDownIcon />
+                    </Button>
+
+                    {/* Toggling review content */}
+      {openReview && (
+        <Grid container spacing={2} style={{ marginTop: '16px', padding: '16px', maxWidth: '100%' }}>
+          {reviews.map((review, index) => (
+            <Grid
+              key={review.id}
+              item
+              xs={12}
+              md={6}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Card
+                style={{
+                  maxWidth: '95%',
+                  width: '95%',
+                  margin: '20px auto',
+                  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+                  borderRadius: '15px',
+                  border: '1px solid #000', // Border for card header
+                }}
+              >
+                {/* Card Header with Image, Title, and Seller Name */}
+                <CardContent style={{ padding: '16px' }}>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item>
+                      <img
+                        src="https://ionicframework.com/docs/img/demos/thumbnail.svg//" // Gambar untuk di sebelah kiri
+                        alt="Reviewer"
+                        style={{ width: '50px', height: '50px', borderRadius: '50%' }}
+                      />
+                    </Grid>
+                    <Grid item xs>
+                      <Typography
+                        variant="h6"
+                        style={{
+                          fontWeight: 600,
+                          fontSize: '16px',
+                          color: '#000',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        Judul {/* Judul */}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        style={{
+                          fontSize: '14px',
+                          color: '#666',
+                        }}
+                      >
+                        Seller: AileenLiexuai {/* Nama Seller */}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+
+                {/* Card Content */}
+                <CardContent style={{ padding: '16px', borderTop:'1px solid black' }}>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item>
+                      <img
+                        src="https://ionicframework.com/docs/img/demos/thumbnail.svg" // Gambar konten di sebelah kiri
+                        alt="Content"
+                        style={{ width: '80px', height: '80px', borderRadius: '8px' }}
+                      />
+                    </Grid>
+                    <Grid item xs>
+                      <Typography
+                        variant="body1"
+                        style={{
+                          fontWeight: 600,
+                          fontSize: '14px',
+                          color: '#000',
+                          marginBottom: '8px',
+                        }}
+                      >
+                        Package Portfolio Website {/* Judul Konten */}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        style={{
+                          fontSize: '12px',
+                          color: '#666',
+                          textAlign: 'justify',
+                        }}
+                      >
+                        Oke {/* Deskripsi konten */}
+                      </Typography>
+
+                      {/* Rating UI */}
+                      <Box style={{ marginTop: '8px' }}>
+                        <StarRatings
+                          rating={review.rating} // Rating dalam angka
+                          starRatedColor="#FF9500"
+                          starEmptyColor="#D8D8D8"
+                          numberOfStars={5}
+                          name="rating"
+                          starDimension="18px"
+                          starSpacing="2px"
+                        />
+                      </Box>
+
+                      {/* Leave a review section */}
+                      <Typography
+                        variant="body2"
+                        style={{
+                          fontSize: '12px',
+                          color: '#333',
+                          marginTop: '8px',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Leave a review for your purchase
+                      </Typography>
+                      <TextField
+                        placeholder="Let us know what you think!"
+                        multiline
+                        rows={4}
+                        variant="outlined"
+                        fullWidth
+                        style={{
+                          marginTop: '8px',
+                          backgroundColor: '#f9f9f9',
+                          borderRadius: '8px',
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
                 </Box>
             </IonContent>
         </IonPage>
