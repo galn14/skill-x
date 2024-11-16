@@ -15,6 +15,7 @@ import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 import Tab4 from './pages/Tab4';
+import Wishlist from './pages/wishlist';
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/RegisterPage';
 import LogoutPage from './pages/LogoutPage';
@@ -76,10 +77,15 @@ const App: React.FC = () => (
           </Route>
           <PrivateRoute path="/tab4" component={Tab4} exact />
           <Route path="/logout" component={LogoutPage} exact />
+          <Route path="/wishlist" component={Wishlist} exact />
+
+          
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>
         </IonRouterOutlet>
+
+
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">
             <div style={{ fontSize: 30 }}>

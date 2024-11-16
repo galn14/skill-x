@@ -1,3 +1,5 @@
+import { Redirect, Route } from 'react-router-dom';
+
 import {
   IonPage,
   IonContent,
@@ -33,7 +35,6 @@ const Tab4: React.FC = () => {
   const [buyerData, setBuyerData] = useState<any>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // For controlling menu open/close
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null); // Store the selected skill
-  const history = useHistory();
   const [image, setImage] = useState<string | undefined>(undefined);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [skills, setSkills] = useState<any[]>([]); // State to store skills data
@@ -217,7 +218,57 @@ const handleCloseEdit = () => setOpenEdit(false);
       boxSizing: 'border-box',
     },
   };
+  const history = useHistory();
+
+  const handleTransactionClick = () => {
+    // Arahkan ke halaman transaksi
+    history.push('/tab3');
+  };
+
+  const handleWishlistClick = () => {
+    console.log('Navigating to Wishlist');
+    history.push('/wishlist');
+  };
+  const [ completePurchase, setCompletePurchase] = useState<any[]>([]);
+
+  useEffect(() => {
+    setCompletePurchase([
+      { id: 1, name: 'Package Powerpoint', icon: '../public/image 1.png', seller: 'dikadika' },
+      { id: 2, name: 'Visual Communication Design', icon:'public/web-design-internet-website-responsive-software-concept 1.png', seller: 'aileenliexiuai' },
+      { id: 3, name: 'Copywriting (Caption)', icon: 'public/high-angle-hand-correcting-grammar-mistakes 1.png', seller: 'galn' },
+    ]);
+  }, []);
+  type ProgressItem = {
+    id: number;
+    name: string;
+    nextMeeting: string;
+    completion: string;
+  };
   
+  const [progressData, setProgressData] = useState<ProgressItem[]>([]);
+
+  useEffect(() => {
+    // Set data untuk kartu
+    setProgressData([
+      {id: 1,
+        name: 'Package Database Website',
+        nextMeeting: '09-29-2024',
+        completion: '09-31-2024'
+      },
+      { id: 2,
+        name: 'Visual Communication Design',
+        nextMeeting: '10-05-2024',
+        completion: '10-10-2024'
+      },
+      {id: 3,
+        name: 'Copywriting (Caption)',
+        nextMeeting: '11-15-2024',
+        completion: '11-20-2024'
+      },
+    ]);
+  }, []);
+
+
   useEffect(() => {
     document.body.style.fontFamily = 'Poppins, sans-serif';
   }, []);
@@ -443,375 +494,209 @@ const handleCloseEdit = () => setOpenEdit(false);
     </Dialog>
 
 
-
-    <div className="CompletePurchaseWrapper" style={{ width: '100%' }}>
-      {/* Red background section only for the message */}
-      <Typography
-        variant="h6"
-        style={{
-          color: 'white',
-          textAlign: 'left',
-          padding: '2px 17px',
-          backgroundColor: '#FF4D00', // Red background only for the text
-        }}
-      >
-        Complete your purchase now!
-      </Typography>
-
-      <CardContent>
-        <div className="scrollable-grid" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
-          {/* Wrap the columns in a div that uses flexbox */}
-          <div style={{ display: 'flex' }}>
-            <Grid item xs={6}>
-              <Card
-                className="product-card"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  margin: '8px',
-                  width: '125px',
-                  height: '200px',
-                  padding: '10px',
-                  borderColor: '#ABABAB',
-                  backgroundColor: 'white', // Keeping the card white
-                }}
-              >
-                <Box
-                  className="image-wrapper"
-                  sx={{
-                    width: '100%',
-                    height: '120px',
-                    marginBottom: '10px',
-                    display: 'flex',
-                    justifyContent: 'left',
-                    alignItems: 'left',
-                    overflow: 'hidden',
-                    borderRadius: '8px',
-                  }}
-                >
-                  <img
-                    src="public\\web-design-internet-website-responsive-software-concept 1.png"
-                    alt="Package Portfolio Website"
-                    style={{ width: '100%', // Make the image width fill the card's width
-                      height: '100%', // Make the image height fill the card's height
-                      objectFit: 'cover'}}
-                  />
-                </Box>
-                <CardContent className="productcontent" sx={{ padding: '0', 
-                    textAlign: 'left', 
-                    paddingBottom: '0',  }}>
-                  <Typography variant="h6" sx={{  textAlign: 'left', wordBreak: 'break-word', whiteSpace: 'normal',fontSize: '14px', fontWeight: 'bold' }}>
-                    Package Portfolio Website</Typography>
-                  <Typography variant="body2"sx={{ textAlign: 'left', fontSize: '12px', color: 'textSecondary' }}>by AileenLiexiuai</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={6}>
-              <Card
-                className="product-card"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  margin: '8px',
-                  width: '125px',
-                  height: '200px',
-                  padding: '10px',
-                  borderColor: '#ABABAB',
-                  backgroundColor: 'white', // Keeping the card white
-                }}
-              >
-                <Box
-                  className="image-wrapper"
-                  sx={{
-                    width: '100%',
-                    height: '120px',
-                    marginBottom: '10px',
-                    display: 'flex',
-                    justifyContent: 'left',
-                    alignItems: 'left',
-                    overflow: 'hidden',
-                    borderRadius: '8px',
-                  }}
-                >
-                  <img
-                    src="public\image 1.png"
-                    alt="Package Portfolio Website"
-                    style={{ width: '100%', // Make the image width fill the card's width
-                      height: '100%', // Make the image height fill the card's height
-                      objectFit: 'cover'}}
-                  />
-                </Box>
-                <CardContent className="productcontent" sx={{ padding: '0', 
-                    textAlign: 'left', 
-                    paddingBottom: '0',  }}>
-                  <Typography variant="h6" sx={{  textAlign: 'left', wordBreak: 'break-word', whiteSpace: 'normal',fontSize: '14px', fontWeight: 'bold' }}>
-                    Package Powerpoint</Typography>
-                  <Typography variant="body2"sx={{ textAlign: 'left', fontSize: '12px', color: 'textSecondary' }}>by dikadika</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={6}>
-              <Card
-                className="product-card"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  margin: '8px',
-                  width: '125px',
-                  height: '200px',
-                  padding: '10px',
-                  borderColor: '#ABABAB',
-                  backgroundColor: 'white', // Keeping the card white
-                }}
-              >
-                <Box
-                  className="image-wrapper"
-                  sx={{
-                    width: '100%',
-                    height: '120px',
-                    marginBottom: '10px',
-                    display: 'flex',
-                    justifyContent: 'left',
-                    alignItems: 'left',
-                    overflow: 'hidden',
-                    borderRadius: '8px',
-                  }}
-                >
-                  <img
-                    src="public\high-angle-hand-correcting-grammar-mistakes 1.png"
-                    alt="Another Package Website"
-                    style={{ width: '100%',height: '100%',  objectFit: 'cover'}}  
-                  />
-                </Box>
-                <CardContent className="productcontent" sx={{ padding: '0', 
-                    textAlign: 'left', 
-                    paddingBottom: '0'  }}>
-                  <Typography variant="h6" sx= {{ textAlign: 'left', wordBreak: 'break-word', whiteSpace: 'normal',fontSize: '14px', fontWeight: 'bold' }}>
-                    Copywriting (Caption)</Typography>
-                  <Typography variant="body2" sx={{ textAlign: 'left', fontSize: '12px', color: 'textSecondary' }}>by galn</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={6}>
-              <Card
-                className="product-card"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  margin: '8px',
-                  width: '125px',
-                  height: '200px',
-                  padding: '10px',
-                  borderColor: '#ABABAB',
-                  backgroundColor: 'white', // Keeping the card white
-                }}
-              >
-                <Box
-                  className="image-wrapper"
-                  sx={{
-                    width: '100%',
-                    height: '120px',
-                    marginBottom: '10px',
-                    display: 'flex',
-                    justifyContent: 'left',
-                    alignItems: 'left',
-                    overflow: 'hidden',
-                    borderRadius: '8px',
-                  }}
-                >
-                  <img
-                    src="/path_to_package_image.png"
-                    alt="Third Package"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                </Box>
-                <CardContent className="productcontent" sx={{ padding: '0', 
-                    textAlign: 'left', 
-                    paddingBottom: '0'   }}>
-                  <Typography variant="h6" sx= {{ textAlign: 'left', wordBreak: 'break-word', whiteSpace: 'normal',fontSize: '14px', fontWeight: 'bold' }}>Third Package</Typography>
-                  <Typography variant="body2"  sx={{ textAlign: 'left', fontSize: '12px', color: 'textSecondary' }}>by Another Creator</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            {/* Add more Grid items as needed */}
-          </div>
-        </div>
-      </CardContent>
-    </div>
-
-    <div className="OnProgressWrapper" style={{ width: '100%' }}>
+      <div className="CompletePurchaseWrapper" style={{ width: '100%' }}>
+  {/* Red background section only for the message */}
   <Typography
     variant="h6"
     style={{
       color: 'white',
       textAlign: 'left',
       padding: '2px 17px',
-      backgroundColor: '#3CB232',
+      backgroundColor: '#FF4D00', // Red background only for the text
     }}
   >
-    On Progress
+    Complete your purchase now!
   </Typography>
 
   <CardContent>
     <div className="scrollable-grid" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
-      <div style={{ display: 'flex', gap: '10px' }}>
-        {/* Card 1 */}
-        <Card
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            overflow: 'hidden',
-            border: '1px solid #ABABAB',
-            borderRadius: '8px',
-            margin: '10px',
-            width: 200, // Ensure the width remains fixed for each card
-            flexShrink: 0, // Prevents shrinking when scrolling
-          }}
-        >
-          <CardContent className="progress-card" sx={{ padding: '8px' }}>
-            {/* Left Column (Package Info) */}
-            <Grid container spacing={0}>
-              <Grid
-                item
-                xs={6}
-                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{ fontSize: '14px', marginLeft: '2px', wordBreak: 'break-word', whiteSpace: 'normal' }}
-                >
-                  Package Database Website
-                </Typography>
-              </Grid>
-
-              {/* Right Column (Next Meeting / Completion) */}
-              <Grid
-                item
-                xs={6}
+      {/* Wrap the columns in a div that uses flexbox */}
+      <div style={{ display: 'flex' }}>
+        {completePurchase.map((item) => (
+          <Card
+            key={item.id}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              margin: '8px',
+              width: '125px', // Adjust the card width to fit in the scrollable container
+              height: '200px',
+              padding: '10px',
+              borderColor: '#ABABAB',
+              backgroundColor: 'white',
+              flexShrink: 0, // Prevent shrinking in the scrollable flex container
+            }}
+          >
+            <Box
+              className="image-wrapper"
+              sx={{
+                width: '100%',
+                height: '120px',
+                marginBottom: '10px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                overflow: 'hidden',
+                borderRadius: '8px',
+              }}
+            >
+              <img
+                src={item.icon}
+                alt={item.name}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Box>
+            <CardContent
+              sx={{
+                padding: '0',
+                textAlign: 'left',
+                paddingBottom: '0',
+              }}
+            >
+              <Typography
+                variant="h6"
                 sx={{
-                  marginTop: '1px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'flex-start',
+                  textAlign: 'left',
+                  wordBreak: 'break-word',
+                  whiteSpace: 'normal',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
                 }}
               >
-                <Box>
-                  <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
-                    Next Meeting:
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}>
-                    09-29-2024
-                  </Typography>
-                </Box>
-                <Box mt={1}>
-                  <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
-                    Completion in:
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}>
-                    09-31-2024
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-
-        {/* Card 2 */}
-        <Card
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            overflow: 'hidden',
-            border: '1px solid #ABABAB',
-            borderRadius: '8px',
-            margin: '10px',
-            width: 200, // Ensure the width remains fixed for each card
-            flexShrink: 0, // Prevents shrinking when scrolling
-          }}
-        >
-          <CardContent className="progress-card" sx={{ padding: '8px' }}>
-            {/* Left Column (Package Info) */}
-            <Grid container spacing={0}>
-              <Grid
-                item
-                xs={6}
-                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{ fontSize: '14px', marginLeft: '2px', wordBreak: 'break-word', whiteSpace: 'normal' }}
-                >
-                  Package Database Website
-                </Typography>
-              </Grid>
-
-              {/* Right Column (Next Meeting / Completion) */}
-              <Grid
-                item
-                xs={6}
+                {item.name}
+              </Typography>
+              <Typography
+                variant="body2"
                 sx={{
-                  marginTop: '1px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'flex-start',
+                  textAlign: 'left',
+                  fontSize: '12px',
+                  color: 'textSecondary',
                 }}
               >
-                <Box>
-                  <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
-                    Next Meeting:
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}>
-                    09-29-2024
-                  </Typography>
-                </Box>
-                <Box mt={1}>
-                  <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
-                    Completion in:
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}>
-                    09-31-2024
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-
-        {/* Add more Cards here if needed */}
+                by {item.seller}
+              </Typography>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   </CardContent>
 </div>
 
 
+
+  <div className="OnProgressWrapper" style={{ width: '100%' }}>
+      <Typography
+        variant="h6"
+        style={{
+          color: 'white',
+          textAlign: 'left',
+          padding: '2px 17px',
+          backgroundColor: '#3CB232',
+        }}
+      >
+        On Progress
+      </Typography>
+
+      <CardContent>
+        <div className="scrollable-grid" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {progressData.map((item) => (
+              <Card
+                key={item.id}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  overflow: 'hidden',
+                  border: '1px solid #ABABAB',
+                  borderRadius: '8px',
+                  margin: '10px',
+                  width: 200,
+                  flexShrink: 0,
+                }}
+              >
+                <CardContent className="progress-card" sx={{ padding: '8px' }}>
+                  <Grid container spacing={0}>
+                    <Grid
+                      item
+                      xs={6}
+                      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontSize: '14px',
+                          marginLeft: '2px',
+                          wordBreak: 'break-word',
+                          whiteSpace: 'normal',
+                        }}
+                      >
+                        {item.name}
+                      </Typography>
+                    </Grid>
+
+                    <Grid
+                      item
+                      xs={6}
+                      sx={{
+                        marginTop: '1px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        justifyContent: 'flex-start',
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
+                          Next Meeting:
+                        </Typography>
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}
+                        >
+                          {item.nextMeeting}
+                        </Typography>
+                      </Box>
+                      <Box mt={1}>
+                        <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
+                          Completion in:
+                        </Typography>
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}
+                        >
+                          {item.completion}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </div>
+
+
         {/* Menu List */}
         <List>
-      <ListItemButton component="li">
+      <ListItemButton  onClick={handleTransactionClick}  component="li">
         <ListItemIcon>
           <ListIcon />
         </ListItemIcon>
         <ListItemText primary="Transaction List" />
       </ListItemButton>
       <Divider />
-      <ListItemButton component="li">
+      <ListItemButton  /*onClick={handleWishlistClick} */ component="li">
         <ListItemIcon>
           <WishlistIcon />
         </ListItemIcon>
