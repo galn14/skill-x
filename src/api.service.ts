@@ -382,10 +382,10 @@ export const loginWithGoogle = async () => {
   try {
     // Open Google sign-in popup
     const result = await signInWithPopup(auth, provider);
-
+    
     // Get the ID token
     const idToken = await result.user.getIdToken();
-
+    
     // Configure headers for the backend request
     const config = {
       headers: {
@@ -394,18 +394,12 @@ export const loginWithGoogle = async () => {
       },
     };
 
+    localStorage.setItem('userToken', idToken);
+
     // Send ID token to the backend
     const response = await axios.post(`${baseUrl}/login/google`, null, config);
 
-    // Extract and store user data
-    const { user, token } = response.data;
-
-    // Save token and user info in local storage or context
-    localStorage.setItem('userToken', token);
-    localStorage.setItem('userInfo', JSON.stringify(user));
-
-    // Return the user data for further use
-    return user;
+    return response.data;
   } catch (error) {
     console.error('Google login error:', error);
     throw error;
