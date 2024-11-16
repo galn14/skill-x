@@ -9,31 +9,7 @@ const PrivateRoute = ({ component: Component, ...rest }: any) => {
   const [error, setError] = useState<string | null>(null); // Error state for debugging
 
   useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = localStorage.getItem('userToken'); // Check token from localStorage
-        if (token) {
-          // Call your API to validate the token
-          const response = await get('validate-token', { token });
-          if (response.valid) {
-            setIsAuthenticated(true); // Token is valid
-          } else {
-            setError('Invalid token'); // Set error if token is invalid
-            setIsAuthenticated(false); // Token is invalid
-          }
-        } else {
-          setError('No token found'); // No token found
-          setIsAuthenticated(false); // No token, so not authenticated
-        }
-      } catch (error) {
-        setError('Token validation failed: ' + (error as Error).message); // Log the validation error
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false); // Set loading to false after token validation
-      }
-    };
-
-    checkToken(); // Call the function to check token validity
+    
   }, []);
 
   if (loading) {

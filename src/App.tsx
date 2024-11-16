@@ -76,7 +76,7 @@ const App: React.FC = () => (
           <Route path="/tab3">
             <Tab3 />
           </Route>
-          <PrivateRoute path="/tab4" component={Tab4} exact />
+          <Route path="/tab4" exact><Tab4 /></Route>
           <Route path="/logout" component={LogoutPage} exact />
           <Route path="/wishlist" component={Wishlist} />
           

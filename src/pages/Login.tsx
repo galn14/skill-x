@@ -74,8 +74,14 @@ const LoginPage: React.FC = () => {
     try {
       // Trigger Google login through Firebase and get backend response
       const response = await loginWithGoogle();
-      localStorage.setItem('userToken', response.token);
-
+  
+      // Extract user and token from the response
+      const { user, token } = response;
+  
+      // Store token and user information in local storage
+      localStorage.setItem('userToken', token);
+      localStorage.setItem('userInfo', JSON.stringify(user));
+  
       // Redirect to Tab4 after successful login
       history.push('/tab4');
       window.location.reload();
@@ -83,6 +89,7 @@ const LoginPage: React.FC = () => {
       console.error('Google login failed', error);
     }
   };
+  
 
   return (
     <IonPage>
