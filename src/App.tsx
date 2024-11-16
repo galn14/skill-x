@@ -19,6 +19,7 @@ import Wishlist from './pages/wishlist';
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/RegisterPage';
 import LogoutPage from './pages/LogoutPage';
+
 import PrivateRoute from './components/PrivateRoute'; // Import the private route
 import { createTheme, ThemeProvider } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -77,8 +78,7 @@ const App: React.FC = () => (
           </Route>
           <PrivateRoute path="/tab4" component={Tab4} exact />
           <Route path="/logout" component={LogoutPage} exact />
-          <Route path="/wishlist" component={Wishlist} exact />
-
+          <Route path="/wishlist" component={Wishlist} />
           
           <Route exact path="/">
             <Redirect to="/login" />

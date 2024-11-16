@@ -121,10 +121,9 @@ useEffect(() => {
   };
 
   const [open, setOpenEdit] = useState(false);// Function to open modal
-const handleOpenEdit = () => setOpenEdit(true);
+  const handleOpenEdit = () => setOpenEdit(true);
 
-// Function to close modal
-const handleCloseEdit = () => setOpenEdit(false);
+  const handleCloseEdit = () => setOpenEdit(false);
 
   const handleLogout = async () => {
     try {
@@ -696,7 +695,7 @@ const handleCloseEdit = () => setOpenEdit(false);
         <ListItemText primary="Transaction List" />
       </ListItemButton>
       <Divider />
-      <ListItemButton  /*onClick={handleWishlistClick} */ component="li">
+      <ListItemButton onClick={handleWishlistClick}  component="li">
         <ListItemIcon>
           <WishlistIcon />
         </ListItemIcon>
