@@ -16,10 +16,15 @@ import '@fontsource/poppins';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import '@fontsource/poppins';  // Import the font
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useHistory } from 'react-router';
+
 
 const Tab1: React.FC = () => {
+  const [setIsLoggedIn] = useState<boolean>(false);
+  const history = useHistory();
   const [categories, setCategories] = useState<any[]>([]);
   const [services, setServices] = useState<any[]>([]);
+  const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
   const globalStyles = {
     '*': {
       fontFamily: 'Poppins',
@@ -36,6 +41,23 @@ const Tab1: React.FC = () => {
       fontFamily: '"Poppins"',  // Set font di tema
     },
   });
+
+  const handleMessageClick = () => {
+    if (isLoggedIn) {
+      history.push('/message'); // Arahkan ke halaman Message jika login
+    } else {
+      history.push('/login'); // Arahkan ke halaman Login jika belum login
+    }
+  };
+
+  const handleMessageButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/message'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
 
   useEffect(() => {
     // Fetch categories from the database
@@ -81,7 +103,7 @@ const Tab1: React.FC = () => {
               <IconButton color="primary">
                 <NotificationsIcon />
               </IconButton>
-              <IconButton color="primary">
+              <IconButton color="primary" onClick={handleMessageButtonClick}>
                 <MailIcon />
               </IconButton>
             </Box>

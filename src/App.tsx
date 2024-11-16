@@ -21,6 +21,7 @@ import FollowingSeller from './pages/followingSeller';
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/RegisterPage';
 import LogoutPage from './pages/LogoutPage';
+import MessagePage from './pages/message';
 import '@ionic/react/css/core.css';
 
 import PrivateRoute from './components/PrivateRoute'; // Import the private route
@@ -78,6 +79,9 @@ const App: React.FC = () => (
           </Route>
           <Route path="/tab3">
             <Tab3 />
+          </Route>
+          <Route path="/message">
+            <MessagePage/>
           </Route>
           <Route path="/tab4" exact><Tab4 /></Route>
           <Route path="/logout" component={LogoutPage} exact />

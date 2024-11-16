@@ -3,14 +3,21 @@ import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { IonPage, IonContent } from '@ionic/react';
 import './Tab2.css';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import '@fontsource/poppins';  // Import the font
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useHistory } from 'react-router';
+
 
 const Tab2: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
+  const [setIsLoggedIn] = useState<boolean>(false);
+  const history = useHistory();
+  const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
+
 
   useEffect(() => {
     // Set data subscription
@@ -35,27 +42,44 @@ const Tab2: React.FC = () => {
       fontFamily: '"Poppins"',  // Set font di tema
     },
   });
+
+  const handleMessageClick = () => {
+    if (isLoggedIn) {
+      history.push('/message'); // Arahkan ke halaman Message jika login
+    } else {
+      history.push('/login'); // Arahkan ke halaman Login jika belum login
+    }
+  };
+
+  const handleMessageButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/message'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
     <CssBaseline />
     <IonPage>
       {/* Header */}
       <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
-        <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
-          <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
-            <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' }} />
-            <IconButton color="primary">
-              <NotificationsIcon />
-            </IconButton>
-            <IconButton color="primary">
-              <MailIcon />
-            </IconButton>
-            <IconButton color="primary">
-              <MenuIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
+          <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
+            <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
+              <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' }} />
+              <IconButton color="primary">
+                <ShoppingCartIcon />
+              </IconButton>
+              <IconButton color="primary">
+                <NotificationsIcon />
+              </IconButton>
+              <IconButton color="primary" onClick={handleMessageButtonClick}>
+                <MailIcon />
+              </IconButton>
+            </Box>
+          </Toolbar>
+        </AppBar>
 
       {/* Main Content */}
       <IonContent>
@@ -69,7 +93,7 @@ const Tab2: React.FC = () => {
           </Box>
 
           {/* Subscription Cards */}
-          <Box className="subscriptions" mt={15}>
+          <Box className="subscriptions" mt={25}>
             {subscriptions.map((subscription) => (
               <Card
                 key={subscription.id}

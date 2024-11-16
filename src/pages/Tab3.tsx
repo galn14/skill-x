@@ -12,6 +12,9 @@ import './Tab3.css';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import '@fontsource/poppins';  // Import the font
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useHistory } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 
 const Tab3: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -19,6 +22,12 @@ const Tab3: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [categoryFilter, setCategoryFilter] = useState('All Categories');
   const [dateFilter, setDateFilter] = useState('All Dates');
+  const history = useHistory();
+  const [setIsLoggedIn] = useState<boolean>(false);
+  const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
+
+
+  const handleBack = () => history.goBack();
 
   const globalStyles = {
     '*': {
@@ -46,6 +55,22 @@ const Tab3: React.FC = () => {
     // Add your modal open logic here
   };
 
+  const handleMessageClick = () => {
+    if (isLoggedIn) {
+      history.push('/message'); // Arahkan ke halaman Message jika login
+    } else {
+      history.push('/login'); // Arahkan ke halaman Login jika belum login
+    }
+  };
+
+  const handleMessageButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/message'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
     <CssBaseline />
@@ -53,6 +78,9 @@ const Tab3: React.FC = () => {
         <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
           <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
             <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
+            <IconButton onClick={handleBack} color="primary">
+                        <ArrowBackIcon />
+                    </IconButton>
               {/* Search bar with search icon */}
               <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', width: '80%', border: '1px solid #ABABAB', borderRadius: '15px', padding: '5px', height:'40px' }}>
@@ -72,7 +100,7 @@ const Tab3: React.FC = () => {
               <IconButton color="primary">
                 <NotificationsIcon />
               </IconButton>
-              <IconButton color="primary">
+              <IconButton color="primary" onClick={handleMessageButtonClick}>
                 <MailIcon />
               </IconButton>
             </Box>

@@ -42,6 +42,10 @@ const Tab4: React.FC = () => {
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
   const [isSkillsListVisible, setIsSkillsListVisible] = useState<boolean>(false); // State for toggling the skills dropdown
 
+  const [setIsLoggedIn] = useState<boolean>(false);
+  const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
+
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -253,6 +257,22 @@ useEffect(() => {
   
   const [progressData, setProgressData] = useState<ProgressItem[]>([]);
 
+  const handleMessageClick = () => {
+    if (isLoggedIn) {
+      history.push('/message'); // Arahkan ke halaman Message jika login
+    } else {
+      history.push('/login'); // Arahkan ke halaman Login jika belum login
+    }
+  };
+
+  const handleMessageButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/message'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
   useEffect(() => {
     // Set data untuk kartu
     setProgressData([
@@ -296,7 +316,7 @@ useEffect(() => {
             <IconButton color="primary">
               <NotificationsIcon />
             </IconButton>
-            <IconButton color="primary">
+            <IconButton color="primary" onClick={handleMessageButtonClick}>
               <MailIcon />
             </IconButton>
           </Box>
