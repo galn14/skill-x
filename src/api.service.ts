@@ -2,7 +2,7 @@
 import { auth, provider, signInWithPopup } from './firebaseConfig';
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:8000/api'; // Replace with your API base URL
+const baseUrl = 'http://localhost:8080'; // Replace with your API base URL
 
 // POST request function
 // export const post = async (endpoint: string, body: any, options: any = {}) => {
@@ -378,15 +378,27 @@ export const updateBuyerProfile = async (data: any) => {
   }
 };
 
-// Function for Google Login
 export const loginWithGoogle = async () => {
   try {
     // Open Google sign-in popup
     const result = await signInWithPopup(auth, provider);
+    
+    // Get the ID token
     const idToken = await result.user.getIdToken();
+    
+    // Configure headers for the backend request
+    const config = {
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    localStorage.setItem('userToken', idToken);
 
     // Send ID token to the backend
-    const response = await axios.post(`${baseUrl}/google-login`, { idToken });
+    const response = await axios.post(`${baseUrl}/login/google`, null, config);
+
     return response.data;
   } catch (error) {
     console.error('Google login error:', error);
@@ -394,19 +406,32 @@ export const loginWithGoogle = async () => {
   }
 };
 
-// // Fungsi untuk menghapus profil buyer
-// export const deleteBuyerProfile = async () => {
+
+// Function for Google Login
+// export const loginWithGoogle = async () => {
 //   try {
-//     const token = localStorage.getItem('userToken');
+//     // Open Google sign-in popup
+//     const result = await signInWithPopup(auth, provider);
+    
+//     // Get the ID token
+//     const idToken = await result.user.getIdToken();
+    
+//     // Configure headers for the backend request
 //     const config = {
 //       headers: {
-//         Authorization: `Bearer ${token}`,
+//         Authorization: `Bearer ${idToken}`,
+//         'Content-Type': 'application/json',
 //       },
 //     };
-//     const response = await axios.delete(`${baseUrl}/buyer`, config);
+
+//     localStorage.setItem('userToken', idToken)
+
+//     // Send ID token to the backend
+//     const response = await axios.post(`${baseUrl}/login/google`, null, config);
+
 //     return response.data;
 //   } catch (error) {
-//     console.error('Error deleting buyer profile', error);
+//     console.error('Google login error:', error);
 //     throw error;
 //   }
 // };
