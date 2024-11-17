@@ -5,7 +5,7 @@ import {
   IonContent,
   IonButton
 } from '@ionic/react';
-import { loginWithEmail, loginWithGoogle } from '../api.service';
+import { loginWithGoogle } from '../api.service';
 import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import { useHistory } from 'react-router-dom'; // For routing
 import GoogleIcon from '@mui/icons-material/Google'; // Import icon Google
@@ -17,7 +17,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const LoginPage: React.FC = () => {
   const [data, setData] = useState({ email: '', password: '' });
   const [rememberMe, setRememberMe] = useState(false);
-  const [resp, setResp] = useState<any>(null);
   const history = useHistory(); // Initialize useHistory for navigation
   const [error, setError] = useState<string | null>(null);
 
@@ -50,35 +49,6 @@ const LoginPage: React.FC = () => {
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRememberMe(e.target.checked);
   };  
-
-  const doLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null); // Reset error state
-
-    if (data.email && data.password) {
-        try {
-            const response = await loginWithEmail(data.email, data.password);
-            console.log('API Response:', response); // Debug the API response
-
-            if (response.token && response.user) {
-                localStorage.setItem('userToken', response.token);
-                localStorage.setItem('userInfo', JSON.stringify(response.user)); // Save userInfo
-                history.push('/tab4');
-                window.location.reload();
-            } else {
-                setError('Invalid response from server');
-                console.error('Response missing token or user:', response);
-            }
-        } catch (error: any) {
-            setError(error.message || 'Login failed');
-            console.error('Login failed:', error);
-        }
-    } else {
-        setError('Email and password are required');
-    }
-};
-
-
 
   const handleGoogleLogin = async () => {
     try {
@@ -148,7 +118,6 @@ const LoginPage: React.FC = () => {
 
           {/* Form Login */}
           <form
-            onSubmit={doLogin}
             style={{
               width: '80%',
               maxWidth: '400px',

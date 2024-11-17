@@ -23,18 +23,6 @@ const baseUrl = 'http://localhost:8080'; // Replace with your API base URL
 //   }
 // };
 
-// POST request function
-export const post = async (endpoint: string, body: any, config = {}) => {
-  try {
-    // Make POST request with the given endpoint, body, and config (headers)
-    const response = await axios.post(`${baseUrl}/${endpoint}`, body, config);
-    return response.data; // Return response data
-  } catch (error) { 
-    console.error('Error during POST request', error); // Log any errors
-    throw error; // Rethrow error for handling in component
-  }
-};
-
 export const updateUser = async (token: string, updatedUser: Record<string, any>) => {
   try {
 
@@ -53,59 +41,6 @@ export const updateUser = async (token: string, updatedUser: Record<string, any>
   } catch (error) {
     console.error('Error updating user:', error);
     throw error;
-  }
-};
-
-// GET request for token validation
-export const get = async (endpoint: string, params: any) => {
-  try {
-    // Retrieve token from localStorage or wherever it's stored
-    const token = localStorage.getItem('userToken'); // Or from your session, cookies, etc.
-    
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`, // Add the token here
-      },
-    };
-
-    const response = await axios.get(`${baseUrl}/${endpoint}`, { params, ...config });
-    return response.data;
-  } catch (error) {
-    console.error('Error during GET request', error);
-    throw error;
-  }
-};
-
-// Function to fetch token from the backend
-export const getTokenFromAPI = async () => {
-  try {
-    const response = await axios.get(`${baseUrl}/get-token`);
-    return response.data.token; // Assuming your backend provides a token in this response
-  } catch (error) {
-    console.error('Error fetching token', error);
-    throw error;
-  }
-};
-
-export const registerWithEmail = async (name: string, email: string, password: string) => {
-    try {
-      const response = await axios.post(`${baseUrl}/register`, {
-        name,
-        email,
-        password,
-      });
-      return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Registration failed');
-    }
-};
-
-export const loginWithEmail = async (email: string, password: string): Promise<any> => {
-  try {
-      const response = await axios.post(`${baseUrl}/login/email`, { email, password });
-      return response.data;
-  } catch (error: any) {
-      throw error.response ? error.response.data : { message: 'An unexpected error occurred' };
   }
 };
 
