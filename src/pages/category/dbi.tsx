@@ -16,7 +16,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Height } from '@mui/icons-material';
 
 
-const ComputerScience: React.FC = () => {
+const DigitalBusinessInnovation: React.FC = () => {
   const [isModalOpen] = useState(false);
   const history = useHistory();
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
@@ -28,26 +28,26 @@ const ComputerScience: React.FC = () => {
     {
       id: 1,
       icon: '🌐',
-      title: 'Websites',
-      subcategories: ['Websites Development', 'Websites Maintenance', 'Custom Website'],
+      title: 'E-Commerce Website Development',
+      subcategories: ['Online Store Design', 'Payment Gateway Integration', 'E-Commerce Platform Setup'],
     },
     {
       id: 2,
       icon: '📱',
-      title: 'Application Development',
-      subcategories: ['Mobile Apps', 'Progressive Web Apps', 'Cross-Platform'],
+      title: 'Business Automation',
+      subcategories: ['CRM Integration', 'Email Marketing Setup', 'Workflow Automation'],
     },
     {
       id: 3,
       icon: '🔍',
-      title: 'Software Development',
-      subcategories: ['Custom Software', 'Enterprise Solutions', 'Desktop Apps'],
+      title: 'Digital Marketing',
+      subcategories: ['Social Media Campaigns', 'SEO & Content Strategy', 'Influencer Marketing'],
     },
     {
       id: 4,
       icon: '🛡️',
-      title: 'Support & Cybersecurity',
-      subcategories: ['Network Security', 'System Maintenance', 'Cloud Security'],
+      title: 'Build Prototype for Digital Business',
+      subcategories: ['Business Web Application Prototyping', 'E-commerce App Prototyping', 'Customer Dashboard Prototyping'],
     },
   ];
 
@@ -127,7 +127,7 @@ const handleCartButtonClick = () => {
           {/* Header Section */}
           <Box
             sx={{
-              backgroundColor: '#0094FF',
+              backgroundColor: '#43A047',
               borderRadius: '20px',
               padding: '15px',
               marginBottom: '20px',
@@ -141,7 +141,7 @@ const handleCartButtonClick = () => {
                 color: '#fff',
               }}
             >
-              Computer Science
+                Digital Business Innovation
             </Typography>
             <Typography
               variant="body2"
@@ -190,7 +190,7 @@ const handleCartButtonClick = () => {
                     {/* Logo dengan background biru */}
                     <Box
                       sx={{
-                        backgroundColor: '#0094FF',
+                        backgroundColor: '#43A047',
                         color: '#fff',
                         width: '80px',
                         height: '40px',
@@ -271,4 +271,4 @@ const handleCartButtonClick = () => {
 };
 
 
-export default ComputerScience;
+export default DigitalBusinessInnovation;

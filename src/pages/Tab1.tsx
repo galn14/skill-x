@@ -81,11 +81,11 @@ const handleCartButtonClick = () => {
       { id: 1, name: 'Computer Science', icon: '../public/icon/computer_science.png', link: '/category/computer-science' },
       { id: 2, name: 'Visual Communication Design', icon: '../public/icon/vcd.png', link: '/category/visual-communication-design' },
       { id: 3, name: 'Interior Design', icon: '../public/icon/di.png', link: '/category/interior-design' },
-      { id: 4, name: 'Digital Business Innovation', icon: '../public/icon/computer_science.png', link: '/category/dbi' },
-      { id: 5, name: 'Interactive Design and Technology', icon: '../public/icon/vcd.png', link: '/category/idt' },
-      { id: 6, name: 'Public Relation', icon: '../public/icon/di.png', link: '/category/pr' },
+      { id: 4, name: 'Digital Business Innovation', icon: '../public/icon/computer_science.png', link: '/category/digital-business-innovation' },
+      { id: 5, name: 'Interactive Design and Technology', icon: '../public/icon/vcd.png', link: '/category/interactive-design-and-technology' },
+      { id: 6, name: 'Public Relation', icon: '../public/icon/di.png', link: '/category/public-relation' },
       { id: 7, name: 'Communications', icon: '../public/icon/computer_science.png', link: '/category/communication' },
-      { id: 8, name: 'Entrepenurship Business Creation', icon: '../public/icon/di.png', link: '/category/ebc' },
+      { id: 8, name: 'Entrepenurship Business Creation', icon: '../public/icon/di.png', link: '/category/entrepenurship-business-creation' },
     ]);
 
     // Fetch popular services from the database

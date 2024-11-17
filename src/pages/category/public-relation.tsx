@@ -16,7 +16,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Height } from '@mui/icons-material';
 
 
-const ComputerScience: React.FC = () => {
+const PublicRelation: React.FC = () => {
   const [isModalOpen] = useState(false);
   const history = useHistory();
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
@@ -24,32 +24,32 @@ const ComputerScience: React.FC = () => {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
     // Data untuk layanan (services)
-  const services = [
-    {
-      id: 1,
-      icon: '🌐',
-      title: 'Websites',
-      subcategories: ['Websites Development', 'Websites Maintenance', 'Custom Website'],
-    },
-    {
-      id: 2,
-      icon: '📱',
-      title: 'Application Development',
-      subcategories: ['Mobile Apps', 'Progressive Web Apps', 'Cross-Platform'],
-    },
-    {
-      id: 3,
-      icon: '🔍',
-      title: 'Software Development',
-      subcategories: ['Custom Software', 'Enterprise Solutions', 'Desktop Apps'],
-    },
-    {
-      id: 4,
-      icon: '🛡️',
-      title: 'Support & Cybersecurity',
-      subcategories: ['Network Security', 'System Maintenance', 'Cloud Security'],
-    },
-  ];
+    const services = [
+        {
+          id: 1,
+          icon: '🌐',
+          title: 'Media Relations',
+          subcategories: ['Press Release Writing', 'Media Outreach', 'Crisis Communication'],
+        },
+        {
+          id: 2,
+          icon: '📱',
+          title: 'Event Management',
+          subcategories: ['Corporate Event Planning', 'Press Conferences', 'Product Launch Events'],
+        },
+        {
+          id: 3,
+          icon: '🔍',
+          title: 'Content Strategy',
+          subcategories: ['Blog Writing and Strategy', 'Social Media Strategy', 'Video Content for PR Campaigns'],
+        },
+        {
+          id: 4,
+          icon: '🛡️',
+          title: 'Build Prototype for Public Relation',
+          subcategories: ['Press Kit Prototyping', 'Event Layout Prototyping', 'Digital Campaign Prototyping'],
+        },
+      ];
 
   const toggleCard = (id: number) => {
     setExpandedCard(expandedCard === id ? null : id);
@@ -127,7 +127,7 @@ const handleCartButtonClick = () => {
           {/* Header Section */}
           <Box
             sx={{
-              backgroundColor: '#0094FF',
+              backgroundColor: '#9C27B0',
               borderRadius: '20px',
               padding: '15px',
               marginBottom: '20px',
@@ -141,7 +141,7 @@ const handleCartButtonClick = () => {
                 color: '#fff',
               }}
             >
-              Computer Science
+              Public Relation
             </Typography>
             <Typography
               variant="body2"
@@ -190,7 +190,7 @@ const handleCartButtonClick = () => {
                     {/* Logo dengan background biru */}
                     <Box
                       sx={{
-                        backgroundColor: '#0094FF',
+                        backgroundColor: '#9C27B0',
                         color: '#fff',
                         width: '80px',
                         height: '40px',
@@ -271,4 +271,4 @@ const handleCartButtonClick = () => {
 };
 
 
-export default ComputerScience;
+export default PublicRelation;

@@ -16,7 +16,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Height } from '@mui/icons-material';
 
 
-const ComputerScience: React.FC = () => {
+const InteractiveDesignTechnology: React.FC = () => {
   const [isModalOpen] = useState(false);
   const history = useHistory();
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
@@ -24,32 +24,32 @@ const ComputerScience: React.FC = () => {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
     // Data untuk layanan (services)
-  const services = [
-    {
-      id: 1,
-      icon: '🌐',
-      title: 'Websites',
-      subcategories: ['Websites Development', 'Websites Maintenance', 'Custom Website'],
-    },
-    {
-      id: 2,
-      icon: '📱',
-      title: 'Application Development',
-      subcategories: ['Mobile Apps', 'Progressive Web Apps', 'Cross-Platform'],
-    },
-    {
-      id: 3,
-      icon: '🔍',
-      title: 'Software Development',
-      subcategories: ['Custom Software', 'Enterprise Solutions', 'Desktop Apps'],
-    },
-    {
-      id: 4,
-      icon: '🛡️',
-      title: 'Support & Cybersecurity',
-      subcategories: ['Network Security', 'System Maintenance', 'Cloud Security'],
-    },
-  ];
+    const services = [
+        {
+          id: 1,
+          icon: '🌐',
+          title: 'Web Development',
+          subcategories: ['Front-End Development', 'Back-End Development', 'Web Application Development'],
+        },
+        {
+          id: 2,
+          icon: '📱',
+          title: 'App Development',
+          subcategories: ['Mobile App Development (iOS, Android)', 'Progressive Web Apps (PWA)', 'Cross-Platform App Development'],
+        },
+        {
+          id: 3,
+          icon: '🔍',
+          title: 'Interactive Media',
+          subcategories: ['Interactive Kiosks', 'AR/VR Experiences', 'Digital Signage Solutions'],
+        },
+        {
+          id: 4,
+          icon: '🛡️',
+          title: 'Build Prototype for Interactive Design',
+          subcategories: ['Interactive Prototyping for Apps', 'Interactive Website Prototyping', 'Virtual Reality Prototyping'],
+        },
+      ];
 
   const toggleCard = (id: number) => {
     setExpandedCard(expandedCard === id ? null : id);
@@ -127,7 +127,7 @@ const handleCartButtonClick = () => {
           {/* Header Section */}
           <Box
             sx={{
-              backgroundColor: '#0094FF',
+              backgroundColor: '#FF4081',
               borderRadius: '20px',
               padding: '15px',
               marginBottom: '20px',
@@ -141,7 +141,7 @@ const handleCartButtonClick = () => {
                 color: '#fff',
               }}
             >
-              Computer Science
+              Interactive Design and Technology
             </Typography>
             <Typography
               variant="body2"
@@ -190,7 +190,7 @@ const handleCartButtonClick = () => {
                     {/* Logo dengan background biru */}
                     <Box
                       sx={{
-                        backgroundColor: '#0094FF',
+                        backgroundColor: '#FF4081',
                         color: '#fff',
                         width: '80px',
                         height: '40px',
@@ -271,4 +271,4 @@ const handleCartButtonClick = () => {
 };
 
 
-export default ComputerScience;
+export default InteractiveDesignTechnology;

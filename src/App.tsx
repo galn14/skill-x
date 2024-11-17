@@ -29,6 +29,13 @@ import '@ionic/react/css/core.css';
 
 // ROUTE UNTUK JURUSAN
 import ComputerScience from './pages/category/computer-science';
+import VisualCommunicationDesign from './pages/category/vcd';
+import InteriorDesign from './pages/category/interior-design';
+import DigitalBusinessInnovation from './pages/category/dbi';
+import InteractiveDesignTechnology from './pages/category/idt';
+import PublicRelation from './pages/category/public-relation';
+import Communication from './pages/category/communication';
+import EntreprenurhsipBusinessCreation from './pages/category/ebc';
 
 import PrivateRoute from './components/PrivateRoute'; // Import the private route
 import { createTheme, ThemeProvider } from '@mui/material';
@@ -92,6 +99,27 @@ const App: React.FC = () => (
           </Route>
           <Route path="/category/computer-science"> 
             <ComputerScience/>
+          </Route>
+          <Route path="/category/visual-communication-design"> 
+            <VisualCommunicationDesign/>
+          </Route>
+          <Route path="/category/interior-design"> 
+            <InteriorDesign/>
+          </Route>
+          <Route path="/category/digital-business-innovation"> 
+            <DigitalBusinessInnovation/>
+          </Route>
+          <Route path="/category/interactive-design-and-technology"> 
+            <InteractiveDesignTechnology/>
+          </Route>
+          <Route path="/category/public-relation"> 
+            <PublicRelation/>
+          </Route>
+          <Route path="/category/communication"> 
+            <Communication/>
+          </Route>
+          <Route path="/category/entrepenurship-business-creation"> 
+            <EntreprenurhsipBusinessCreation/>
           </Route>
           <Route path="/message" component={MessagePage} exact />
           <Route path="/notification" component={NotificationPage} exact/>

@@ -16,7 +16,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Height } from '@mui/icons-material';
 
 
-const ComputerScience: React.FC = () => {
+const Communication: React.FC = () => {
   const [isModalOpen] = useState(false);
   const history = useHistory();
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
@@ -24,32 +24,32 @@ const ComputerScience: React.FC = () => {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
     // Data untuk layanan (services)
-  const services = [
-    {
-      id: 1,
-      icon: '🌐',
-      title: 'Websites',
-      subcategories: ['Websites Development', 'Websites Maintenance', 'Custom Website'],
-    },
-    {
-      id: 2,
-      icon: '📱',
-      title: 'Application Development',
-      subcategories: ['Mobile Apps', 'Progressive Web Apps', 'Cross-Platform'],
-    },
-    {
-      id: 3,
-      icon: '🔍',
-      title: 'Software Development',
-      subcategories: ['Custom Software', 'Enterprise Solutions', 'Desktop Apps'],
-    },
-    {
-      id: 4,
-      icon: '🛡️',
-      title: 'Support & Cybersecurity',
-      subcategories: ['Network Security', 'System Maintenance', 'Cloud Security'],
-    },
-  ];
+    const services = [
+        {
+          id: 1,
+          icon: '🌐',
+          title: 'Corporate Communication',
+          subcategories: ['Internal Communication Strategy', 'Stakeholder Communication', 'Corporate Newsletter Design'],
+        },
+        {
+          id: 2,
+          icon: '📱',
+          title: 'Social Media Management',
+          subcategories: ['Social Media Content Strategy', 'Social Media Campaigns', 'Analytics and Reporting'],
+        },
+        {
+          id: 3,
+          icon: '🔍',
+          title: 'Public Speaking and Traininy',
+          subcategories: ['Corporate Training Sessions', 'Presentation Coaching', 'Public Speaking Workshops'],
+        },
+        {
+          id: 4,
+          icon: '🛡️',
+          title: 'Build Prototype for Communication',
+          subcategories: ['Presentation Prototyping', 'Social Media Content Prototyping', 'Internal Communication Tools Prototyping'],
+        },
+      ];
 
   const toggleCard = (id: number) => {
     setExpandedCard(expandedCard === id ? null : id);
@@ -127,7 +127,7 @@ const handleCartButtonClick = () => {
           {/* Header Section */}
           <Box
             sx={{
-              backgroundColor: '#0094FF',
+              backgroundColor: '#9C27B0',
               borderRadius: '20px',
               padding: '15px',
               marginBottom: '20px',
@@ -141,7 +141,7 @@ const handleCartButtonClick = () => {
                 color: '#fff',
               }}
             >
-              Computer Science
+              Communication
             </Typography>
             <Typography
               variant="body2"
@@ -190,7 +190,7 @@ const handleCartButtonClick = () => {
                     {/* Logo dengan background biru */}
                     <Box
                       sx={{
-                        backgroundColor: '#0094FF',
+                        backgroundColor: '#9C27B0',
                         color: '#fff',
                         width: '80px',
                         height: '40px',
@@ -271,4 +271,4 @@ const handleCartButtonClick = () => {
 };
 
 
-export default ComputerScience;
+export default Communication;
