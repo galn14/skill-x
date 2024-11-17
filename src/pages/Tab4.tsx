@@ -338,6 +338,14 @@ useEffect(() => {
     }
   };
 
+  const handleJoinSellerClick = () => {
+    if (isLoggedIn) {
+      history.push('/JoinAsSeller'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
   useEffect(() => {
     // Set data untuk kartu
     setProgressData([
@@ -446,6 +454,7 @@ useEffect(() => {
 
           {/* Join as Seller Button */}
           <Button 
+          onClick={handleJoinSellerClick} 
             variant="contained" 
             size="small" 
             sx={{
