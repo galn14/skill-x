@@ -360,7 +360,7 @@ useEffect(() => {
        <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
         <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
           <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
-            <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' }} />
+            <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' ,height: '40px'}} />
             <IconButton color="primary" onClick={handleCartButtonClick}>
               <ShoppingCartIcon />
             </IconButton>

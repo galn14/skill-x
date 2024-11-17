@@ -1,26 +1,6 @@
 /* Background biru tanpa border-radius */
 
-.blue-background {
-  background-color: #007bff; /* Warna biru dasar */
-  height: 148px; /* Sesuaikan tinggi sesuai kebutuhan */
-  width: 100%;
-  position: absolute;
-  top: 0;
-  z-index: 1; /* Agar berada di bawah toolbar putih */
-}
-
 /* Toolbar putih dengan border-radius di bagian bawah */
-.custom-toolbar {
-  background-color: #007bff; /* Warna putih */
-  border-bottom-left-radius: 30px; /* Radius di bagian bawah kiri */
-  border-bottom-right-radius: 30px; /* Radius di bagian bawah kanan */
-  padding: 10px;
-  position: fixed;
-  z-index: 2; /* Agar toolbar putih berada di atas background biru */
-  width: 100%;
-  margin: 0 auto;
-  height: 102px;
-}
 
 /* Penyesuaian logo */
 .logo-container {
@@ -28,10 +8,6 @@
   left: 10px;
   top: 10px;
   z-index: 3;
-}
-
-.logo {
-  height: 40px; /* Ukuran logo */
 }
 
 .header-icon {
