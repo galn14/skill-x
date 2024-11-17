@@ -9,6 +9,8 @@ import {
     Select,
     MenuItem,
     CssBaseline,
+    Checkbox,
+    Button,
     Card,
     CardContent,
     CardMedia,
@@ -19,6 +21,8 @@ import { IonPage, IonContent } from '@ionic/react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useHistory } from 'react-router-dom';
 import '@fontsource/poppins'; // Font Import
@@ -66,36 +70,72 @@ const CartPage: React.FC = () => {
         }
     };
 
-    const notifications = [
-      {
+    const [cartItems, setCartItems] = useState([
+        {
           id: 1,
-          type: 'Promo',
-          time: '2 hours ago',
-          description: 'Exclusive promo for today only!',
-          product: {
-              image: 'https://via.placeholder.com/60',
-              title: 'Product A',
-              seller: 'Seller A',
-              originalPrice: 'Rp 150,000',
-              discountedPrice: 'Rp 120,000',
-          },
-          isRead: false, // Card belum ditekan
-      },
-      {
+          logo: '🌐',
+          seller: 'AileenLiexiulai',
+          serviceName: 'Building Website',
+          productImage: 'https://via.placeholder.com/80',
+          productName: 'Package Portfolio Website',
+          category: 'Computer Science',
+          price: 500000,
+          quantity: 1,
+        },
+        {
           id: 2,
-          type: 'Waiting Payment',
-          time: '5 hours ago',
-          description: 'Please complete your payment for Product B.',
-          product: {
-              image: 'https://via.placeholder.com/60',
-              title: 'Product B',
-              seller: 'Seller B',
-              originalPrice: 'Rp 200,000',
-              discountedPrice: 'Rp 170,000',
-          },
-          isRead: true, // Card sudah ditekan
-      },
-  ];
+          logo: '📊',
+          seller: 'Data Analyst Co.',
+          serviceName: 'Data Analysis',
+          productImage: 'https://via.placeholder.com/80',
+          productName: 'Data Analysis Course',
+          category: 'Data Science',
+          price: 500000,
+          quantity: 1,
+        },
+        {
+          id: 3,
+          logo: '🎨',
+          seller: 'Creative Minds',
+          serviceName: 'Graphic Design',
+          productImage: 'https://via.placeholder.com/80',
+          productName: 'Graphic Design Package',
+          category: 'Design',
+          price: 500000,
+          quantity: 1,
+        },
+      ]);
+    
+      const [selectAll, setSelectAll] = useState(false);
+      const [selectedItems, setSelectedItems] = useState<number[]>([]);
+    
+      const handleQuantityChange = (id: number, change: number) => {
+        setCartItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === id
+              ? { ...item, quantity: Math.max(1, item.quantity + change) }
+              : item
+          )
+        );
+      };
+    
+      const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const isChecked = event.target.checked;
+        setSelectAll(isChecked);
+        setSelectedItems(isChecked ? cartItems.map((item) => item.id) : []);
+      };
+    
+      const handleSelectItem = (id: number) => {
+        setSelectedItems((prevSelected) =>
+          prevSelected.includes(id)
+            ? prevSelected.filter((itemId) => itemId !== id)
+            : [...prevSelected, id]
+        );
+      };
+    
+      const totalPrice = cartItems
+        .filter((item) => selectedItems.includes(item.id))
+        .reduce((acc, item) => acc + item.price * item.quantity, 0);
 
     return (
         <ThemeProvider theme={theme}>
@@ -142,7 +182,96 @@ const CartPage: React.FC = () => {
                 </AppBar>
 
                 <IonContent fullscreen className={`${isModalOpen ? 'blurred-content' : ''} `}>
-                    
+                    <Box sx={{ padding: '16px', marginTop: '100px' }}>
+                    {cartItems.map((item) => (
+                    <Card key={item.id} sx={{ marginBottom: '16px', borderRadius: '12px' }}>
+                        <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Typography variant="h5" sx={{ fontSize: '32px', marginRight: '16px' }}>
+                                {item.logo}
+                            </Typography>
+                            <Box sx={{ flex: 1 }}>
+                                <Typography variant="subtitle1" fontWeight="bold">
+                                {item.serviceName}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                {item.seller}
+                                </Typography>
+                            </Box>
+                            </CardContent>
+                            <Box
+                            sx={{
+                                borderTop: '1px solid #ddd',
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '16px',
+                            }}
+                            >
+                            <CardMedia
+                                component="img"
+                                image={item.productImage}
+                                sx={{ width: '80px', height: '80px', borderRadius: '8px', marginRight: '16px' }}
+                            />
+                            <Box sx={{ flex: 1 }}>
+                                <Typography fontWeight="bold">{item.productName}</Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                {item.category}
+                                </Typography>
+                                <Typography variant="body2" sx={{ marginTop: '8px' }}>
+                                Total Order
+                                </Typography>
+                                <Typography variant="h6" color="primary">
+                                Rp {item.price.toLocaleString('id-ID')}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <IconButton onClick={() => handleQuantityChange(item.id, -1)}>
+                                <RemoveIcon />
+                                </IconButton>
+                                <Typography>{item.quantity}</Typography>
+                                <IconButton onClick={() => handleQuantityChange(item.id, 1)}>
+                                <AddIcon />
+                                </IconButton>
+                                <Checkbox
+                                checked={selectedItems.includes(item.id)}
+                                onChange={() => handleSelectItem(item.id)}
+                                />
+                            </Box>
+                            </Box>
+                        </Card>
+                        ))}
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                marginTop: '16px',
+                                padding: '16px',
+                                borderTop: '1px solid #ddd',
+                            }}
+                            >
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <Checkbox checked={selectAll} onChange={handleSelectAll} />
+                                <Typography>All</Typography>
+                            </Box>
+                            <Box sx={{ textAlign: 'right', marginRight: '1px', alignItems:'right' }}> {/* Rata kanan */}
+                                <Typography>Total</Typography>
+                                <Typography variant="h6" color="primary">
+                                Rp {totalPrice.toLocaleString('id-ID')}
+                                </Typography>
+                            </Box>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{
+                                borderRadius: '8px',
+                                width: '80px',
+                                fontSize: '16px', // Membesarkan teks
+                                }}
+                            >
+                                Buy
+                            </Button>
+                            </Box>
+                    </Box>
                 </IonContent>
             </IonPage>
         </ThemeProvider>
