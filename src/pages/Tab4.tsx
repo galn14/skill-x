@@ -132,12 +132,28 @@ useEffect(() => {
     handleCloseEdit(); // This closes the modal, for example
     console.log("Cancel action triggered.");
   };
+  const [universitas, setUniversitas] = useState('Universitas');
+  const [major, setMajor] = useState('Jurusan');
+  const [language, setLanguage] = useState('Bahasa');
 
+  // State for form values
+  const [editName, setEditName] = useState(userName);
+  const [editUniversitas, setEditUniversitas] = useState(universitas);
+  const [editMajor, setEditMajor] = useState(major);
+  const [editLanguage, setEditLanguage] = useState(language);
   const [open, setOpenEdit] = useState(false);// Function to open modal
   const handleOpenEdit = () => setOpenEdit(true);
 
   const handleCloseEdit = () => setOpenEdit(false);
-
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Update the state with the new values
+    setUserName(editName);
+    setUniversitas(editUniversitas);
+    setMajor(editMajor);
+    setLanguage(editLanguage);
+    handleCloseEdit(); // Close the modal after saving
+  };
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('userToken');
@@ -368,14 +384,14 @@ useEffect(() => {
 
           {/* University and Major */}
           <Typography variant="body2" color="textSecondary" sx={{ marginBottom: '6px' }}>
-            {buyerData?.Universitas || 'Universitas'} | {buyerData?.Major || 'Jurusan'}
+            {universitas || 'Universitas'} | {buyerData?.Major || 'Jurusan'}
           </Typography>
 
           {/* Language */}
           <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
             <LanguageIcon fontSize="small" sx={{ marginRight: 0.5 }} />
             <Typography variant="body2" color="textSecondary">
-              {buyerData?.Language || 'Bahasa'}
+              {language || 'Bahasa'}
             </Typography>
           </Box> 
 
@@ -460,31 +476,46 @@ useEffect(() => {
       </Box>
 
           <form
-            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-              event.preventDefault();
-              setOpenEdit(false);
-            }}
-          >
+            onSubmit={handleSubmit} >
             <Box sx={{ paddingLeft: '20px',
             paddingRight:'20px',
             paddingBottom: '20px',
             display: 'flex', marginTop:'20px', flexDirection: 'column', alignItems: 'flex-start' }}>
               <FormControl sx={{ marginBottom: 2 }}>
                 <FormLabel>Name*</FormLabel>
-                <TextField sx={{width: '300px' }} autoFocus required />
+                <TextField  sx={{ width: '300px' }}
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  autoFocus
+                  required/>
               </FormControl>
               <FormControl sx={{ marginBottom: 2 }}>
                 <FormLabel>Organization*</FormLabel>
-                <TextField sx={{ width: '300px' }} autoFocus required />
-              </FormControl>
+                <TextField
+                  sx={{ width: '300px' }}
+                  value={editUniversitas}
+                  onChange={(e) => setEditUniversitas(e.target.value)}
+                  required
+                />              </FormControl>
               <FormControl sx={{ marginBottom: 2 }}>
                 <FormLabel>Major*</FormLabel>
-                <TextField sx={{ width: '300px' }} autoFocus required />
+                <TextField
+                  sx={{ width: '300px' }}
+                  value={editMajor}
+                  onChange={(e) => setEditMajor(e.target.value)}
+                  required
+                />
               </FormControl>
               <FormControl sx={{ marginBottom: 10 }}>
                 <FormLabel>Language*</FormLabel>
-                <TextField sx={{ width: '300px' }} autoFocus required />
-              </FormControl>
+                <TextField
+                  sx={{ width: '300px' }}
+                  value={editLanguage}
+                  onChange={(e) => setEditLanguage(e.target.value)}
+                  required
+                />               
+               </FormControl>
+
               <Box display="flex" justifyContent="space-between" mt={1}>
                 <Button
                   variant="contained"
