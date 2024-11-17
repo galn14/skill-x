@@ -5,7 +5,6 @@ import {
   Typography,
   IconButton,
   Button,
-  Card,
   AppBar,
   Toolbar,
   Box,
@@ -17,9 +16,19 @@ import MailIcon from '@mui/icons-material/Mail';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchIcon from '@mui/icons-material/Search';
 import { useHistory } from 'react-router-dom';
-import { CssBaseline, GlobalStyles } from '@mui/material';
+import { CssBaseline, Rating } from '@mui/material';
 import '@fontsource/poppins';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import StarIcon from '@mui/icons-material/Star';
+
+const reviews = [
+  { id: 1, productName: 'Awesome Course', rating: 4.5, reviewText: 'Servicenya sangat baik, komunikatif, hasil produknya bagus.', reviewDate: '2024-11-14', category: 'Education' },
+  { id: 2, productName: 'Photography Basics', rating: 5.0, reviewText: 'Komunikatif sekali, fast respon, produk rapi dan sesuai ekspektasi, Harga sesuai dengan services', reviewDate: '2024-11-13', category: 'Photography' },
+  { id: 3, productName: 'Copywriting Masterclass', rating: 4.0, reviewText: 'Good course', reviewDate: '2024-11-12', category: 'Writing' },
+  { id: 4, productName: 'Web Development 101', rating: 4.7, reviewText: 'Informative course', reviewDate: '2024-11-10', category: 'Web Development' },
+  { id: 5, productName: 'Design Fundamentals', rating: 4.8, reviewText: 'Great design course', reviewDate: '2024-11-09', category: 'Design' },
+];
+
 
 const theme = createTheme({
   typography: {
@@ -30,29 +39,9 @@ const theme = createTheme({
 const Review: React.FC = () => {
   const history = useHistory();
   const [searchQuery, setSearchQuery] = useState('');
-  const [sellers, setSellers] = useState([
-    {
-      id: 1,
-      name: 'John Doe',
-      image: 'https://via.placeholder.com/150',
-      description: 'Specialist in graphic design and branding.',
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      image: 'https://via.placeholder.com/150',
-      description: 'Experienced photographer and videographer.',
-    },
-  ]);
+  const maxRating = 5; // Maximum possible rating
 
   const handleBack = () => history.goBack();
-
-  const handleRemove = (id: number) =>
-    setSellers((prev) => prev.filter((seller) => seller.id !== id));
-
-  const filteredSellers = sellers.filter((seller) =>
-    seller.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <ThemeProvider theme={theme}>
@@ -101,8 +90,9 @@ const Review: React.FC = () => {
           </Toolbar>
         </AppBar>
 
-        <IonContent fullscreen>
+        <IonContent fullscreen style={{ padding: '20px' }}>
           <Box sx={{ paddingTop: '110px', paddingX: '20px' }}>
+            {/* Search Box */}
             <Box
               sx={{
                 display: 'flex',
@@ -120,7 +110,7 @@ const Review: React.FC = () => {
                 <SearchIcon />
               </IconButton>
               <InputBase
-                placeholder="Search sellers"
+                placeholder="Search items"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 sx={{
@@ -131,61 +121,46 @@ const Review: React.FC = () => {
               />
             </Box>
 
-            <Box sx={{ paddingX: '20px' }}>
-              {filteredSellers.length > 0 ? (
-                <Grid container spacing={2}>
-                  {filteredSellers.map((seller) => (
-                    <Grid item xs={12} sm={6} md={4} key={seller.id}>
-                      <Card
-                        sx={{
-                          border: '2px solid #ABABAB',
-                          borderRadius: '5.44px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          padding: '10px',
-                        }}
-                      >
-                        <img
-                          src={seller.image}
-                          alt={seller.name}
-                          style={{
-                            borderRadius: '10px',
-                            width: '100px',
-                            height: '100px',
-                            objectFit: 'cover',
-                          }}
-                        />
-                        <Typography
-                          variant="h6"
-                          sx={{ marginTop: '10px', textAlign: 'center' }}
-                        >
-                          {seller.name}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          sx={{ textAlign: 'center', marginBottom: '10px' }}
-                        >
-                          {seller.description}
-                        </Typography>
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          onClick={() => handleRemove(seller.id)}
-                        >
-                          Unfollow
-                        </Button>
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
-              ) : (
-                <Typography variant="body1">
-                  No sellers found. Try searching for another seller.
+            {/* Render Reviews Dynamically */}
+            {reviews.map((review) => (
+              <Box
+                key={review.id}
+                sx={{
+                  border: '1px solid #ccc',
+                  borderRadius: '10px',
+                  padding: '8px',
+                  marginBottom: '8px', // Perkecil jarak antar box review
+                }}
+              >
+            
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Rating
+                    value={review.rating}
+                    readOnly
+                    precision={0.1}
+                    icon={<StarIcon fontSize="inherit" color="warning" />}
+                    sx={{ marginRight: '4px' }}
+                  />
+                  <Typography variant="body2" fontWeight="bold"  sx={{ fontSize: '12px' }}>
+                    {review.rating}/{maxRating}
+                  </Typography>
+                </Box>
+                <Typography variant="h6" sx={{ fontWeight: 'bold',  fontSize: '14px', marginTop: '4px', marginBottom: '4px'  }}>
+                  {review.productName}
                 </Typography>
-              )}
-            </Box>
+                <Typography variant="body2" sx={{ fontSize: '12px', marginTop: '4px', marginBottom: '4px'  }}>
+                  {review.reviewText}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '12px', marginTop: '4px', marginBottom: '4px'  }}>
+                  Reviewed on: {review.reviewDate}
+                </Typography>
+                <Box mt={2} style={{ padding: '2px 0' }}>
+                  <Button variant="outlined" color="primary" fullWidth sx={{ fontSize: '12px' }}>
+                    Reply to Review
+                  </Button>
+                </Box>
+              </Box>
+            ))}
           </Box>
         </IonContent>
       </IonPage>

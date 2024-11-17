@@ -50,6 +50,16 @@ const NotificationPage: React.FC = () => {
       }
     };
 
+    const handleCartButtonClick = () => {
+      if (isLoggedIn) {
+        history.push('/cart'); // Redirect ke halaman message
+      } else {
+        history.push('/login'); // Redirect ke halaman login
+      }
+    };
+
+    
+
     const handleBack = () => history.goBack();
 
     const theme = createTheme({
@@ -120,7 +130,7 @@ const NotificationPage: React.FC = () => {
                             >
                                 Notification
                             </Typography>
-                            <IconButton color="primary">
+                            <IconButton color="primary" onClick={handleCartButtonClick}>
                                 <ShoppingCartIcon />
                             </IconButton>
                             <IconButton color="primary">

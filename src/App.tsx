@@ -23,6 +23,8 @@ import LoginPage from './pages/Login';
 import RegisterPage from './pages/RegisterPage';
 import LogoutPage from './pages/LogoutPage';
 import MessagePage from './pages/message';
+import NotificationPage from './pages/notification';
+import CartPage from './pages/cart';
 import '@ionic/react/css/core.css';
 
 import PrivateRoute from './components/PrivateRoute'; // Import the private route
@@ -45,7 +47,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import { VerifiedOutlined } from '@mui/icons-material';
-import NotificationPage from './pages/notification';
+
 
 setupIonicReact();
 const theme = createTheme({
@@ -82,12 +84,12 @@ const App: React.FC = () => (
           <Route path="/tab3">
             <Tab3 />
           </Route>
-          <Route path="/message">
-            <MessagePage/>
+          <Route path="/cart">
+            <CartPage/>
           </Route>
-          <Route path="/notification">
-            <NotificationPage/>
-          </Route>
+          <Route path="/message" component={MessagePage} exact />
+          <Route path="/notification" component={NotificationPage} exact/>
+
           <Route path="/tab4" exact><Tab4 /></Route>
           <Route path="/logout" component={LogoutPage} exact />
           <Route path="/wishlist" component={Wishlist} />

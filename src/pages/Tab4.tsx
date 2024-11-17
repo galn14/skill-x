@@ -145,12 +145,28 @@ useEffect(() => {
     handleCloseEdit(); // This closes the modal, for example
     console.log("Cancel action triggered.");
   };
+  const [universitas, setUniversitas] = useState('Universitas');
+  const [major, setMajor] = useState('Jurusan');
+  const [language, setLanguage] = useState('Bahasa');
 
+  // State for form values
+  const [editName, setEditName] = useState(userName);
+  const [editUniversitas, setEditUniversitas] = useState(universitas);
+  const [editMajor, setEditMajor] = useState(major);
+  const [editLanguage, setEditLanguage] = useState(language);
   const [open, setOpenEdit] = useState(false);// Function to open modal
   const handleOpenEdit = () => setOpenEdit(true);
 
   const handleCloseEdit = () => setOpenEdit(false);
-
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Update the state with the new values
+    setUserName(editName);
+    setUniversitas(editUniversitas);
+    setMajor(editMajor);
+    setLanguage(editLanguage);
+    handleCloseEdit(); // Close the modal after saving
+  };
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('userToken');
@@ -300,6 +316,14 @@ useEffect(() => {
     }
   };
 
+  const handleCartButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/cart'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
   useEffect(() => {
     // Set data untuk kartu
     setProgressData([
@@ -337,7 +361,7 @@ useEffect(() => {
         <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
           <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
             <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' }} />
-            <IconButton color="primary">
+            <IconButton color="primary" onClick={handleCartButtonClick}>
               <ShoppingCartIcon />
             </IconButton>
             <IconButton color="primary" onClick={handleNotificationButtonClick}>
