@@ -92,7 +92,7 @@ const handleCartButtonClick = () => {
     setServices([
       { id: 1, name: 'Editing Video', icon: '../public/icon/edit_video.png', link: '/service/editing-video' },
       { id: 2, name: 'Logo Design', icon: '../public/icon/logo_design.png', link: '/service/logo-design' },
-      { id: 3, name: 'Build Website', icon: '../public/icon/building_website.png', link: '/service/build-website' },
+      { id: 3, name: 'Build Website', icon: '../public/icon/building_website.png', link: '/service/website-development' },
       { id: 4, name: 'Build Prototype', icon: "../public/icon/edit_video.png", link: '/service/build-prototype' }
     ]);
   }, []);

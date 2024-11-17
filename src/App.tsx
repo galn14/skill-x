@@ -37,6 +37,9 @@ import PublicRelation from './pages/category/public-relation';
 import Communication from './pages/category/communication';
 import EntreprenurhsipBusinessCreation from './pages/category/ebc';
 
+// ROUTE UNTUK SERVICES
+import WebsiteDevelopment from './pages/services/websiteDevelopment';
+
 import PrivateRoute from './components/PrivateRoute'; // Import the private route
 import { createTheme, ThemeProvider } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -59,6 +62,7 @@ import { CssBaseline, GlobalStyles } from '@mui/material';
 import { VerifiedOutlined } from '@mui/icons-material';
 import JoinAsSeller from './pages/JoinAsSeller';
 import JoinAsSellerWait from './pages/JoinSellerWait';
+
 
 setupIonicReact();
 const theme = createTheme({
@@ -122,6 +126,11 @@ const App: React.FC = () => (
           <Route path="/category/entrepenurship-business-creation"> 
             <EntreprenurhsipBusinessCreation/>
           </Route>
+
+          <Route path="/service/website-development"> 
+            <WebsiteDevelopment/>
+          </Route>
+
           <Route path="/message" component={MessagePage} exact />
           <Route path="/notification" component={NotificationPage} exact/>
 
