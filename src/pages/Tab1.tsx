@@ -188,6 +188,7 @@ const handleCartButtonClick = () => {
                     <Card sx={{ width: '100%', height: 200, margin: '10px', borderRadius: '10px', border: '1px solid #007bff', '&:hover': {
                       backgroundColor: '#f0f0f0', // Warna latar belakang berubah saat hover
                       boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Efek bayangan saat hover
+                      transitionDuration: '0.5ms'
                     }, }}>
                       <CardActionArea href={category.link} style={{ height: '100%' }}>
                         <CardContent
@@ -278,7 +279,7 @@ const handleCartButtonClick = () => {
                 boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
-                height: '150px', // Tinggi kartu lebih rendah
+                height: 'auto', // Tinggi kartu lebih rendah
               }}
             >
               {/* Emoticon di sebelah kiri */}

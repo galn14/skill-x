@@ -1,20 +1,5 @@
 /* Tab1.css */
 
-.header-icon {
-  margin-left: 10px;
-  font-size: 1.5em;
-}
-
-.welcome-banner {
-  text-align: center;
-  background-color: #007bff;
-  color: #fff;
-  padding: 5px 5px;
-  border-radius: 20px;
-  margin-left: 10px;
-  margin: 10px;
-}
-
 .categories, .popular-services {
   padding: 15px;
 }
@@ -56,9 +41,3 @@
     /* flex-wrap: nowrap; */
 }
   
-.swiper-slide {
-    flex-shrink: 0;
-    width: auto;
-    height: auto;
-
-}
