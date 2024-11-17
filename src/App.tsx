@@ -27,6 +27,9 @@ import NotificationPage from './pages/notification';
 import CartPage from './pages/cart';
 import '@ionic/react/css/core.css';
 
+// ROUTE UNTUK JURUSAN
+import ComputerScience from './pages/category/computer-science';
+
 import PrivateRoute from './components/PrivateRoute'; // Import the private route
 import { createTheme, ThemeProvider } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -87,6 +90,9 @@ const App: React.FC = () => (
           <Route path="/cart">
             <CartPage/>
           </Route>
+          <Route path="/category/computer-science"> 
+            <ComputerScience/>
+          </Route>
           <Route path="/message" component={MessagePage} exact />
           <Route path="/notification" component={NotificationPage} exact/>
 
@@ -99,6 +105,7 @@ const App: React.FC = () => (
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>
+
         </IonRouterOutlet>
 
 
