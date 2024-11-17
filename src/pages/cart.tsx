@@ -9,6 +9,8 @@ import {
     Select,
     MenuItem,
     CssBaseline,
+    Checkbox,
+    Button,
     Card,
     CardContent,
     CardMedia,
@@ -19,6 +21,8 @@ import { IonPage, IonContent } from '@ionic/react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useHistory } from 'react-router-dom';
 import '@fontsource/poppins'; // Font Import
@@ -66,36 +70,72 @@ const CartPage: React.FC = () => {
         }
     };
 
-    const notifications = [
-      {
+    const [cartItems, setCartItems] = useState([
+        {
           id: 1,
-          type: 'Promo',
-          time: '2 hours ago',
-          description: 'Exclusive promo for today only!',
-          product: {
-              image: 'https://via.placeholder.com/60',
-              title: 'Product A',
-              seller: 'Seller A',
-              originalPrice: 'Rp 150,000',
-              discountedPrice: 'Rp 120,000',
-          },
-          isRead: false, // Card belum ditekan
-      },
-      {
+          logo: '🌐',
+          seller: 'AileenLiexiulai',
+          serviceName: 'Building Website',
+          productImage: 'https://via.placeholder.com/80',
+          productName: 'Package Portfolio Website',
+          category: 'Computer Science',
+          price: 500000,
+          quantity: 1,
+        },
+        {
           id: 2,
-          type: 'Waiting Payment',
-          time: '5 hours ago',
-          description: 'Please complete your payment for Product B.',
-          product: {
-              image: 'https://via.placeholder.com/60',
-              title: 'Product B',
-              seller: 'Seller B',
-              originalPrice: 'Rp 200,000',
-              discountedPrice: 'Rp 170,000',
-          },
-          isRead: true, // Card sudah ditekan
-      },
-  ];
+          logo: '📊',
+          seller: 'Data Analyst Co.',
+          serviceName: 'Data Analysis',
+          productImage: 'https://via.placeholder.com/80',
+          productName: 'Data Analysis Course',
+          category: 'Data Science',
+          price: 500000,
+          quantity: 1,
+        },
+        {
+          id: 3,
+          logo: '🎨',
+          seller: 'Creative Minds',
+          serviceName: 'Graphic Design',
+          productImage: 'https://via.placeholder.com/80',
+          productName: 'Graphic Design Package',
+          category: 'Design',
+          price: 500000,
+          quantity: 1,
+        },
+      ]);
+    
+      const [selectAll, setSelectAll] = useState(false);
+      const [selectedItems, setSelectedItems] = useState<number[]>([]);
+    
+      const handleQuantityChange = (id: number, change: number) => {
+        setCartItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === id
+              ? { ...item, quantity: Math.max(1, item.quantity + change) }
+              : item
+          )
+        );
+      };
+    
+      const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const isChecked = event.target.checked;
+        setSelectAll(isChecked);
+        setSelectedItems(isChecked ? cartItems.map((item) => item.id) : []);
+      };
+    
+      const handleSelectItem = (id: number) => {
+        setSelectedItems((prevSelected) =>
+          prevSelected.includes(id)
+            ? prevSelected.filter((itemId) => itemId !== id)
+            : [...prevSelected, id]
+        );
+      };
+    
+      const totalPrice = cartItems
+        .filter((item) => selectedItems.includes(item.id))
+        .reduce((acc, item) => acc + item.price * item.quantity, 0);
 
     return (
         <ThemeProvider theme={theme}>
@@ -126,7 +166,7 @@ const CartPage: React.FC = () => {
                                     paddingLeft: '16px',
                                 }}
                             >
-                                Notification
+                                Cart
                             </Typography>
                             <IconButton color="primary">
                                 <ShoppingCartIcon />
@@ -142,200 +182,95 @@ const CartPage: React.FC = () => {
                 </AppBar>
 
                 <IonContent fullscreen className={`${isModalOpen ? 'blurred-content' : ''} `}>
-                    <Box
-                        sx={{
-                            backgroundColor: '#007bff', // Warna biru
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
-                    >
+                    <Box sx={{ padding: '16px', marginTop: '100px' }}>
+                    {cartItems.map((item) => (
+                    <Card key={item.id} sx={{ marginBottom: '16px', borderRadius: '12px' }}>
+                        <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Typography variant="h5" sx={{ fontSize: '32px', marginRight: '16px' }}>
+                                {item.logo}
+                            </Typography>
+                            <Box sx={{ flex: 1 }}>
+                                <Typography variant="subtitle1" fontWeight="bold">
+                                {item.serviceName}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                {item.seller}
+                                </Typography>
+                            </Box>
+                            </CardContent>
+                            <Box
+                            sx={{
+                                borderTop: '1px solid #ddd',
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '16px',
+                            }}
+                            >
+                            <CardMedia
+                                component="img"
+                                image={item.productImage}
+                                sx={{ width: '80px', height: '80px', borderRadius: '8px', marginRight: '16px' }}
+                            />
+                            <Box sx={{ flex: 1 }}>
+                                <Typography fontWeight="bold">{item.productName}</Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                {item.category}
+                                </Typography>
+                                <Typography variant="body2" sx={{ marginTop: '8px' }}>
+                                Total Order
+                                </Typography>
+                                <Typography variant="h6" color="primary">
+                                Rp {item.price.toLocaleString('id-ID')}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <IconButton onClick={() => handleQuantityChange(item.id, -1)}>
+                                <RemoveIcon />
+                                </IconButton>
+                                <Typography>{item.quantity}</Typography>
+                                <IconButton onClick={() => handleQuantityChange(item.id, 1)}>
+                                <AddIcon />
+                                </IconButton>
+                                <Checkbox
+                                checked={selectedItems.includes(item.id)}
+                                onChange={() => handleSelectItem(item.id)}
+                                />
+                            </Box>
+                            </Box>
+                        </Card>
+                        ))}
                         <Box
                             sx={{
                                 display: 'flex',
-                                justifyContent: 'space-around',
                                 alignItems: 'center',
-                                marginTop: '90px',
-                                padding: '10px',
-                                width: '95%',
-                                maxWidth: '800px',
-                                gap: '16px',
-                                flexWrap: 'wrap',
+                                justifyContent: 'space-between',
+                                marginTop: '16px',
+                                padding: '16px',
+                                borderTop: '1px solid #ddd',
                             }}
-                        >
-                            {/* Filter: On Going Transaction */}
-                            <FormControl sx={{ flex: '1 1 30%' }}>
-                                <Select
-                                    value={onGoingTrans}
-                                    onChange={(e) => setOnGoingTrans(e.target.value)}
-                                    displayEmpty
-                                    inputProps={{ 'aria-label': 'Ongoing Transaction' }}
-                                    sx={{
-                                        backgroundColor: '#FFFFFF',
-                                        borderRadius: '20px',
-                                        '& .MuiSelect-select': {
-                                            padding: '8px',
-                                            fontSize: '12px',
-                                        },
-                                    }}
-                                >
-                                    <MenuItem value="Ongoing Transaction">Ongoing Transaction</MenuItem>
-                                </Select>
-                            </FormControl>
-
-                            {/* Filter: Waiting for Payment */}
-                            <FormControl sx={{ flex: '1 1 30%' }}>
-                                <Select
-                                    value={waitingPayment}
-                                    onChange={(e) => setWaitingPayment(e.target.value)}
-                                    displayEmpty
-                                    inputProps={{ 'aria-label': 'Waiting for Payment' }}
-                                    sx={{
-                                        backgroundColor: '#FFFFFF',
-                                        borderRadius: '20px',
-                                        '& .MuiSelect-select': {
-                                            padding: '8px',
-                                            fontSize: '12px',
-                                        },
-                                    }}
-                                >
-                                    <MenuItem value="Waiting Payment">Waiting For Payment</MenuItem>
-                                </Select>
-                            </FormControl>
-
-                            {/* Filter: Promo */}
-                            <FormControl sx={{ flex: '1 1 30%' }}>
-                                <Select
-                                    value={promo}
-                                    onChange={(e) => setPromo(e.target.value)}
-                                    displayEmpty
-                                    inputProps={{ 'aria-label': 'Promo' }}
-                                    sx={{
-                                        backgroundColor: '#FFFFFF',
-                                        borderRadius: '20px',
-                                        '& .MuiSelect-select': {
-                                            padding: '8px',
-                                            fontSize: '12px',
-                                        },
-                                    }}
-                                >
-                                    <MenuItem value="Promo">Promo</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    </Box>
-
-                    <Box sx={{ padding: '20px', backgroundColor: '#F4F4F4' }}>
-                        {notifications.map((notification) => (
-                            <Card
-                                key={notification.id}
+                            >
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <Checkbox checked={selectAll} onChange={handleSelectAll} />
+                                <Typography>All</Typography>
+                            </Box>
+                            <Box sx={{ textAlign: 'right', marginRight: '1px', alignItems:'right' }}> {/* Rata kanan */}
+                                <Typography>Total</Typography>
+                                <Typography variant="h6" color="primary">
+                                Rp {totalPrice.toLocaleString('id-ID')}
+                                </Typography>
+                            </Box>
+                            <Button
+                                variant="contained"
+                                color="primary"
                                 sx={{
-                                    backgroundColor: notification.isRead ? '#3CB23257' : '#FFFFFF',
-                                    borderRadius: '16px',
-                                    marginBottom: '10px',
-                                    padding: '16px',
-                                    border: '2px solid #3CB232',
+                                borderRadius: '8px',
+                                width: '80px',
+                                fontSize: '16px', // Membesarkan teks
                                 }}
                             >
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        marginBottom: '8px',
-                                    }}
-                                >
-                                    <Typography
-                                        sx={{
-                                            backgroundColor: '#3CB232',
-                                            color: 'white',
-                                            borderRadius: '15px',
-                                            padding: '4px 8px',
-                                            fontSize: '12px',
-                                            fontWeight: 'bold',
-                                        }}
-                                    >
-                                        {notification.type}
-                                    </Typography>
-                                    <Typography sx={{ fontSize: '12px', color: '#666' }}>
-                                        {notification.time}
-                                    </Typography>
-                                </Box>
-                                <Typography sx={{ fontSize: '14px', color: '#000', marginBottom: '8px' }}>
-                                    {notification.description}
-                                </Typography>
-                                <Card
-                                    sx={{
-                                        display: 'flex',
-                                        backgroundColor: notification.isRead ? '#EAF7E9' : '#3CB23257',
-                                        borderRadius: '12px',
-                                        padding: '6px',
-                                        height: '60px', // Mengurangi tinggi card dalam
-                                    }}
-                                >
-                                    <CardMedia
-                                        component="img"
-                                        image={notification.product.image}
-                                        alt="Product Image"
-                                        sx={{
-                                            width: '60px',
-                                            height: '60px',
-                                            borderRadius: '8px',
-                                        }}
-                                    />
-                                    <CardContent
-                                      sx={{
-                                          flex: 1,
-                                          padding: '8px 16px',
-                                          display: 'flex',
-                                          flexDirection: 'column',
-                                          justifyContent: 'space-between',
-                                      }}
-                                  >
-                                      <Box
-                                          sx={{
-                                              display: 'flex',
-                                              justifyContent: 'space-between', // Membuat judul dan harga sejajar
-                                              alignItems: 'center',
-                                          }}
-                                      >
-                                          <Typography sx={{ fontSize: '14px', fontWeight: 'bold', color: '#000' }}>
-                                              {notification.product.title}
-                                          </Typography>
-                                          <Typography
-                                              sx={{
-                                                  fontSize: '14px',
-                                                  color: '#0094FF',
-                                                  fontWeight: 'bold',
-                                              }}
-                                          >
-                                              {notification.product.originalPrice}
-                                          </Typography>
-                                      </Box>
-                                      <Box
-                                          sx={{
-                                              display: 'flex',
-                                              justifyContent: 'space-between', // Membuat seller dan harga diskon sejajar
-                                              alignItems: 'center',
-                                              marginTop: '4px', // Jarak antara baris atas dan bawah
-                                          }}
-                                      >
-                                          <Typography sx={{ fontSize: '12px', color: '#666' }}>
-                                              {notification.product.seller}
-                                          </Typography>
-                                          <Typography
-                                              sx={{
-                                                  fontSize: '12px',
-                                                  color: 'red',
-                                                  textDecoration: 'line-through',
-                                              }}
-                                          >
-                                              {notification.product.discountedPrice}
-                                          </Typography>
-                                      </Box>
-                                  </CardContent>
-                                </Card>
-                            </Card>
-                        ))}
+                                Buy
+                            </Button>
+                            </Box>
                     </Box>
                 </IonContent>
             </IonPage>

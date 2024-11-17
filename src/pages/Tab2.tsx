@@ -69,7 +69,7 @@ const Tab2: React.FC = () => {
 
 const handleCartButtonClick = () => {
   if (isLoggedIn) {
-    history.push('/notification'); // Redirect ke halaman message
+    history.push('/cart'); // Redirect ke halaman message
   } else {
     history.push('/login'); // Redirect ke halaman login
   }
