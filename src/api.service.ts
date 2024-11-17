@@ -35,6 +35,21 @@ export const post = async (endpoint: string, body: any, config = {}) => {
   }
 };
 
+// Function to update user data
+export const updateUser = async (token: string, updatedUser: Record<string, any>) => {
+  try {
+    const response = await axios.put('/user/update', updatedUser, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+};
+
 // GET request for token validation
 export const get = async (endpoint: string, params: any) => {
   try {

@@ -21,7 +21,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { get, post, getSkills, getUserSkills } from '../api.service';
-import { getUser, createBuyerProfile, updateBuyerProfile} from '../api.service';
+import { getUser, updateUser, createBuyerProfile, updateBuyerProfile} from '../api.service';
 import { useHistory } from 'react-router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Preferences } from '@capacitor/preferences';
@@ -41,6 +41,7 @@ const Tab4: React.FC = () => {
   const [userSkills, setUserSkills] = useState<any[]>([]); // State to store user skills
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
   const [isSkillsListVisible, setIsSkillsListVisible] = useState<boolean>(false); // State for toggling the skills dropdown
+  const [editData, setEditData] = useState({ name: '', organization: '', major: '', language: '' });
 
   const [setIsLoggedIn] = useState<boolean>(false);
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
@@ -155,18 +156,31 @@ useEffect(() => {
   const [editMajor, setEditMajor] = useState(major);
   const [editLanguage, setEditLanguage] = useState(language);
   const [open, setOpenEdit] = useState(false);// Function to open modal
-  const handleOpenEdit = () => setOpenEdit(true);
 
+  const handleOpenEdit = () => setOpenEdit(true);
   const handleCloseEdit = () => setOpenEdit(false);
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Update the state with the new values
-    setUserName(editName);
-    setUniversitas(editUniversitas);
-    setMajor(editMajor);
-    setLanguage(editLanguage);
-    handleCloseEdit(); // Close the modal after saving
+
+ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      console.error('User not logged in');
+      return;
+    }
+
+    try {
+      const response = await updateUser(token, editData);
+      console.log('User updated successfully:', response);
+
+      // Update local storage and state
+      localStorage.setItem('userInfo', JSON.stringify(editData));
+      setUserInfo(editData);
+      handleCloseEdit();
+    } catch (error) {
+      console.error('Failed to update user:', error);
+    }
   };
+  
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('userToken');
@@ -354,6 +368,37 @@ useEffect(() => {
     zIndex: 1300,  // pastikan modal memiliki z-index yang cukup tinggi
   };
 
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  
+    const formData = new FormData(event.currentTarget);
+    const updatedUser = Object.fromEntries(formData.entries());
+  
+    // Log form data to validate
+    console.log('Form data submitted:', updatedUser);
+  
+    if (Object.values(updatedUser).some((field) => !field)) {
+      console.error('Validation failed: All fields are required.');
+      return;
+    }
+  
+    // Update user in localStorage
+    const currentUser = JSON.parse(localStorage.getItem('userInfo') || '{}');
+    const updatedUserInfo = { ...currentUser, ...updatedUser };
+  
+    localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+    setUserInfo(updatedUserInfo);
+    setOpenEdit(false);
+  };
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEditData((prev) => ({ ...prev, [name]: value }));
+  };
+
+
   return (
  
     <IonPage>
@@ -437,136 +482,91 @@ useEffect(() => {
   </Grid>
 
   <Modal
-        open={open}
-        onClose={handleCloseEdit}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Box
-          sx={{
-            backgroundColor: 'white',
-            width: '350px',
-            borderRadius: '8px',
-            
-            boxShadow: 24,
-          }}
-        >
-          <Box
+  open={open}
+  onClose={handleCloseEdit}
+  sx={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <Box
+    sx={{
+      backgroundColor: 'white',
+      width: '350px',
+      borderRadius: '8px',
+      boxShadow: 24,
+    }}
+  >
+    {/* Header Section */}
+    <Box
       sx={{
-        
-        backgroundColor: '#0094FF',  // Blue background
-        borderRadius: '10px 10px 0 0',  // Rounded top corners
+        backgroundColor: '#0094FF',
+        borderRadius: '10px 10px 0 0',
         display: 'flex',
         justifyContent: 'center',
         padding: '20px',
-        margin: 0,
-        paddingLeft: 0,
-            paddingRight:0,
-        marginBottom: '20px',  // Adjust space below the blue bar
+        marginBottom: '20px',
       }}
     >
       <DialogTitle
         sx={{
-          padding: 0,  // Remove padding around text
+          padding: 0,
           color: 'white',
-          fontSize: '18px', // Adjust font size if necessary
+          fontSize: '18px',
         }}
       >
         Edit Profile
       </DialogTitle>
-      </Box>
+    </Box>
 
-      <form
-  onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();  // Prevent default form submission
-
-    // Log form data to check if it's correctly being captured
-    const formData = new FormData(event.currentTarget);
-    const name = formData.get('name') as string;
-    const organization = formData.get('organization') as string;
-    const major = formData.get('major') as string;
-    const language = formData.get('language') as string;
-
-    // Log the data that will be used for updating
-    console.log('Form data submitted:', { name, organization, major, language });
-
-    if (!name || !organization || !major || !language) {
-      console.error('Form validation failed: One or more required fields are missing.');
-      return;
-    }
-
-    // Create updated user object from form data and localStorage data
-    const updatedUser = {
-      ...JSON.parse(localStorage.getItem('userInfo') || '{}'),
-      name,
-      organization,
-      major,
-      language,
-    };
-
-    // Log before updating localStorage
-    console.log('Updating user info in localStorage:', updatedUser);
-
-    // Update localStorage with the new user info
-    localStorage.setItem('userInfo', JSON.stringify(updatedUser));
-
-    // Confirm localStorage update
-    console.log('Updated user info in localStorage:', localStorage.getItem('userInfo'));
-
-    // Optionally trigger a state update if needed to re-render the UI
-    setUserInfo(updatedUser);  // If `setUserInfo` is a state updater
-
-    // Close the modal
-    setOpenEdit(false);
-  }}
->
-
-
-            <Box sx={{ paddingLeft: '20px',
-            paddingRight:'20px',
-            paddingBottom: '20px',
-            display: 'flex', marginTop:'20px', flexDirection: 'column', alignItems: 'flex-start' }}>
-              <FormControl sx={{ marginBottom: 2 }}>
-                <FormLabel>Name*</FormLabel>
-                <TextField sx={{width: '300px' }} defaultValue={JSON.parse(localStorage.getItem('userInfo') || '{}').name} name='name'autoFocus required />
-              </FormControl>
-              <FormControl sx={{ marginBottom: 2 }}>
-                <FormLabel>Organization*</FormLabel>
-                <TextField sx={{ width: '300px' }} defaultValue={JSON.parse(localStorage.getItem('userInfo') || '{}').organization} name='organization' autoFocus required />
-              </FormControl>
-              <FormControl sx={{ marginBottom: 2 }}>
-                <FormLabel>Major*</FormLabel>
-                <TextField sx={{ width: '300px' }} defaultValue={JSON.parse(localStorage.getItem('userInfo') || '{}').major} name='major' autoFocus required />
-              </FormControl>
-              <FormControl sx={{ marginBottom: 10 }}>
-                <FormLabel>Language*</FormLabel>
-                <TextField sx={{ width: '300px' }} defaultValue={JSON.parse(localStorage.getItem('userInfo') || '{}').language} name='language' autoFocus required />
-              </FormControl>
-              <Box display="flex" justifyContent="space-between" mt={1}>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleCloseEdit}
-                  sx={{ width: '150px' }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  sx={{ marginLeft: '10px', width: '150px' }}
-                >
-                  Submit
-                </Button>
-              </Box>
-            </Box>
-          </form>
+    {/* Form Section */}
+    <form onSubmit={handleFormSubmit}>
+      <Box
+        sx={{
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+        }}
+      >
+        {['name', 'organization', 'major', 'language'].map((field) => (
+          <FormControl key={field}>
+            <FormLabel>{capitalize(field)}*</FormLabel>
+            <TextField
+              sx={{ width: '100%' }}
+              name={field}
+              defaultValue={JSON.parse(localStorage.getItem('userInfo') || '{}')[field]}
+              autoFocus={field === 'name'}
+              required
+            />
+          </FormControl>
+        ))}
+        
+        {/* Action Buttons */}
+        <Box display="flex" justifyContent="space-between" mt={1}>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleCloseEdit}
+            sx={{ width: '150px' }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            sx={{ width: '150px' }}
+          >
+            Submit
+          </Button>
         </Box>
-      </Modal>
+      </Box>
+    </form>
+  </Box>
+</Modal>
+
 
 
   <br></br>
