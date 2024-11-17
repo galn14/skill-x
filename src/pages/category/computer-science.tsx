@@ -1,11 +1,9 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar ,IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonItem, IonLabel, IonIcon, IonList, IonThumbnail,IonSearchbar} from '@ionic/react';
 import { AppBar, Toolbar, IconButton, Card, CardContent, CardMedia, Typography, Box, Button, InputBase, Select, MenuItem, FormControl, CardHeader, Avatar, CardActions } from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import React, { useState } from 'react';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import '@fontsource/poppins';  // Import the font
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -29,25 +27,41 @@ const ComputerScience: React.FC = () => {
       id: 1,
       icon: '🌐',
       title: 'Websites',
-      subcategories: ['Websites Development', 'Websites Maintenance', 'Custom Website'],
+      subcategories: [
+        {name: 'Websites Development', link: '/service/website-development'}, 
+        {name: 'Website Maintenance', link: '/service/website-maintenance' }, 
+        {name: 'Custom Website', link: '/service/custom-website'},
+      ],
     },
     {
       id: 2,
       icon: '📱',
       title: 'Application Development',
-      subcategories: ['Mobile Apps', 'Progressive Web Apps', 'Cross-Platform'],
+      subcategories: [
+        { name: 'Mobile Apps', link: '/service/mobile-apps' },
+        { name: 'Progressive Web Apps', link: '/service/progressive-web-apps' },
+        { name: 'Cross-Platform', link: '/service/cross-platform' },
+      ],
     },
     {
       id: 3,
       icon: '🔍',
       title: 'Software Development',
-      subcategories: ['Custom Software', 'Enterprise Solutions', 'Desktop Apps'],
+      subcategories: [
+        { name: 'Custom Software', link: '/service/custom-software' },
+        { name: 'Enterprise Solutions', link: '/service/enterprise-solutions' },
+        { name: 'Desktop Apps', link: '/service/desktop-apps' },
+      ],
     },
     {
       id: 4,
       icon: '🛡️',
       title: 'Support & Cybersecurity',
-      subcategories: ['Network Security', 'System Maintenance', 'Cloud Security'],
+      subcategories: [
+        { name: 'Network Security', link: '/service/network-security' },
+        { name: 'System Maintenance', link: '/service/system-maintenance' },
+        { name: 'Cloud Security', link: '/service/cloud-security' },
+      ],
     },
   ];
 
@@ -89,6 +103,13 @@ const handleCartButtonClick = () => {
   }
 };
 
+const handleServiceClick = (link: string) => {
+  if (isLoggedIn) {
+    history.push(link);
+  } else {
+    history.push('/login');
+  }
+};
 
   return (
     <ThemeProvider theme={theme}>
@@ -251,8 +272,8 @@ const handleCartButtonClick = () => {
                     </Box>
                     <IonList>
                       {service.subcategories.map((subcategory, index) => (
-                        <IonItem key={index} lines="none">
-                          <IonLabel>{subcategory}</IonLabel>
+                        <IonItem key={index} button onClick={() => handleServiceClick(subcategory.link)}>
+                          <IonLabel>{subcategory.name}</IonLabel>
                         </IonItem>
                       ))}
                     </IonList>
