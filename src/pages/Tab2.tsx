@@ -67,6 +67,14 @@ const Tab2: React.FC = () => {
     }
 };
 
+const handleCartButtonClick = () => {
+  if (isLoggedIn) {
+    history.push('/notification'); // Redirect ke halaman message
+  } else {
+    history.push('/login'); // Redirect ke halaman login
+  }
+};
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -77,7 +85,7 @@ const Tab2: React.FC = () => {
           <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
             <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
               <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' }} />
-              <IconButton color="primary">
+              <IconButton color="primary" onClick={handleCartButtonClick}>
                 <ShoppingCartIcon />
               </IconButton>
               <IconButton color="primary" onClick={handleNotificationButtonClick}>

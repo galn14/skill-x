@@ -23,7 +23,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useHistory } from 'react-router-dom';
 import '@fontsource/poppins'; // Font Import
 
-const NotificationPage: React.FC = () => {
+const CartPage: React.FC = () => {
     const history = useHistory();
     const [openModal, setOpenModal] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,16 +50,6 @@ const NotificationPage: React.FC = () => {
       }
     };
 
-    const handleCartButtonClick = () => {
-      if (isLoggedIn) {
-        history.push('/cart'); // Redirect ke halaman message
-      } else {
-        history.push('/login'); // Redirect ke halaman login
-      }
-    };
-
-    
-
     const handleBack = () => history.goBack();
 
     const theme = createTheme({
@@ -67,6 +57,14 @@ const NotificationPage: React.FC = () => {
             fontFamily: '"Poppins"',
         },
     });
+
+    const handleNotificationButtonClick = () => {
+        if (isLoggedIn) {
+          history.push('/notification'); // Redirect ke halaman message
+        } else {
+          history.push('/login'); // Redirect ke halaman login
+        }
+    };
 
     const notifications = [
       {
@@ -130,10 +128,10 @@ const NotificationPage: React.FC = () => {
                             >
                                 Notification
                             </Typography>
-                            <IconButton color="primary" onClick={handleCartButtonClick}>
+                            <IconButton color="primary">
                                 <ShoppingCartIcon />
                             </IconButton>
-                            <IconButton color="primary">
+                            <IconButton color="primary" onClick={handleNotificationButtonClick}>
                                 <NotificationsIcon />
                             </IconButton>
                             <IconButton color="primary" onClick={handleMessageButtonClick}>
@@ -345,4 +343,4 @@ const NotificationPage: React.FC = () => {
     );
 };
 
-export default NotificationPage;
+export default CartPage;

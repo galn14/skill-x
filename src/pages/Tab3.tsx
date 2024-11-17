@@ -79,6 +79,14 @@ const Tab3: React.FC = () => {
     }
 };
 
+const handleCartButtonClick = () => {
+  if (isLoggedIn) {
+    history.push('/notification'); // Redirect ke halaman message
+  } else {
+    history.push('/login'); // Redirect ke halaman login
+  }
+};
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -103,7 +111,7 @@ const Tab3: React.FC = () => {
                   />
                 </Box>
               </Box>
-              <IconButton color="primary">
+              <IconButton color="primary" onClick={handleCartButtonClick}>
                 <ShoppingCartIcon />
               </IconButton>
               <IconButton color="primary" onClick={handleNotificationButtonClick}>

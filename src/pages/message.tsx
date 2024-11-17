@@ -125,6 +125,14 @@ const MessagePage: React.FC = () => {
         }
     };
 
+    const handleCartButtonClick = () => {
+        if (isLoggedIn) {
+          history.push('/cart'); // Redirect ke halaman message
+        } else {
+          history.push('/login'); // Redirect ke halaman login
+        }
+      };
+
     return (
         <IonPage>
             {/* AppBar for header */}
@@ -163,7 +171,7 @@ const MessagePage: React.FC = () => {
                         >
                             Messages
                         </Typography>
-                        <IconButton color="primary">
+                        <IconButton color="primary" onClick={handleCartButtonClick}>
                             <ShoppingCartIcon />
                         </IconButton>
                         <IconButton color="primary" onClick={handleNotificationButtonClick}>
