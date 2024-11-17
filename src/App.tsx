@@ -17,6 +17,7 @@ import Tab3 from './pages/Tab3';
 import Tab4 from './pages/Tab4';
 import Wishlist from './pages/wishlist';
 import FollowingSeller from './pages/followingSeller';
+import Review from './pages/review';
 
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/RegisterPage';
@@ -87,6 +88,7 @@ const App: React.FC = () => (
           <Route path="/logout" component={LogoutPage} exact />
           <Route path="/wishlist" component={Wishlist} />
           <Route path="/followingseller" component={FollowingSeller} />
+          <Route path="/review" component={Review} />
 
           <Route exact path="/">
             <Redirect to="/login" />

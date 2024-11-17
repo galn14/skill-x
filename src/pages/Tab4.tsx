@@ -239,6 +239,11 @@ useEffect(() => {
     history.push('/followingSeller');
   };
 
+  const handleReviewClick= () => {
+    console.log('Navigating to Wishlist');
+    history.push('/review');
+  };
+
   const [ completePurchase, setCompletePurchase] = useState<any[]>([]);
 
   useEffect(() => {
@@ -736,13 +741,17 @@ useEffect(() => {
         <ListItemText primary="Following Seller" />
       </ListItemButton>
       <Divider />
-      <ListItemButton component="li">
+      <ListItemButton onClick={handleReviewClick} component="li">
         <ListItemIcon>
           <ReviewIcon />
         </ListItemIcon>
         <ListItemText primary="Review" />
       </ListItemButton>
       <Divider />
+      <Divider />
+
+      <Divider />
+
       <ListItemButton component="li">
         <ListItemIcon>
           <ComplainedOrderIcon />
