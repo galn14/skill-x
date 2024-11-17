@@ -44,6 +44,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import { VerifiedOutlined } from '@mui/icons-material';
+import NotificationPage from './pages/notification';
 
 setupIonicReact();
 const theme = createTheme({
@@ -82,6 +83,9 @@ const App: React.FC = () => (
           </Route>
           <Route path="/message">
             <MessagePage/>
+          </Route>
+          <Route path="/notification">
+            <NotificationPage/>
           </Route>
           <Route path="/tab4" exact><Tab4 /></Route>
           <Route path="/logout" component={LogoutPage} exact />

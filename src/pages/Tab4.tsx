@@ -45,6 +45,15 @@ const Tab4: React.FC = () => {
   const [setIsLoggedIn] = useState<boolean>(false);
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
 
+  const handleNotificationButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/notification'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+};
+
+
 
 
   useEffect(() => {
@@ -313,7 +322,7 @@ useEffect(() => {
             <IconButton color="primary">
               <ShoppingCartIcon />
             </IconButton>
-            <IconButton color="primary">
+            <IconButton color="primary" onClick={handleNotificationButtonClick}>
               <NotificationsIcon />
             </IconButton>
             <IconButton color="primary" onClick={handleMessageButtonClick}>

@@ -91,6 +91,7 @@ const reviews = [
 const MessagePage: React.FC = () => {
     const history = useHistory();
     const handleBack = () => history.goBack();
+    const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
     const [anchorElSeller, setAnchorElSeller] = React.useState<null | HTMLElement>(null);
     const [anchorElBuyer, setAnchorElBuyer] = React.useState<null | HTMLElement>(null);
     const [anchorElReview, setAnchorElReview] = React.useState<null | HTMLElement>(null);
@@ -114,6 +115,14 @@ const MessagePage: React.FC = () => {
     const handleClose = () => {
         setAnchorElSeller(null);
         setAnchorElBuyer(null);
+    };
+
+    const handleNotificationButtonClick = () => {
+        if (isLoggedIn) {
+          history.push('/notification'); // Redirect ke halaman message
+        } else {
+          history.push('/login'); // Redirect ke halaman login
+        }
     };
 
     return (
@@ -157,7 +166,7 @@ const MessagePage: React.FC = () => {
                         <IconButton color="primary">
                             <ShoppingCartIcon />
                         </IconButton>
-                        <IconButton color="primary">
+                        <IconButton color="primary" onClick={handleNotificationButtonClick}>
                             <NotificationsIcon />
                         </IconButton>
                         <IconButton color="primary">
