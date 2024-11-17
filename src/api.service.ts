@@ -66,14 +66,25 @@ export const getTokenFromAPI = async () => {
   }
 };
 
-// Register request function
-export const register = async (body: any) => {
+export const registerWithEmail = async (name: string, email: string, password: string) => {
+    try {
+      const response = await axios.post(`${baseUrl}/register`, {
+        name,
+        email,
+        password,
+      });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Registration failed');
+    }
+};
+
+export const loginWithEmail = async (email: string, password: string): Promise<any> => {
   try {
-    const response = await axios.post(`${baseUrl}/register`, body); // Replace 'register' with your actual registration endpoint
-    return response.data;
-  } catch (error) {
-    console.error('Error during registration', error);
-    throw error;
+      const response = await axios.post(`${baseUrl}/login/email`, { email, password });
+      return response.data;
+  } catch (error: any) {
+      throw error.response ? error.response.data : { message: 'An unexpected error occurred' };
   }
 };
 
@@ -312,22 +323,6 @@ export const deletePortfolio = async (id: string) => {
   }
 };
 
-// export const getBuyerProfile = async () => {
-//   try {
-//     const token = localStorage.getItem('userToken');
-//     const config = {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     };
-//     const response = await axios.get(`${baseUrl}/buyer`, config);
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error fetching buyer profile', error);
-//     throw error;
-//   }
-// };
-
 export const getUser = async () => {
   try {
     const token = localStorage.getItem('userToken');
@@ -405,33 +400,3 @@ export const loginWithGoogle = async () => {
     throw error;
   }
 };
-
-
-// Function for Google Login
-// export const loginWithGoogle = async () => {
-//   try {
-//     // Open Google sign-in popup
-//     const result = await signInWithPopup(auth, provider);
-    
-//     // Get the ID token
-//     const idToken = await result.user.getIdToken();
-    
-//     // Configure headers for the backend request
-//     const config = {
-//       headers: {
-//         Authorization: `Bearer ${idToken}`,
-//         'Content-Type': 'application/json',
-//       },
-//     };
-
-//     localStorage.setItem('userToken', idToken)
-
-//     // Send ID token to the backend
-//     const response = await axios.post(`${baseUrl}/login/google`, null, config);
-
-//     return response.data;
-//   } catch (error) {
-//     console.error('Google login error:', error);
-//     throw error;
-//   }
-// };

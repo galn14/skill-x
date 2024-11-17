@@ -8,7 +8,7 @@ import {
   IonCardContent,
   IonCardHeader
 } from '@ionic/react';
-import { register } from '../api.service'; // Import your API service
+import { registerWithEmail } from '../api.service'; // Import your API service
 import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google'; // Import icon Google
 import { useHistory } from 'react-router-dom'; // Import useHistory for routing
@@ -21,6 +21,12 @@ const RegisterPage: React.FC = () => {
   const [termsAccepted, setTermsAccepted] = useState(false); // Tambahkan state untuk termsAccepted
   const [resp, setResp] = useState<any>(null);
   const history = useHistory(); // Initialize useHistory for navigation
+
+  const [error, setError] = useState<string | null>(null);
+
+// Display error message
+{error && <Typography color="error" variant="body2">{error}</Typography>}
+
 
   // Handle form input changes (real-time input)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,18 +63,27 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
     if (data.password === data.confirmPassword && data.email && data.name) {
       try {
-        // Send 'name', 'email', 'password', and 'password_confirmation' to the backend
-        const response = await register({
-          name: data.name, // Include the 'name' field
-          email: data.email,
-          password: data.password,
-          password_confirmation: data.confirmPassword,
-        });
+        if (!termsAccepted) {
+          setError('You must accept the terms and conditions');
+          return;
+        }
+      
+        if (data.password !== data.confirmPassword) {
+          setError('Passwords do not match');
+          return;
+        }
+      
+        const response = await registerWithEmail(
+          data.name,
+          data.email,
+          data.password
+        );
+      
         console.log('Registration successful', response);
         setResp(response);
-        history.push('/login'); // Redirect to login page after successful registration
-      } catch (error) {
-        console.error('Registration failed', error);
+        history.push('/login');
+      } catch (error: any) {
+        setError(error.message || 'Registration failed');
       }
     } else {
       console.error('Passwords do not match or required fields are missing');

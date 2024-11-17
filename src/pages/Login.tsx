@@ -5,7 +5,7 @@ import {
   IonContent,
   IonButton
 } from '@ionic/react';
-import { post, loginWithGoogle } from '../api.service'; // Import your API service
+import { loginWithEmail, loginWithGoogle } from '../api.service';
 import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import { useHistory } from 'react-router-dom'; // For routing
 import GoogleIcon from '@mui/icons-material/Google'; // Import icon Google
@@ -19,6 +19,7 @@ const LoginPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [resp, setResp] = useState<any>(null);
   const history = useHistory(); // Initialize useHistory for navigation
+  const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;
@@ -28,6 +29,7 @@ const LoginPage: React.FC = () => {
       [name]: value,
     }));
   };
+
   const globalStyles = {
     '*': {
       fontFamily: 'Poppins',
@@ -49,34 +51,34 @@ const LoginPage: React.FC = () => {
     setRememberMe(e.target.checked);
   };  
 
-  // Handle login action
   const doLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null); // Reset error state
+
     if (data.email && data.password) {
-      try {
-        // Send login request to the backend
-        const response = await post('login', data);
+        try {
+            const response = await loginWithEmail(data.email, data.password);
+            console.log('API Response:', response); // Debug the API response
 
-        // If login is successful, the response should include a token
-        if (response.token) {
-          console.log('Login successful', response);
-          localStorage.setItem('userToken', response.token);
-
-          // Redirect to Tab4 after successful login
-          history.push('/tab4');
-          window.location.reload();
-        } else {
-          // Handle failed login attempt (no token received)
-          setError('Login failed: Invalid credentials');
+            if (response.token && response.user) {
+                localStorage.setItem('userToken', response.token);
+                localStorage.setItem('userInfo', JSON.stringify(response.user)); // Save userInfo
+                history.push('/tab4');
+                window.location.reload();
+            } else {
+                setError('Invalid response from server');
+                console.error('Response missing token or user:', response);
+            }
+        } catch (error: any) {
+            setError(error.message || 'Login failed');
+            console.error('Login failed:', error);
         }
-      } catch (error) {
-        setError('Login failed: ' + (error as any).message);
-        console.error('Login failed', error);
-      }
     } else {
-      setError('Email and password are required');
+        setError('Email and password are required');
     }
-  };
+};
+
+
 
   const handleGoogleLogin = async () => {
     try {
