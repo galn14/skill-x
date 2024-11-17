@@ -100,24 +100,36 @@ const handleCartButtonClick = () => {
 
       {/* Main Content */}
       <IonContent>
-        <Box display="flex" flexDirection="column" alignItems="center" pt={15} className="custom-content" >
-          <Typography variant="h6" fontWeight="bold" color="white" align="center" mt={1} marginBottom="150px">
+        <Box display="flex" flexDirection="column" alignItems="center" pt={12} className="custom-content" >
+          <Typography variant="h6" fontWeight="bold" color="white" align="center" marginBottom="10vh">
             Experience the different with pro
           </Typography>
 
-          <Box className="logo-container" mt={20}>
+          <Box className="logo-container"
+          sx={{ 
+            marginTop: '25%',
+            position: 'absolute',
+            justifyContent: 'center',
+            alignItems: 'center'
+           }}
+          >
             <img src="../public/SubscribeLogo2.png" alt="Logo" className="blur-logo" />
           </Box>
 
           {/* Subscription Cards */}
-          <Box className="subscriptions" mt={25}>
+          <Box className="subscriptions"
+            sx={{ 
+              display: 'flex',
+              marginTop: '100%',
+             }}
+          >
             {subscriptions.map((subscription) => (
               <Card
                 key={subscription.id}
                 onClick={() => window.location.href = subscription.link}
                 sx={{
                   backgroundColor: subscription.background,
-                  width: '348px',
+                  width: '80%',
                   height: '82px',
                   borderRadius: '18px',
                   marginBottom: '16px',
@@ -130,7 +142,7 @@ const handleCartButtonClick = () => {
                   },
                 }}
               >
-                <CardContent sx={{ paddingLeft: '16px' }}>
+                <CardContent sx={{ paddingLeft: '16px'}}>
                   <Typography variant="h5" fontWeight="bold">
                     {subscription.name}
                   </Typography>
@@ -146,7 +158,7 @@ const handleCartButtonClick = () => {
           <Button
             variant="contained"
             sx={{
-              width: '348px',
+              width: '80%',
               height: '59px',
               borderRadius: '18px',
               marginTop: '8px',
@@ -173,7 +185,7 @@ const handleCartButtonClick = () => {
               position: 'absolute', 
               bottom: 0, 
               width: '100%', 
-              height: '450px', 
+              height: '35%', 
               borderTopLeftRadius: '24.946px', // Hanya bagian atas yang memiliki border-radius
               borderTopRightRadius: '24.946px', // Hanya bagian atas yang memiliki border-radius
               background: 'linear-gradient(180deg, #FFF 43.6%, #FFF 99.89%)' 

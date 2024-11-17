@@ -57,7 +57,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import { VerifiedOutlined } from '@mui/icons-material';
-
+import JoinAsSeller from './pages/JoinAsSeller';
 
 setupIonicReact();
 const theme = createTheme({
@@ -129,6 +129,7 @@ const App: React.FC = () => (
           <Route path="/wishlist" component={Wishlist} />
           <Route path="/followingseller" component={FollowingSeller} />
           <Route path="/review" component={Review} />
+          <Route path="/JoinAsSeller" component={JoinAsSeller}/>
 
           <Route exact path="/">
             <Redirect to="/login" />
