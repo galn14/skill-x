@@ -121,9 +121,6 @@ const LoginPage: React.FC = () => {
               Login
             </IonButton>
           </Box>
-          <IonButton fill="clear" routerLink="/register" className="text-blue-500">
-            Sign Up
-          </IonButton>
         </Toolbar>
       </AppBar>
 
@@ -143,9 +140,9 @@ const LoginPage: React.FC = () => {
             alt="SkillX Logo"
             src="public/SkillXLogo.png"
             style={{
-              width: '250px',
+              width: '330px',
               height: 'auto',
-              marginBottom: '20px',
+              marginBottom: '50px',
             }}
           />
 
@@ -157,43 +154,6 @@ const LoginPage: React.FC = () => {
               maxWidth: '400px',
             }}
           >
-            {/* Email Field */}
-            <TextField
-              name="email"
-              label="Email"
-              type="email"
-              value={data.email}
-              onChange={handleInputChange}
-              fullWidth
-              variant="outlined"
-              required
-              size="medium"
-              sx={{
-                marginBottom: '16px',
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '10px',
-                },
-              }}
-            />
-
-            {/* Password Field */}
-            <TextField
-              name="password"
-              label="Password"
-              type="password"
-              value={data.password}
-              onChange={handleInputChange}
-              fullWidth
-              variant="outlined"
-              required
-              size="medium"
-              sx={{
-                marginBottom: '16px',
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '10px',
-                },
-              }}
-            />
 
             {/* Remember Me Checkbox */}
             <FormControlLabel
@@ -208,23 +168,6 @@ const LoginPage: React.FC = () => {
               label="Remember me"
               sx={{ display: 'flex'}}
             />
-
-            {/* Login Button */}
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-              size="large"
-              sx={{
-                borderRadius: '10px',
-                paddingY: '12px',
-                fontSize: '1.1rem',
-                marginBottom: '16px'
-              }}
-            >
-              Sign In
-            </Button>
 
             {/* Google Login Button */}
             <Button
