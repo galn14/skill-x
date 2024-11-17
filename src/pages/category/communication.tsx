@@ -29,25 +29,41 @@ const Communication: React.FC = () => {
           id: 1,
           icon: '🌐',
           title: 'Corporate Communication',
-          subcategories: ['Internal Communication Strategy', 'Stakeholder Communication', 'Corporate Newsletter Design'],
+          subcategories: [
+            {name: 'Internal Communication Strategy', link:'/service/internal-communication-strategy'}, 
+            {name :'Stakeholder Communication', link:'/service/stakeholder-communication'}, 
+            {name :'Corporate Newsletter Design', link:'/service/corporate-newsletter-design'}
+          ],
         },
         {
           id: 2,
           icon: '📱',
           title: 'Social Media Management',
-          subcategories: ['Social Media Content Strategy', 'Social Media Campaigns', 'Analytics and Reporting'],
+          subcategories: [
+            { name: 'Social Media Content Strategy', link: '/service/social-media-content-strategy' },
+            { name: 'Social Media Campaigns', link: '/service/social-media-campaigns' },
+            { name: 'Analytics and Reporting', link: '/service/analytics-and-reporting' },
+          ],
         },
         {
           id: 3,
           icon: '🔍',
           title: 'Public Speaking and Traininy',
-          subcategories: ['Corporate Training Sessions', 'Presentation Coaching', 'Public Speaking Workshops'],
+          subcategories: [
+            { name: 'Corporate Training Sessions', link: '/service/corporate-training-sessions' },
+            { name: 'Presentation Coaching', link: '/service/presentation-coaching' },
+            { name: 'Public Speaking Workshops', link: '/service/public-speaking-workshops' },
+          ],
         },
         {
           id: 4,
           icon: '🛡️',
           title: 'Build Prototype for Communication',
-          subcategories: ['Presentation Prototyping', 'Social Media Content Prototyping', 'Internal Communication Tools Prototyping'],
+          subcategories: [
+            { name: 'Presentation Prototyping', link: '/service/presentation-prototyping' },
+            { name: 'Social Media Content Prototyping', link: '/service/social-media-content-prototyping' },
+            { name: 'Internal Communication Tools Prototyping', link: '/service/internal-communication-tools-prototyping' },
+          ],
         },
       ];
 
@@ -88,6 +104,15 @@ const handleCartButtonClick = () => {
     history.push('/login'); // Redirect ke halaman login
   }
 };
+
+const handleServiceClick = (link: string) => {
+  if (isLoggedIn) {
+    history.push(link);
+  } else {
+    history.push('/login');
+  }
+};
+
 
 
   return (
@@ -251,8 +276,8 @@ const handleCartButtonClick = () => {
                     </Box>
                     <IonList>
                       {service.subcategories.map((subcategory, index) => (
-                        <IonItem key={index} lines="none">
-                          <IonLabel>{subcategory}</IonLabel>
+                        <IonItem key={index} button onClick={() => handleServiceClick(subcategory.link)}>
+                          <IonLabel>{subcategory.name}</IonLabel>
                         </IonItem>
                       ))}
                     </IonList>

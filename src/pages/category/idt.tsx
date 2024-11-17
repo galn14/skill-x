@@ -29,25 +29,41 @@ const InteractiveDesignTechnology: React.FC = () => {
           id: 1,
           icon: '🌐',
           title: 'Web Development',
-          subcategories: ['Front-End Development', 'Back-End Development', 'Web Application Development'],
+          subcategories: [
+            { name: 'Front-End Development', link: '/service/front-end-development' },
+            { name: 'Back-End Development', link: '/service/back-end-development' },
+            { name: 'Web Application Development', link: '/service/web-application-development' },
+          ],
         },
         {
           id: 2,
           icon: '📱',
           title: 'App Development',
-          subcategories: ['Mobile App Development (iOS, Android)', 'Progressive Web Apps (PWA)', 'Cross-Platform App Development'],
+          subcategories: [
+            { name: 'Mobile App Development (iOS, Android)', link: '/service/mobile-app-development' },
+            { name: 'Progressive Web Apps (PWA)', link: '/service/progressive-web-apps' },
+            { name: 'Cross-Platform App Development', link: '/service/cross-platform-app-development' },
+          ],
         },
         {
           id: 3,
           icon: '🔍',
           title: 'Interactive Media',
-          subcategories: ['Interactive Kiosks', 'AR/VR Experiences', 'Digital Signage Solutions'],
+          subcategories: [
+            { name: 'Interactive Kiosks', link: '/service/interactive-kiosks' },
+            { name: 'AR/VR Experiences', link: '/service/ar-vr-experiences' },
+            { name: 'Digital Signage Solutions', link: '/service/digital-signage-solutions' },
+          ],
         },
         {
           id: 4,
           icon: '🛡️',
           title: 'Build Prototype for Interactive Design',
-          subcategories: ['Interactive Prototyping for Apps', 'Interactive Website Prototyping', 'Virtual Reality Prototyping'],
+          subcategories: [
+            { name: 'Interactive Prototyping for Apps', link: '/service/interactive-app-prototyping' },
+            { name: 'Interactive Website Prototyping', link: '/service/interactive-website-prototyping' },
+            { name: 'Virtual Reality Prototyping', link: '/service/virtual-reality-prototyping' },
+          ],
         },
       ];
 
@@ -86,6 +102,14 @@ const handleCartButtonClick = () => {
     history.push('/cart'); // Redirect ke halaman message
   } else {
     history.push('/login'); // Redirect ke halaman login
+  }
+};
+
+const handleServiceClick = (link: string) => {
+  if (isLoggedIn) {
+    history.push(link);
+  } else {
+    history.push('/login');
   }
 };
 
@@ -251,9 +275,9 @@ const handleCartButtonClick = () => {
                     </Box>
                     <IonList>
                       {service.subcategories.map((subcategory, index) => (
-                        <IonItem key={index} lines="none">
-                          <IonLabel>{subcategory}</IonLabel>
-                        </IonItem>
+                        <IonItem key={index} button onClick={() => handleServiceClick(subcategory.link)}>
+                          <IonLabel>{subcategory.name}</IonLabel>
+                      </IonItem>
                       ))}
                     </IonList>
                   </IonCardContent>

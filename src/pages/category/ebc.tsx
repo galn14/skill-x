@@ -29,25 +29,41 @@ const EntreprenurhsipBusinessCreation: React.FC = () => {
       id: 1,
       icon: '🌐',
       title: 'Business Plan Development',
-      subcategories: ['Startup Business Plans', 'Financial Modeling & Projections', 'Market Research and Analysis'],
+      subcategories: [
+        { name: 'Startup Business Plans', link: '/service/startup-business-plans' },
+        { name: 'Financial Modeling & Projections', link: '/service/financial-modeling' },
+        { name: 'Market Research and Analysis', link: '/service/market-research' },
+      ],
     },
     {
       id: 2,
       icon: '📱',
       title: 'Marketing Strategy',
-      subcategories: ['Branding & Identity Development', 'Digital Marketing Strategy', 'Customer Acquisition Plans'],
+      subcategories: [
+        { name: 'Branding & Identity Development', link: '/service/branding-identity' },
+        { name: 'Digital Marketing Strategy', link: '/service/digital-marketing' },
+        { name: 'Customer Acquisition Plans', link: '/service/customer-acquisition' },
+      ],
     },
     {
       id: 3,
       icon: '🔍',
       title: 'Business Coaching',
-      subcategories: ['Startup Mentorship', 'Pitch Preparation', 'Leadership Coaching'],
+      subcategories: [
+        { name: 'Startup Mentorship', link: '/service/startup-mentorship' },
+        { name: 'Pitch Preparation', link: '/service/pitch-preparation' },
+        { name: 'Leadership Coaching', link: '/service/leadership-coaching' },
+      ],
     },
     {
       id: 4,
       icon: '🛡️',
       title: 'Build Prototype for Business',
-      subcategories: ['MVP (Minimum Viable Product) Prototyping', 'Startup Web App Prototyping', 'Product Prototyping'],
+      subcategories: [
+        { name: 'MVP (Minimum Viable Product) Prototyping', link: '/service/mvp-prototyping' },
+        { name: 'Startup Web App Prototyping', link: '/service/startup-web-app' },
+        { name: 'Product Prototyping', link: '/service/product-prototyping' },
+      ],
     },
   ];
 
@@ -86,6 +102,14 @@ const handleCartButtonClick = () => {
     history.push('/cart'); // Redirect ke halaman message
   } else {
     history.push('/login'); // Redirect ke halaman login
+  }
+};
+
+const handleServiceClick = (link: string) => {
+  if (isLoggedIn) {
+    history.push(link);
+  } else {
+    history.push('/login');
   }
 };
 
@@ -251,9 +275,9 @@ const handleCartButtonClick = () => {
                     </Box>
                     <IonList>
                       {service.subcategories.map((subcategory, index) => (
-                        <IonItem key={index} lines="none">
-                          <IonLabel>{subcategory}</IonLabel>
-                        </IonItem>
+                      <IonItem key={index} button onClick={() => handleServiceClick(subcategory.link)}>
+                        <IonLabel>{subcategory.name}</IonLabel>
+                      </IonItem>
                       ))}
                     </IonList>
                   </IonCardContent>

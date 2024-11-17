@@ -29,25 +29,41 @@ const VisualCommunicationDesign: React.FC = () => {
       id: 1,
       icon: '🌐',
       title: 'Logo Design',
-      subcategories: ['Brand Logo Design', 'Business Logo Design', 'Event Logo Design'],
+      subcategories: [
+        { name: 'Brand Logo Design', link: '/service/brand-logo-design' },
+        { name: 'Business Logo Design', link: '/service/business-logo-design' },
+        { name: 'Event Logo Design', link: '/service/event-logo-design' },
+      ],
     },
     {
       id: 2,
       icon: '📱',
       title: 'Graphic Design',
-      subcategories: ['Social Media Graphics', 'Print Media Design (flyers, brochures)', 'Infographics'],
+      subcategories: [
+        { name: 'Social Media Graphics', link: '/service/social-media-graphics' },
+        { name: 'Print Media Design (flyers, brochures)', link: '/service/print-media-design' },
+        { name: 'Infographics', link: '/service/infographics' },
+      ],
     },
     {
       id: 3,
       icon: '🔍',
       title: 'Video Editing',
-      subcategories: ['Promotional Video Editing', 'Social Media Video Editing', 'Corporate Video Editing'],
+      subcategories: [
+        { name: 'Promotional Video Editing', link: '/service/promotional-video-editing' },
+        { name: 'Social Media Video Editing', link: '/service/social-media-video-editing' },
+        { name: 'Corporate Video Editing', link: '/service/corporate-video-editing' },
+      ],
     },
     {
       id: 4,
       icon: '🛡️',
       title: 'UI/UX Design',
-      subcategories: ['Website Design', 'Mobile Apps Design', 'Interactive Prototyping'],
+      subcategories: [
+        { name: 'Website Design', link: '/service/website-design' },
+        { name: 'Mobile Apps Design', link: '/service/mobile-apps-design' },
+        { name: 'Interactive Prototyping', link: '/service/interactive-prototyping' },
+      ],
     },
   ];
 
@@ -89,6 +105,13 @@ const handleCartButtonClick = () => {
   }
 };
 
+const handleServiceClick = (link: string) => {
+  if (isLoggedIn) {
+    history.push(link);
+  } else {
+    history.push('/login');
+  }
+};
 
   return (
     <ThemeProvider theme={theme}>
@@ -251,9 +274,9 @@ const handleCartButtonClick = () => {
                     </Box>
                     <IonList>
                       {service.subcategories.map((subcategory, index) => (
-                        <IonItem key={index} lines="none">
-                          <IonLabel>{subcategory}</IonLabel>
-                        </IonItem>
+                      <IonItem key={index} button onClick={() => handleServiceClick(subcategory.link)}>
+                        <IonLabel>{subcategory.name}</IonLabel>
+                     </IonItem>
                       ))}
                     </IonList>
                   </IonCardContent>

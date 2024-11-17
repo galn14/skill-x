@@ -29,25 +29,41 @@ const InteriorDesign: React.FC = () => {
           id: 1,
           icon: '🌐',
           title: 'Residential Interior Design',
-          subcategories: ['Living Room Design', 'Kitchen & Dining Design', 'Bedroom Design'],
+          subcategories: [
+            { name: 'Living Room Design', link: '/service/living-room-design' },
+            { name: 'Kitchen & Dining Design', link: '/service/kitchen-dining-design' },
+            { name: 'Bedroom Design', link: '/service/bedroom-design' },
+          ],
         },
         {
           id: 2,
           icon: '📱',
           title: 'Commercial Interior Design',
-          subcategories: ['Office Design', 'Retail Store Design', 'Restaurant & Cafe Design'],
+          subcategories: [
+            { name: 'Office Design', link: '/service/office-design' },
+            { name: 'Retail Store Design', link: '/service/retail-store-design' },
+            { name: 'Restaurant & Cafe Design', link: '/service/restaurant-cafe-design' },
+          ],
         },
         {
           id: 3,
           icon: '🔍',
           title: '3D Visualization & Rendering',
-          subcategories: ['Interior Rendering', 'Floor Plans and Layouts', 'Virtual Walkthroughs'],
+          subcategories: [
+            { name: 'Interior Rendering', link: '/service/interior-rendering' },
+            { name: 'Floor Plans and Layouts', link: '/service/floor-plans-layouts' },
+            { name: 'Virtual Walkthroughs', link: '/service/virtual-walkthroughs' },
+          ],
         },
         {
           id: 4,
           icon: '🛡️',
           title: 'Build Prototype for Interior Design',
-          subcategories: ['Furniture Prototyping', 'Display/Store Design Prototyping', 'Room Layout Prototyping'],
+          subcategories: [
+            { name: 'Furniture Prototyping', link: '/service/furniture-prototyping' },
+            { name: 'Display/Store Design Prototyping', link: '/service/display-store-prototyping' },
+            { name: 'Room Layout Prototyping', link: '/service/room-layout-prototyping' },
+          ],
         },
       ];
 
@@ -89,6 +105,13 @@ const handleCartButtonClick = () => {
   }
 };
 
+const handleServiceClick = (link: string) => {
+  if (isLoggedIn) {
+    history.push(link);
+  } else {
+    history.push('/login');
+  }
+};
 
   return (
     <ThemeProvider theme={theme}>
@@ -251,9 +274,9 @@ const handleCartButtonClick = () => {
                     </Box>
                     <IonList>
                       {service.subcategories.map((subcategory, index) => (
-                        <IonItem key={index} lines="none">
-                          <IonLabel>{subcategory}</IonLabel>
-                        </IonItem>
+                        <IonItem key={index} button onClick={() => handleServiceClick(subcategory.link)}>
+                          <IonLabel>{subcategory.name}</IonLabel>
+                      </IonItem>
                       ))}
                     </IonList>
                   </IonCardContent>

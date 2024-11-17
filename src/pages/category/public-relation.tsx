@@ -29,25 +29,41 @@ const PublicRelation: React.FC = () => {
           id: 1,
           icon: '🌐',
           title: 'Media Relations',
-          subcategories: ['Press Release Writing', 'Media Outreach', 'Crisis Communication'],
+          subcategories: [
+            { name: 'Press Release Writing', link: '/service/press-release-writing' },
+            { name: 'Media Outreach', link: '/service/media-outreach' },
+            { name: 'Crisis Communication', link: '/service/crisis-communication' },
+          ],
         },
         {
           id: 2,
           icon: '📱',
           title: 'Event Management',
-          subcategories: ['Corporate Event Planning', 'Press Conferences', 'Product Launch Events'],
+          subcategories: [
+            { name: 'Corporate Event Planning', link: '/service/corporate-event-planning' },
+            { name: 'Press Conferences', link: '/service/press-conferences' },
+            { name: 'Product Launch Events', link: '/service/product-launch-events' },
+          ],
         },
         {
           id: 3,
           icon: '🔍',
           title: 'Content Strategy',
-          subcategories: ['Blog Writing and Strategy', 'Social Media Strategy', 'Video Content for PR Campaigns'],
+          subcategories: [
+            { name: 'Blog Writing and Strategy', link: '/service/blog-writing-strategy' },
+            { name: 'Social Media Strategy', link: '/service/social-media-strategy' },
+            { name: 'Video Content for PR Campaigns', link: '/service/video-content-pr-campaigns' },
+          ],
         },
         {
           id: 4,
           icon: '🛡️',
           title: 'Build Prototype for Public Relation',
-          subcategories: ['Press Kit Prototyping', 'Event Layout Prototyping', 'Digital Campaign Prototyping'],
+          subcategories: [
+            { name: 'Press Kit Prototyping', link: '/service/press-kit-prototyping' },
+            { name: 'Event Layout Prototyping', link: '/service/event-layout-prototyping' },
+            { name: 'Digital Campaign Prototyping', link: '/service/digital-campaign-prototyping' },
+          ],
         },
       ];
 
@@ -89,6 +105,13 @@ const handleCartButtonClick = () => {
   }
 };
 
+const handleServiceClick = (link: string) => {
+  if (isLoggedIn) {
+    history.push(link);
+  } else {
+    history.push('/login');
+  }
+};
 
   return (
     <ThemeProvider theme={theme}>
@@ -251,9 +274,9 @@ const handleCartButtonClick = () => {
                     </Box>
                     <IonList>
                       {service.subcategories.map((subcategory, index) => (
-                        <IonItem key={index} lines="none">
-                          <IonLabel>{subcategory}</IonLabel>
-                        </IonItem>
+                        <IonItem key={index} button onClick={() => handleServiceClick(subcategory.link)}>
+                          <IonLabel>{subcategory.name}</IonLabel>
+                      </IonItem>
                       ))}
                     </IonList>
                   </IonCardContent>

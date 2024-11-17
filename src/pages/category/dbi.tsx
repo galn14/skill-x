@@ -29,25 +29,41 @@ const DigitalBusinessInnovation: React.FC = () => {
       id: 1,
       icon: '🌐',
       title: 'E-Commerce Website Development',
-      subcategories: ['Online Store Design', 'Payment Gateway Integration', 'E-Commerce Platform Setup'],
+      subcategories: [
+        { name: 'Online Store Design', link: '/service/online-store-design' },
+        { name: 'Payment Gateway Integration', link: '/service/payment-gateway-integration' },
+        { name: 'E-Commerce Platform Setup', link: '/service/ecommerce-platform-setup' },
+      ],
     },
     {
       id: 2,
       icon: '📱',
       title: 'Business Automation',
-      subcategories: ['CRM Integration', 'Email Marketing Setup', 'Workflow Automation'],
+      subcategories: [
+        { name: 'CRM Integration', link: '/service/crm-integration' },
+        { name: 'Email Marketing Setup', link: '/service/email-marketing-setup' },
+        { name: 'Workflow Automation', link: '/service/workflow-automation' },
+      ],
     },
     {
       id: 3,
       icon: '🔍',
       title: 'Digital Marketing',
-      subcategories: ['Social Media Campaigns', 'SEO & Content Strategy', 'Influencer Marketing'],
+      subcategories: [
+        { name: 'Social Media Campaigns', link: '/service/social-media-campaigns' },
+        { name: 'SEO & Content Strategy', link: '/service/seo-content-strategy' },
+        { name: 'Influencer Marketing', link: '/service/influencer-marketing' },
+      ],
     },
     {
       id: 4,
       icon: '🛡️',
       title: 'Build Prototype for Digital Business',
-      subcategories: ['Business Web Application Prototyping', 'E-commerce App Prototyping', 'Customer Dashboard Prototyping'],
+      subcategories: [
+        { name: 'Business Web Application Prototyping', link: '/service/business-web-application-prototyping' },
+        { name: 'E-commerce App Prototyping', link: '/service/ecommerce-app-prototyping' },
+        { name: 'Customer Dashboard Prototyping', link: '/service/customer-dashboard-prototyping' },
+      ],
     },
   ];
 
@@ -86,6 +102,14 @@ const handleCartButtonClick = () => {
     history.push('/cart'); // Redirect ke halaman message
   } else {
     history.push('/login'); // Redirect ke halaman login
+  }
+};
+
+const handleServiceClick = (link: string) => {
+  if (isLoggedIn) {
+    history.push(link);
+  } else {
+    history.push('/login');
   }
 };
 
@@ -251,8 +275,8 @@ const handleCartButtonClick = () => {
                     </Box>
                     <IonList>
                       {service.subcategories.map((subcategory, index) => (
-                        <IonItem key={index} lines="none">
-                          <IonLabel>{subcategory}</IonLabel>
+                        <IonItem key={index} button onClick={() => handleServiceClick(subcategory.link)}>
+                          <IonLabel>{subcategory.name}</IonLabel>
                         </IonItem>
                       ))}
                     </IonList>
