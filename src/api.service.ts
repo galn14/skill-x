@@ -29,20 +29,26 @@ export const post = async (endpoint: string, body: any, config = {}) => {
     // Make POST request with the given endpoint, body, and config (headers)
     const response = await axios.post(`${baseUrl}/${endpoint}`, body, config);
     return response.data; // Return response data
-  } catch (error) {
+  } catch (error) { 
     console.error('Error during POST request', error); // Log any errors
     throw error; // Rethrow error for handling in component
   }
 };
 
-// Function to update user data
 export const updateUser = async (token: string, updatedUser: Record<string, any>) => {
   try {
-    const response = await axios.put('/user/update', updatedUser, {
+
+    console.log('Updating user with data:', updatedUser); // Log the data being sent
+    console.log('API URL:', `${baseUrl}/user/update`); // Log the full URL
+
+    const response = await axios.put(`${baseUrl}/user/update`, updatedUser, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    console.log('API response:', response); // Log the full response data
+
     return response.data;
   } catch (error) {
     console.error('Error updating user:', error);
@@ -172,221 +178,6 @@ export const updateSkill = async (id: string, data: any) => {
   }
 };
 
-// Function to delete a skill by ID
-export const deleteSkill = async (id: string) => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await axios.delete(`${baseUrl}/delete/${id}`, config);
-    return response.data;
-  } catch (error) {
-    console.error(`Error deleting skill with ID: ${id}`, error);
-    throw error;
-  }
-};
-
-// Function to get user's skills
-export const getUserSkills = async () => {
-  try {
-    const response = await get('user/skills/view', {}); // 'user/skills/view' API endpoint
-    return response;
-  } catch (error) {
-    console.error('Error fetching user skills', error);
-    throw error;
-  }
-};
-// Function to view all skills of the current user
-export const viewUserSkills = async () => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await axios.get(`${baseUrl}/user/skills/view`, config);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching user skills', error);
-    throw error;
-  }
-};
-
-// Function to add a skill to the current user
-export const addUserSkill = async (data: any) => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    };
-    const response = await axios.post(`${baseUrl}/user/skills/add`, data, config);
-    return response.data;
-  } catch (error) {
-    console.error('Error adding skill to user', error);
-    throw error;
-  }
-};
-
-// Function to delete a skill from the current user by skill ID
-export const deleteUserSkill = async (skillId: string) => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await axios.delete(`${baseUrl}/user/skills/delete/${skillId}`, config);
-    return response.data;
-  } catch (error) {
-    console.error(`Error deleting user skill with ID: ${skillId}`, error);
-    throw error;
-  }
-};
-
-// Function to view all portfolio items of the current user
-export const viewPortfolios = async () => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await axios.get(`${baseUrl}/user/portfolios/view`, config);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching portfolios', error);
-    throw error;
-  }
-};
-
-// Function to create a new portfolio item
-export const createPortfolio = async (data: any) => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    };
-    const response = await axios.post(`${baseUrl}/user/portfolios/create`, data, config);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating portfolio item', error);
-    throw error;
-  }
-};
-
-// Function to view a specific portfolio item by ID
-export const viewPortfolio = async (id: string) => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await axios.get(`${baseUrl}/user/portfolios/view/${id}`, config);
-    return response.data;
-  } catch (error) {
-    console.error(`Error viewing portfolio item with ID: ${id}`, error);
-    throw error;
-  }
-};
-
-// Function to update a specific portfolio item by ID
-export const updatePortfolio = async (id: string, data: any) => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    };
-    const response = await axios.put(`${baseUrl}/user/portfolios/update/${id}`, data, config);
-    return response.data;
-  } catch (error) {
-    console.error(`Error updating portfolio item with ID: ${id}`, error);
-    throw error;
-  }
-};
-
-// Function to delete a portfolio item by ID
-export const deletePortfolio = async (id: string) => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await axios.delete(`${baseUrl}/user/portfolios/delete/${id}`, config);
-    return response.data;
-  } catch (error) {
-    console.error(`Error deleting portfolio item with ID: ${id}`, error);
-    throw error;
-  }
-};
-
-export const getUser = async () => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await axios.get(`${baseUrl}/user`, config);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching user data', error);
-    throw error;
-  }
-};
-
-export const createBuyerProfile = async (data: any) => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    };
-    const response = await axios.post(`${baseUrl}/buyer`, data, config);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating buyer profile', error);
-    throw error;
-  }
-};
-
-export const updateBuyerProfile = async (data: any) => {
-  try {
-    const token = localStorage.getItem('userToken');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    };
-    const response = await axios.put(`${baseUrl}/buyer`, data, config);
-    return response.data;
-  } catch (error) {
-    console.error('Error updating buyer profile', error);
-    throw error;
-  }
-};
 
 export const loginWithGoogle = async () => {
   try {
