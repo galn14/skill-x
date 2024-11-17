@@ -134,7 +134,7 @@ const RegisterAsSeller: React.FC = () => {
                     maxWidth: '400px',
                     overflowY: 'visible',
                     paddingBottom: '20px',
-                    marginBottom:'200px',
+                    marginBottom:'250px',
 
                     }}
                 >
