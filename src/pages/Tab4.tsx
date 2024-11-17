@@ -53,8 +53,21 @@ const Tab4: React.FC = () => {
     }
 };
 
+//user info change
+const [userInfo, setUserInfo] = React.useState(() => {
+  return JSON.parse(localStorage.getItem('userInfo') || '{}');
+});
 
+React.useEffect(() => {
+  const handleStorageChange = () => {
+    setUserInfo(JSON.parse(localStorage.getItem('userInfo') || '{}'));
+  };
 
+  window.addEventListener('storage', handleStorageChange);
+  return () => {
+    window.removeEventListener('storage', handleStorageChange);
+  };
+}, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -353,23 +366,14 @@ useEffect(() => {
 
         <Grid item xs sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left', marginTop: '150px', marginLeft: '16px', height: '80px' }}>
           
-          {/* User Name */}
-          <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '2px' }}>
-            {userName || 'Nama Pengguna'}
-          </Typography>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '2px' }}>{userInfo.name || 'Nama Pengguna'}</Typography>
+        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: '6px' }}> {userInfo.organization || 'Universitas'} | {userInfo.major || 'major'}</Typography>
 
-          {/* University and Major */}
-          <Typography variant="body2" color="textSecondary" sx={{ marginBottom: '6px' }}>
-            {buyerData?.Universitas || 'Universitas'} | {buyerData?.Major || 'Jurusan'}
-          </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+          <LanguageIcon fontSize="small" sx={{ marginRight: 0.5 }} />
+          <Typography variant="body2" color="textSecondary">{userInfo.language || 'Bahasa'}</Typography>
+      </Box>
 
-          {/* Language */}
-          <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
-            <LanguageIcon fontSize="small" sx={{ marginRight: 0.5 }} />
-            <Typography variant="body2" color="textSecondary">
-              {buyerData?.Language || 'Bahasa'}
-            </Typography>
-          </Box> 
 
           {/* Join as Seller Button */}
           <Button 
@@ -451,31 +455,71 @@ useEffect(() => {
       </DialogTitle>
       </Box>
 
-          <form
-            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-              event.preventDefault();
-              setOpenEdit(false);
-            }}
-          >
+      <form
+  onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();  // Prevent default form submission
+
+    // Log form data to check if it's correctly being captured
+    const formData = new FormData(event.currentTarget);
+    const name = formData.get('name') as string;
+    const organization = formData.get('organization') as string;
+    const major = formData.get('major') as string;
+    const language = formData.get('language') as string;
+
+    // Log the data that will be used for updating
+    console.log('Form data submitted:', { name, organization, major, language });
+
+    if (!name || !organization || !major || !language) {
+      console.error('Form validation failed: One or more required fields are missing.');
+      return;
+    }
+
+    // Create updated user object from form data and localStorage data
+    const updatedUser = {
+      ...JSON.parse(localStorage.getItem('userInfo') || '{}'),
+      name,
+      organization,
+      major,
+      language,
+    };
+
+    // Log before updating localStorage
+    console.log('Updating user info in localStorage:', updatedUser);
+
+    // Update localStorage with the new user info
+    localStorage.setItem('userInfo', JSON.stringify(updatedUser));
+
+    // Confirm localStorage update
+    console.log('Updated user info in localStorage:', localStorage.getItem('userInfo'));
+
+    // Optionally trigger a state update if needed to re-render the UI
+    setUserInfo(updatedUser);  // If `setUserInfo` is a state updater
+
+    // Close the modal
+    setOpenEdit(false);
+  }}
+>
+
+
             <Box sx={{ paddingLeft: '20px',
             paddingRight:'20px',
             paddingBottom: '20px',
             display: 'flex', marginTop:'20px', flexDirection: 'column', alignItems: 'flex-start' }}>
               <FormControl sx={{ marginBottom: 2 }}>
                 <FormLabel>Name*</FormLabel>
-                <TextField sx={{width: '300px' }} autoFocus required />
+                <TextField sx={{width: '300px' }} defaultValue={JSON.parse(localStorage.getItem('userInfo') || '{}').name} name='name'autoFocus required />
               </FormControl>
               <FormControl sx={{ marginBottom: 2 }}>
                 <FormLabel>Organization*</FormLabel>
-                <TextField sx={{ width: '300px' }} autoFocus required />
+                <TextField sx={{ width: '300px' }} defaultValue={JSON.parse(localStorage.getItem('userInfo') || '{}').organization} name='organization' autoFocus required />
               </FormControl>
               <FormControl sx={{ marginBottom: 2 }}>
                 <FormLabel>Major*</FormLabel>
-                <TextField sx={{ width: '300px' }} autoFocus required />
+                <TextField sx={{ width: '300px' }} defaultValue={JSON.parse(localStorage.getItem('userInfo') || '{}').major} name='major' autoFocus required />
               </FormControl>
               <FormControl sx={{ marginBottom: 10 }}>
                 <FormLabel>Language*</FormLabel>
-                <TextField sx={{ width: '300px' }} autoFocus required />
+                <TextField sx={{ width: '300px' }} defaultValue={JSON.parse(localStorage.getItem('userInfo') || '{}').language} name='language' autoFocus required />
               </FormControl>
               <Box display="flex" justifyContent="space-between" mt={1}>
                 <Button
