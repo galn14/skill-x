@@ -11,7 +11,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import * as React from 'react';
 //import './Tab4.css';
 import {Stack, FormControl, FormLabel, Input, TextField, Modal, Divider, List, ListItemButton, ListItemIcon, ListItemText, Avatar, Grid, AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, Menu, MenuItem } from '@mui/material' ;
-import { List as ListIcon, FavoriteBorder as WishlistIcon, PersonOutline as FollowingSellerIcon, ChatBubbleOutline as ReviewIcon, HeadsetMic as ComplainedOrderIcon, HelpOutline as HelpIcon } from '@mui/icons-material';
+import { List as ListIcon, FavoriteBorder as WishlistIcon, PersonOutline as FollowingSellerIcon, ChatBubbleOutline as ReviewIcon, HeadsetMic as ComplainedOrderIcon, HelpOutline as HelpIcon, Token } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import '@fontsource/poppins';  // Import the font
@@ -20,8 +20,7 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { get, post, getSkills, getUserSkills } from '../api.service';
-import { getUser, updateUser, createBuyerProfile, updateBuyerProfile} from '../api.service';
+import { get, post, updateUser } from '../api.service';
 import { useHistory } from 'react-router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Preferences } from '@capacitor/preferences';
@@ -70,19 +69,6 @@ React.useEffect(() => {
   };
 }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userData = await getUser();
-        setUserName(userData.name); // Mengambil variabel 'name' dari user data
-      } catch (error) {
-        console.error('Failed to fetch user data:', error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
   // Load saved image on component mount
   useEffect(() => {
     const loadImage = async () => {
@@ -107,39 +93,6 @@ const handleClose = () => {
   setAnchorEl(null);
 };
 
-// Handle selecting a skill from the dropdown
-const handleSelectSkill = (skillTitle: string) => {
-  console.log(`Skill selected: ${skillTitle}`); // Log the selected skill
-  setSelectedSkill(skillTitle); // Set the selected skill
-  handleClose(); // Close the menu
-};
-
-// Log the skills data each time it updates
-useEffect(() => {
-  console.log('Skills data updated:', skills); // Log skills whenever the state updates
-}, [skills]);
-
-useEffect(() => {
-  const fetchSkillsData = async () => {
-    try {
-      console.log('Fetching skills data...'); // Log before fetching
-      const skillsData = await get('skills/fetch', {});
-      console.log('Fetched skills data:', skillsData); // Log the fetched data
-      
-      // Check if skills data is an object and contains the 'data' array
-      if (skillsData && Array.isArray(skillsData.data)) {
-        setSkills(skillsData.data); // Set the skills data from the 'data' property
-      } else {
-        console.error('Fetched skills data is not in the expected format:', skillsData);
-      }
-    } catch (error) {
-      console.error('Error fetching skills data:', error); // Log any errors during fetch
-    }
-  };
-
-  fetchSkillsData();
-}, []); // Empty dependency array means this will run once on mount
-
   // Function to handle cancel action
   const handleCancel = () => {
     // Reset any form fields, close modal, or any other cleanup
@@ -151,35 +104,12 @@ useEffect(() => {
   const [language, setLanguage] = useState('Bahasa');
 
   // State for form values
-  const [editName, setEditName] = useState(userName);
-  const [editUniversitas, setEditUniversitas] = useState(universitas);
-  const [editMajor, setEditMajor] = useState(major);
-  const [editLanguage, setEditLanguage] = useState(language);
+
   const [open, setOpenEdit] = useState(false);// Function to open modal
 
   const handleOpenEdit = () => setOpenEdit(true);
   const handleCloseEdit = () => setOpenEdit(false);
 
- const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const token = localStorage.getItem('userToken');
-    if (!token) {
-      console.error('User not logged in');
-      return;
-    }
-
-    try {
-      const response = await updateUser(token, editData);
-      console.log('User updated successfully:', response);
-
-      // Update local storage and state
-      localStorage.setItem('userInfo', JSON.stringify(editData));
-      setUserInfo(editData);
-      handleCloseEdit();
-    } catch (error) {
-      console.error('Failed to update user:', error);
-    }
-  };
   
   const handleLogout = async () => {
     try {
@@ -314,13 +244,6 @@ useEffect(() => {
   
   const [progressData, setProgressData] = useState<ProgressItem[]>([]);
 
-  const handleMessageClick = () => {
-    if (isLoggedIn) {
-      history.push('/message'); // Arahkan ke halaman Message jika login
-    } else {
-      history.push('/login'); // Arahkan ke halaman Login jika belum login
-    }
-  };
 
   const handleMessageButtonClick = () => {
     if (isLoggedIn) {
@@ -376,9 +299,7 @@ useEffect(() => {
     const formData = new FormData(event.currentTarget);
     const updatedUser = Object.fromEntries(formData.entries());
   
-    // Log form data to validate
-    console.log('Form data submitted:', updatedUser);
-  
+    console.log('Form data submitted:', updatedUser);  // Check this log
     if (Object.values(updatedUser).some((field) => !field)) {
       console.error('Validation failed: All fields are required.');
       return;
@@ -387,11 +308,25 @@ useEffect(() => {
     // Update user in localStorage
     const currentUser = JSON.parse(localStorage.getItem('userInfo') || '{}');
     const updatedUserInfo = { ...currentUser, ...updatedUser };
+    const userToken = localStorage.getItem('userToken') as string;
   
     localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
     setUserInfo(updatedUserInfo);
-    setOpenEdit(false);
+  
+    try {
+      // Send the data to the update API
+    
+      const response = await updateUser(userToken, updatedUserInfo);  // Assuming `updateUser` is your API function
+      console.log('API response:', response); // Log the response to confirm it's being called
+    } catch (error) {
+      console.error('Error updating user:', error);
+    
+
+    }
+  
+    setOpenEdit(false);  // Close after everything is done
   };
+  
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
