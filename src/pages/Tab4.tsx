@@ -1,5 +1,4 @@
 import { Redirect, Route } from 'react-router-dom';
-
 import {
   IonPage,
   IonContent,
@@ -20,7 +19,7 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { get, post, updateUser } from '../api.service';
+import { get, post, updateUser, logout } from '../api.service';
 import { useHistory } from 'react-router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Preferences } from '@capacitor/preferences';
@@ -109,28 +108,6 @@ const handleClose = () => {
 
   const handleOpenEdit = () => setOpenEdit(true);
   const handleCloseEdit = () => setOpenEdit(false);
-
-  
-  const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem('userToken');
-      if (!token) throw new Error('No token found');
-
-      await post('logout', {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      });
-
-      localStorage.removeItem('userToken');
-      history.push('/login');
-      window.location.reload();
-    } catch (error) {
-      console.error('Logout failed', error);
-    }
-  };
 
   const captureImage = () => {
     setModalOpen(true);
@@ -339,6 +316,19 @@ const handleClose = () => {
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await logout();
+      console.log('Logout successful:', response);
+
+      // Optional: Navigate to login page after logout
+      history.push('/login');
+    } catch (error) {
+      console.error('Failed to logout:', error);
+      alert('Logout failed. Please try again.');
+    }
   };
 
 

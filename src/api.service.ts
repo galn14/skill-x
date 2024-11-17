@@ -206,3 +206,31 @@ export const loginWithGoogle = async () => {
     throw error;
   }
 };
+
+export const logout = async () => {
+  try {
+    const userToken = localStorage.getItem('userToken');
+    if (!userToken) {
+      throw new Error('User is not logged in.');
+    }
+
+    // Configure headers for the backend request
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    // Send logout request to the backend
+    const response = await axios.post(`${baseUrl}/logout`, null, config);
+
+    // Clear the local storage
+    localStorage.removeItem('userToken');
+
+    return response.data;
+  } catch (error) {
+    console.error('Logout error:', error);
+    throw error;
+  }
+};
