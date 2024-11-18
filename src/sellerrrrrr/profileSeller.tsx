@@ -21,6 +21,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import EditProfileModal from './EditProfileModal'; // import modal yang baru dibuat
 import { Route, BrowserRouter } from "react-router-dom";
+import EditAboutMe from './EditAboutMe';
 
 const profileSeller: React.FC = () => {
   const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
@@ -31,6 +32,9 @@ const profileSeller: React.FC = () => {
   };
 
 
+  const openAboutMeModal = () => {
+    history.push('/EditAboutMe'); // Rute untuk modal
+  };
 
   const AboutmetoggleCard = () => {
     setAboutMeIsOpen(!isAboutMeOpen); // Toggle state untuk buka/tutup konten
@@ -206,7 +210,7 @@ const profileSeller: React.FC = () => {
           </Grid>
 
         
-          <IonCard onClick={AboutmetoggleCard} style={{ cursor: 'pointer' }}>
+          <IonCard  style={{ cursor: 'pointer' }}>
             {/* Header Card */}
            
             <IonCardHeader>
@@ -222,12 +226,31 @@ const profileSeller: React.FC = () => {
                   About Me
                 </Typography>
               </IonCardTitle>
+
+              <Box sx={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
+              <div>
+              <IconButton
+               onClick={openAboutMeModal}
+              sx={{
+                marginLeft:'1px',
+              
+              }}
+              size="small"
+            >
+              <EditIcon />
+            </IconButton>
+            <Route path="/EditAboutMe" component={EditAboutMe}/>
+          </div>
+
+            
               {isAboutMeOpen ? (
-                  <ArrowDropUpIcon sx={{ color: 'gray' }} />
+                  <ArrowDropUpIcon sx={{ color: 'gray' }} onClick={AboutmetoggleCard}/>
                 ) : (
-                  <ArrowDropDownIcon sx={{ color: 'gray' }} />
+                  <ArrowDropDownIcon sx={{ color: 'gray' }} onClick={AboutmetoggleCard} />
                 )}
             </Box>
+            </Box>
+
             </IonCardHeader>
 
             {/* Konten Card (Hanya tampil jika isOpen true) */}
@@ -243,57 +266,68 @@ const profileSeller: React.FC = () => {
               </IonCardContent>
             )}
           </IonCard>
-          
-          <IonCard style={{
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', cursor: 'pointer'}} onClick={SkilltoggleCard} >
-  {/* Header Card */}
-        <IonCardHeader>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            {/* Judul Card */}
-            <IonCardTitle>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                Skills
-              </Typography>
-            </IonCardTitle>
 
-            {/* Ikon Panah */}
+    <IonCard
+      style={{
+        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+        cursor: 'pointer',
+      }}
+    >
+      {/* Header Card */}
+      <IonCardHeader>
+        <Box sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}>
+          {/* Judul Card */}
+          <IonCardTitle>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              Skills
+            </Typography>
+          </IonCardTitle>
+
+          {/* Box containing the Add Icon and Arrow */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {/* Add Icon */}
+            <IconButton
+              sx={{
+                marginLeft: '1px',
+              }}
+              size="small"
+            >
+              <AddIcon />
+            </IconButton>
+
+            {/* Arrow Icon based on state */}
             {isSkillOpen ? (
-              <ArrowDropUpIcon sx={{ color: 'gray' }} />
+              <ArrowDropUpIcon sx={{ color: 'gray' }}  onClick={SkilltoggleCard}/>
             ) : (
-              <ArrowDropDownIcon sx={{ color: 'gray' }} />
+              <ArrowDropDownIcon sx={{ color: 'gray' }} onClick={SkilltoggleCard} />
             )}
           </Box>
-        </IonCardHeader>
+        </Box>
+      </IonCardHeader>
 
-        {/* Konten Card (Hanya tampil jika isOpen true) */}
-        {isSkillOpen && (
-          <IonCardContent>
-            <Box>
-              {/* Chips Konten */}
-              <Chip
-                label="Database Design"
-                style={{ marginRight: '8px', marginBottom: '8px' }}
-              />
-              <Chip label="Software Engineering" style={{ marginBottom: '8px' }} />
-            </Box>
-          </IonCardContent>
-        )}
-      </IonCard>
+      {/* Konten Card (Hanya tampil jika isOpen true) */}
+      {isSkillOpen && (
+        <IonCardContent>
+          <Box>
+            {/* Chips Konten */}
+            <Chip
+              label="Database Design"
+              style={{ marginRight: '8px', marginBottom: '8px' }}
+            />
+            <Chip label="Software Engineering" style={{ marginBottom: '8px' }} />
+          </Box>
+        </IonCardContent>
+      )}
+    </IonCard>
 
 {/*portfolio*/}
 <IonCard style={{ cursor: "pointer"}}>
       {/* Header Card */}
-      <IonCardHeader
-        style={{
-          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Shadow untuk header
-        }}
-      >
+      <IonCardHeader>
         <Box
           sx={{
             display: "flex",
