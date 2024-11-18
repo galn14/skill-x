@@ -120,46 +120,48 @@ const profileSeller: React.FC = () => {
 
       {/* Content */}
       
-      <IonContent>
-        <div style={{ padding: '16px', marginTop:"90px"}}>
-          
-        <Grid container spacing={2} alignItems="center"> {/* alignItems to center vertically */}
-          {/* Avatar */}
-          <Grid item xs="auto"> {/* Use xs="auto" for auto-sizing */}
-            <Avatar
-              src="/assets/avatar.png" // Ganti dengan path gambar avatar Anda
-              alt="Avatar"
-              style={{ width: '80px', height: '80px' }}
-            />
-          </Grid>
+     <IonContent>
+    <div style={{ padding: '16px', marginTop: '90px', position: 'relative' }}>
+    <Grid container spacing={2} alignItems="center">
+      {/* Avatar */}
+      <Grid item xs="auto">
+        <Avatar
+          src="/assets/avatar.png" // Ganti dengan path gambar avatar Anda
+          alt="Avatar"
+          style={{ width: '80px', height: '80px' }}
+        />
+      </Grid>
 
-          {/* Info */}
-          <Grid item xs>
-            <Typography variant="h6" fontWeight="bold">
-              Aileen Liexiulai
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              BINUS University, Computer Science
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              🌍 Indonesia, English, Chinese
-            </Typography>
-          </Grid>
-        </Grid>
+      {/* Info */}
+      <Grid item xs>
+        <Typography variant="h6" fontWeight="bold">
+          Aileen Liexiulai
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          BINUS University, Computer Science
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          🌍 Indonesia, English, Chinese
+        </Typography>
+      </Grid>
+    </Grid>
 
-        {/* Edit Button in Top-right Corner */}
-        <IconButton
-          // onClick={handleOpenEdit}
-          sx={{
-            position: 'absolute',
-            top: '10px', // Positioning from the top of the card
-            right: '10px', // Positioning from the right of the card
-            zIndex: 2, // Ensure the button is above other elements
-          }}
-          size="small"
-        >
-          <EditIcon />
-        </IconButton>
+    {/* Edit Button in Top-right Corner */}
+    <IconButton
+      // onClick={handleOpenEdit}
+      sx={{
+        position: 'absolute',
+        top: '10px', // Positioning from the top of the card
+        right: '10px', // Positioning from the right of the card
+        zIndex: 2, // Ensure the button is above other elements
+      }}
+      size="small"
+    >
+      <EditIcon />
+    </IconButton>
+
+
+       
 
 <br></br>
           {/* Stats Section */}
