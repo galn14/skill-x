@@ -8,7 +8,7 @@ import {
   IonCardContent,
   IonCardHeader
 } from '@ionic/react';
-import { registerWithEmail } from '../api.service'; // Import your API service
+import { } from '../api.service'; // Import your API service
 import { AppBar, Toolbar, IconButton, Card, CardContent, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google'; // Import icon Google
 import { useHistory } from 'react-router-dom'; // Import useHistory for routing
@@ -73,7 +73,7 @@ const RegisterPage: React.FC = () => {
           return;
         }
       
-        const response = await registerWithEmail(
+        const response = await (
           data.name,
           data.email,
           data.password

@@ -203,6 +203,10 @@ const handleClose = () => {
     history.push('/review');
   };
 
+  const handleLogout= () => {
+    history.push('/logout');
+  };
+
   const [ completePurchase, setCompletePurchase] = useState<any[]>([]);
 
   useEffect(() => {
@@ -317,20 +321,6 @@ const handleClose = () => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
   };
-
-  const handleLogout = async () => {
-    try {
-      const response = await logout();
-      console.log('Logout successful:', response);
-
-      // Optional: Navigate to login page after logout
-      history.push('/login');
-    } catch (error) {
-      console.error('Failed to logout:', error);
-      alert('Logout failed. Please try again.');
-    }
-  };
-
 
   return (
  
