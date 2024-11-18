@@ -135,7 +135,7 @@ const profileSeller: React.FC = () => {
       {/* Info */}
       <Grid item xs>
         <Typography variant="h6" fontWeight="bold">
-          Aileen Liexiulai
+          AileenLiexiuai
         </Typography>
         <Typography variant="body2" color="textSecondary">
           BINUS University, Computer Science
@@ -150,6 +150,8 @@ const profileSeller: React.FC = () => {
     <IconButton
       // onClick={handleOpenEdit}
       sx={{
+        marginRight:'5px',
+
         position: 'absolute',
         top: '10px', // Positioning from the top of the card
         right: '10px', // Positioning from the right of the card
@@ -296,10 +298,32 @@ const profileSeller: React.FC = () => {
           </IonCardTitle>
 
           {/* Icons */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <AddIcon sx={{ color: "gray", cursor: "pointer" }} />
-            <EditIcon sx={{ color: "gray", cursor: "pointer" }} />
-            {isPortoOpen ? (
+          <Box sx={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
+            
+            <IconButton
+              // onClick={handleOpenEdit}
+              sx={{
+                marginLeft:'1px',
+              
+              }}
+              size="small"
+            >
+              <AddIcon />
+            </IconButton>
+
+            {/* The Edit Button positioned at the top-right corner */}
+            <IconButton
+              // onClick={handleOpenEdit}
+              sx={{
+                marginLeft:'1px',
+              
+              }}
+              size="small"
+            >
+              <EditIcon />
+            </IconButton>
+
+    {isPortoOpen ? (
               <ArrowDropUpIcon sx={{ color: "gray" }} onClick={PortotoggleCard} />
             ) : (
               <ArrowDropDownIcon sx={{ color: "gray" }} onClick={PortotoggleCard} />
@@ -315,12 +339,14 @@ const profileSeller: React.FC = () => {
             {portfolioData.map((item, index) => (
               <TimelineItem key={index} sx={{ marginLeft: '-20px' }}>
                 <TimelineSeparator sx={{ marginLeft: '-20px' }}>
-                <TimelineDot sx={{ marginLeft: '-20px' }} color="primary" />
-                {index < portfolioData.length - 1 && <TimelineConnector />}
+                  <TimelineDot sx={{ marginLeft: '-20px' }} color="primary" />
+                  {index < portfolioData.length - 1 && (
+                    <TimelineConnector sx={{ marginLeft: '-23px' }} /> // Adjust only the line's position
+                  )}
                 </TimelineSeparator>
                 <TimelineContent>
-                  <Typography variant="h3" fontWeight="bold">
-                    {item.title}
+                <Typography variant="h3" sx={{ fontWeight: 700 }}>
+                {item.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {item.tools}
@@ -341,7 +367,7 @@ const profileSeller: React.FC = () => {
         }}>
         <IonCardTitle>
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            About Me
+            Products
           </Typography>
         </IonCardTitle>
         
