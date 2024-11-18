@@ -16,7 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { IonPage, IonContent } from '@ionic/react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '@fontsource/poppins';
-import { useHistory } from 'react-router';
+import { useHistory, Link } from 'react-router-dom';
 
 const WebsiteDevelopment: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -178,42 +178,45 @@ const WebsiteDevelopment: React.FC = () => {
           <Box
             sx={{
               overflowX: 'auto',
-              display: 'flex',
+              display: 'flex', // Ganti ke flex untuk slider horizontal
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', // Kontrol ukuran kolom
               gap: '10px',
               paddingBottom: '10px',
             }}
           >
             {sponsoredContent.map((item) => (
-              <Box
-                key={item.id}
-                sx={{
-                  border: '1px solid black',
-                  margin: '5px',
-                  padding: '10px',
-                  borderRadius: '10px',
-                  width: '80%',
-                  flexShrink: 0,
-                }}
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  style={{
-                    width: '100%',
+              <Link key={item.id} to={`/service/${item.name}`} style={{ textDecoration: 'none', color: 'inherit'}}>
+                <Box
+                  key={item.id}
+                  sx={{
+                    border: '1px solid black',
+                    margin: '5px',
+                    padding: '10px',
                     borderRadius: '10px',
-                    marginBottom: '10px',
+                    width: '70vw',
+                    flexShrink: 0,
                   }}
-                />
-                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                  {item.name}
-                </Typography>
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0094FF' }}>
-                  {item.price}
-                </Typography>
-                <Typography variant="caption" sx={{ color: '#555' }}>
-                  {item.seller}
-                </Typography>
-              </Box>
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    style={{
+                      width: '100%',
+                      borderRadius: '10px',
+                      marginBottom: '10px',
+                    }}
+                  />
+                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                    {item.name}
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#0094FF' }}>
+                    {item.price}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#555' }}>
+                    {item.seller}
+                  </Typography>
+                </Box>
+              </Link>
             ))}
           </Box>
 
@@ -229,6 +232,7 @@ const WebsiteDevelopment: React.FC = () => {
             }}
           >
             {nonSponsoredContent.map((item) => (
+            <Link key={item.id} to={`/service/${item.name}`} style={{ textDecoration: 'none', color: 'inherit'}}>
               <Box
                 key={item.id}
                 sx={{
@@ -257,6 +261,7 @@ const WebsiteDevelopment: React.FC = () => {
                   {item.seller}
                 </Typography>
               </Box>
+            </Link>
             ))}
           </Box>
         </IonContent>
