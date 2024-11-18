@@ -62,7 +62,7 @@ import { CssBaseline, GlobalStyles } from '@mui/material';
 import { VerifiedOutlined } from '@mui/icons-material';
 import JoinAsSeller from './pages/JoinAsSeller';
 import JoinAsSellerWait from './pages/JoinSellerWait';
-
+import profileSeller from './sellerrrrrr/profileSeller';
 
 setupIonicReact();
 const theme = createTheme({
@@ -141,6 +141,7 @@ const App: React.FC = () => (
           <Route path="/review" component={Review} />
           <Route path="/JoinAsSeller" component={JoinAsSeller}/>
           <Route path="/JoinAsSellerWait" component={JoinAsSellerWait}/>
+          <Route path="/profileSeller" component={profileSeller}/>
 
           <Route exact path="/">
             <Redirect to="/login" />
