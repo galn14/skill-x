@@ -118,10 +118,11 @@ const RegisterAsSeller: React.FC = () => {
                 alt="SkillX Logo"
                 src="public/SkillXLogo.png"
                 style={{
-                width: '250px',
+                width: '150px',
                 height: 'auto',
                 maxHeight: '30vh', // Batas tinggi gambar
-                marginBottom: '20px',
+                marginTop: '30px',
+                marginBottom: '30px',
                 }}
             />
 
@@ -141,6 +142,7 @@ const RegisterAsSeller: React.FC = () => {
 
           <TextField name="name" label="Full Name" value={data.name} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
           <TextField name="kampus" label="University/Organization" value={data.kampus} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
+          <TextField name="email" label="University/Organization Email" value={data.name} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
           <TextField name="jurusan" label="Major" value={data.jurusan} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
 
           {/* Date Picker */}
