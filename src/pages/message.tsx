@@ -65,6 +65,13 @@ const buyers = [
         profileImage: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
         unreadMessages: 1,
     },
+    {
+        id: 3,
+        name: 'Ricat Wijaya',
+        slogan: 'Lets do it ',
+        profileImage: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
+        unreadMessages: 1,
+    },
 ];
 
 const reviews = [

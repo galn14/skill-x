@@ -40,6 +40,9 @@ import EntreprenurhsipBusinessCreation from './pages/category/ebc';
 // ROUTE UNTUK SERVICES
 import WebsiteDevelopment from './pages/services/websiteDevelopment';
 
+// ROUTE UNTUK DETAILED SERVICE
+import FullstackDevelopment from './pages/detail_services/websiteDevelopment/fullstackDevelopment';
+
 import PrivateRoute from './components/PrivateRoute'; // Import the private route
 import { createTheme, ThemeProvider } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -131,6 +134,11 @@ const App: React.FC = () => (
 
           <Route path="/service/website-development"> 
             <WebsiteDevelopment/>
+          </Route>
+
+          {/* Route untuk Detailed Service*/}
+          <Route path="/service/Full Stack Development"> 
+            <FullstackDevelopment/>
           </Route>
 
           <Route path="/message" component={MessagePage} exact />
