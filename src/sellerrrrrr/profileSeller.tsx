@@ -17,7 +17,8 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useHistory } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import MailIcon from '@mui/icons-material/Mail';
 
 const profileSeller: React.FC = () => {
   const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
@@ -73,8 +74,24 @@ const profileSeller: React.FC = () => {
       certified: true,
     },
   ];
-
+  const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
   const history = useHistory();
+
+  const handleMessageButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/message'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
+  const handleNotificationButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/notification'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  }
   const handleBack = () => history.goBack();
   const theme = createTheme({
     typography: {
@@ -86,58 +103,65 @@ const profileSeller: React.FC = () => {
 
     <IonPage>
       {/* Header */}
-      <AppBar position="fixed" sx={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px',    zIndex: 1201, // Pastikan hanya melayang di atas konten
- }}>
-        <Toolbar>
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <IconButton onClick={handleBack} color="primary">
-              <ArrowBackIcon />
+       <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
+        <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
+          <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
+            <img src="../public/SkillXLogo.png" alt="SkillEx Logo" className="logo" style={{ marginRight: 'auto' ,height: '40px'}} />
+              <IconButton color="primary" onClick={handleNotificationButtonClick}>
+              <NotificationsIcon />
             </IconButton>
-            <Typography variant="h6" sx={{ color: '#838383', textAlign: 'left', flexGrow: 1 }}>
-              Register as Seller
-            </Typography>
+            <IconButton color="primary" onClick={handleMessageButtonClick}>
+              <MailIcon />
+            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
+
 
       {/* Content */}
       
       <IonContent>
         <div style={{ padding: '16px', marginTop:"90px"}}>
-          {/* Profile Card */}
-          <Card
-  style={{
-    padding: '16px',
-    borderRadius: '12px',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-    marginBottom: '16px',
-  }}
->
-  <Grid container spacing={2} alignItems="center"> {/* alignItems to center vertically */}
-    {/* Avatar */}
-    <Grid item xs="auto"> {/* Use xs="auto" for auto-sizing */}
-      <Avatar
-        src="/assets/avatar.png" // Ganti dengan path gambar avatar Anda
-        alt="Avatar"
-        style={{ width: '80px', height: '80px' }}
-      />
-    </Grid>
+          
+        <Grid container spacing={2} alignItems="center"> {/* alignItems to center vertically */}
+          {/* Avatar */}
+          <Grid item xs="auto"> {/* Use xs="auto" for auto-sizing */}
+            <Avatar
+              src="/assets/avatar.png" // Ganti dengan path gambar avatar Anda
+              alt="Avatar"
+              style={{ width: '80px', height: '80px' }}
+            />
+          </Grid>
 
-    {/* Info */}
-    <Grid item xs>
-      <Typography variant="h6" fontWeight="bold">
-        Aileen Liexiulai
-      </Typography>
-      <Typography variant="body2" color="textSecondary">
-        BINUS University, Computer Science
-      </Typography>
-      <Typography variant="body2" color="textSecondary">
-        🌍 Indonesia, English, Chinese
-      </Typography>
-    </Grid>
-  </Grid>
-</Card>
+          {/* Info */}
+          <Grid item xs>
+            <Typography variant="h6" fontWeight="bold">
+              Aileen Liexiulai
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              BINUS University, Computer Science
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              🌍 Indonesia, English, Chinese
+            </Typography>
+          </Grid>
+        </Grid>
 
+        {/* Edit Button in Top-right Corner */}
+        <IconButton
+          // onClick={handleOpenEdit}
+          sx={{
+            position: 'absolute',
+            top: '10px', // Positioning from the top of the card
+            right: '10px', // Positioning from the right of the card
+            zIndex: 2, // Ensure the button is above other elements
+          }}
+          size="small"
+        >
+          <EditIcon />
+        </IconButton>
+
+<br></br>
           {/* Stats Section */}
           <Grid container spacing={2} style={{ textAlign: 'center', marginBottom: '16px' }}>
             <Grid item xs={3}>
@@ -166,6 +190,7 @@ const profileSeller: React.FC = () => {
             </Grid>
           </Grid>
 
+        
           <IonCard onClick={AboutmetoggleCard} style={{ cursor: 'pointer' }}>
             {/* Header Card */}
            
