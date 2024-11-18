@@ -31,6 +31,7 @@
     "@ionic/react-router": "^8.0.0",
     "@mui/icons-material": "^6.1.7",
     "@mui/joy": "^5.0.0-beta.48",
+    "@mui/lab": "^6.0.0-beta.15",
     "@mui/material": "^6.1.7",
     "@mui/styled-engine-sc": "^6.1.6",
     "@mui/x-date-pickers": "^7.22.2",
