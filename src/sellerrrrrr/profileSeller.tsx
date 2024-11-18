@@ -19,10 +19,18 @@ import { useHistory } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
+import EditProfileModal from './EditProfileModal'; // import modal yang baru dibuat
+import { Route, BrowserRouter } from "react-router-dom";
 
 const profileSeller: React.FC = () => {
   const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
   const [isSkillOpen, setSkillIsOpen] = useState(false);
+
+  const openModal = () => {
+    history.push('/EditProfileModal'); // Rute untuk modal
+  };
+
+
 
   const AboutmetoggleCard = () => {
     setAboutMeIsOpen(!isAboutMeOpen); // Toggle state untuk buka/tutup konten
@@ -147,21 +155,24 @@ const profileSeller: React.FC = () => {
     </Grid>
 
     {/* Edit Button in Top-right Corner */}
-    <IconButton
-      // onClick={handleOpenEdit}
-      sx={{
-        marginRight:'5px',
+    <div>
+      <IconButton
+        onClick={openModal}
+        sx={{
+          marginRight: '5px',
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          zIndex: 2,
+        }}
+        size="small"
+      >
+        <EditIcon />
+      </IconButton>
 
-        position: 'absolute',
-        top: '10px', // Positioning from the top of the card
-        right: '10px', // Positioning from the right of the card
-        zIndex: 2, // Ensure the button is above other elements
-      }}
-      size="small"
-    >
-      <EditIcon />
-    </IconButton>
-
+      {/* Menyusun Routes */}
+      <Route path="/EditProfileModal" component={EditProfileModal}/>
+      </div>
 
        
 
