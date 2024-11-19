@@ -23,6 +23,7 @@ import EditProfileModal from './EditProfileModal'; // import modal yang baru dib
 import { Route, BrowserRouter } from "react-router-dom";
 import EditAboutMe from './EditAboutMe';
 import EditPortoModal from './EditPortoModal';
+import AddProduct from './AddProduct';
 
 const profileSeller: React.FC = () => {
   const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
@@ -39,7 +40,9 @@ const profileSeller: React.FC = () => {
   const openPortoMeModal = () => {
     history.push('/EditPortoModal'); // Rute untuk modal
   };
-
+  const openAddProduct = () => {
+    history.push('/AddProduct'); // Rute untuk modal
+  };
   const AboutmetoggleCard = () => {
     setAboutMeIsOpen(!isAboutMeOpen); // Toggle state untuk buka/tutup konten
   };
@@ -447,8 +450,9 @@ const profileSeller: React.FC = () => {
             ))}
           </Grid>
         </Box>
+       <div>
         <IconButton
-          //    onClick={() => alert(`Added ${product.title} to cart`)} // Add functionality here
+              onClick={ openAddProduct}
               sx={{
                 position: 'absolute',
                 bottom: '10px',
@@ -461,7 +465,10 @@ const profileSeller: React.FC = () => {
               }}
             >
               <AddIcon />
+              <Route path="/AddProduct" component={AddProduct}/>
+
             </IconButton>
+            </div>
       </IonCard>
 
 
