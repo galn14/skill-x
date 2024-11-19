@@ -23,6 +23,35 @@ const baseUrl = 'http://localhost:8080'; // Replace with your API base URL
 //   }
 // };
 
+export const fetchMajors = async () => {
+  try {
+    console.log("Starting fetchMajors...");
+
+    const token = localStorage.getItem('userToken'); // Fetch token from localStorage
+    if (!token) {
+      console.error("User token not found in localStorage!");
+      throw new Error("Authentication token is missing.");
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`, // Attach token to the request
+      },
+    };
+
+    console.log("Fetching from API endpoint...");
+    const response = await axios.get(`${baseUrl}/majors/adminfetch`, config);
+
+    console.log("API response:", response); // Log the full response
+    console.log("Majors data:", response.data); // Log the data payload
+
+    return response.data; // Return the majors data
+  } catch (error) {
+    console.error("Error in fetchMajors:", error);
+    throw error; // Propagate error for handling
+  }
+};
+
 export const updateUser = async (token: string, updatedUser: Record<string, any>) => {
   try {
 

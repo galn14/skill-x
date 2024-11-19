@@ -12,6 +12,7 @@ import BrushIcon from '@mui/icons-material/Brush';
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import { Autoplay, Grid, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper/modules';
 import './Tab1.css';
+import { fetchMajors, } from '../api.service';
 import '@fontsource/poppins';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import '@fontsource/poppins';  // Import the font
@@ -74,26 +75,44 @@ const handleCartButtonClick = () => {
   }
 };
 
+interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  link: string;
+}
 
+const CategoriesComponent = () => {
+  const [categories, setCategories] = useState<Category[]>([]); // Specify the type for state
+}
   useEffect(() => {
-    // Fetch categories from the database
-    setCategories([
-      { id: 1, name: 'Computer Science', icon: '../public/icon/computer_science.png', link: '/category/computer-science' },
-      { id: 2, name: 'Visual Communication Design', icon: '../public/icon/vcd.png', link: '/category/visual-communication-design' },
-      { id: 3, name: 'Interior Design', icon: '../public/icon/di.png', link: '/category/interior-design' },
-      { id: 4, name: 'Digital Business Innovation', icon: '../public/icon/computer_science.png', link: '/category/digital-business-innovation' },
-      { id: 5, name: 'Interactive Design and Technology', icon: '../public/icon/vcd.png', link: '/category/interactive-design-and-technology' },
-      { id: 6, name: 'Public Relation', icon: '../public/icon/di.png', link: '/category/public-relation' },
-      { id: 7, name: 'Communications', icon: '../public/icon/computer_science.png', link: '/category/communication' },
-      { id: 8, name: 'Entrepenurship Business Creation', icon: '../public/icon/di.png', link: '/category/entrepenurship-business-creation' },
-    ]);
+    const getCategories = async () => {
+      try {
+        console.log("Calling fetchMajors..."); // Log to check if this part runs
+        const data: any[] = await fetchMajors(); // Explicitly type the fetched data
+        console.log("Fetched data:", data); // Log the fetched data to check it
+        const formattedCategories: Category[] = data.map((major: any) => ({
+          id: major.idMajor,
+          name: major.titleMajor,
+          icon: major.iconUrl,
+          link: major.link,
+        }));
+        setCategories(formattedCategories);
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        // Handle errors gracefully (e.g., display an error message)
+      }
+    };
 
-    // Fetch popular services from the database
+    getCategories();
+
+    // Populate services with hardcoded data
+    console.log("Setting hardcoded services...");
     setServices([
-      { id: 1, name: 'Editing Video', icon: '../public/icon/edit_video.png', link: '/service/editing-video' },
-      { id: 2, name: 'Logo Design', icon: '../public/icon/logo_design.png', link: '/service/logo-design' },
-      { id: 3, name: 'Build Website', icon: '../public/icon/building_website.png', link: '/service/website-development' },
-      { id: 4, name: 'Build Prototype', icon: "../public/icon/edit_video.png", link: '/service/build-prototype' }
+      { id: '1', name: 'Editing Video', icon: '../public/icon/edit_video.png', link: '/service/editing-video' },
+      { id: '2', name: 'Logo Design', icon: '../public/icon/logo_design.png', link: '/service/logo-design' },
+      { id: '3', name: 'Build Website', icon: '../public/icon/building_website.png', link: '/service/website-development' },
+      { id: '4', name: 'Build Prototype', icon: '../public/icon/edit_video.png', link: '/service/build-prototype' },
     ]);
   }, []);
 
@@ -181,7 +200,9 @@ const handleCartButtonClick = () => {
           <Box
             sx={{ backgroundColor: 'white', borderTopLeftRadius: '30px', borderBottomLeftRadius:'30px', marginLeft:'10px', marginTop:'20px'}}
             >
+             
             <div className="categories">
+            {categories.length > 0 ? (
               <Swiper slidesPerView={3} freeMode={true} spaceBetween={10}>
                 {categories.map((category) => (
                   <SwiperSlide key={category.id} style={{ width: 'auto', flexShrink: 0 }}>
@@ -210,6 +231,9 @@ const handleCartButtonClick = () => {
                   </SwiperSlide>
                 ))}
               </Swiper>
+               ) : (
+                <p>No categories available.</p>
+              )}
             </div>
           </Box>
         </Box>
