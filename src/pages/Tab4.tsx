@@ -27,6 +27,11 @@ import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { useEffect, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import JoinAsSeller from './JoinAsSeller';
+
+
+
+
 const Tab4: React.FC = () => {
   
   const [userName, setUserName] = useState<string | null>(null);
@@ -50,7 +55,7 @@ const Tab4: React.FC = () => {
     } else {
       history.push('/login'); // Redirect ke halaman login
     }
-};
+  };
 
 //user info change
 const [userInfo, setUserInfo] = React.useState(() => {
@@ -375,7 +380,7 @@ const handleClose = () => {
           <Typography variant="body2" color="textSecondary">{userInfo.language || 'Bahasa'}</Typography>
       </Box>
 
-
+<div>
           {/* Join as Seller Button */}
           <Button 
           onClick={handleJoinSellerClick} 
@@ -393,6 +398,8 @@ const handleClose = () => {
           >
             Join as Seller
           </Button>
+          <Route path="/JoinAsSeller" component={JoinAsSeller } />
+          </div>
         </Grid>
 
         {/* Edit Button */}

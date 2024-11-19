@@ -4,6 +4,7 @@ import {
   Button,
   AppBar,
   Toolbar,
+  Grid,
   Box,
   IconButton,
   Typography,
@@ -14,6 +15,8 @@ import {
   DialogContent,
   DialogTitle,
 } from '@mui/material';
+import {IonContent,IonPage} from '@ionic/react';
+
 import { useHistory } from 'react-router-dom';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -23,7 +26,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
-const RegisterAsSeller: React.FC = () => {
+const JoinAsSeller: React.FC = () => {
   const history = useHistory();
   const handleBack = () => history.goBack();
 
@@ -88,6 +91,8 @@ const RegisterAsSeller: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
+          <IonPage>
+
       <AppBar position="fixed" sx={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px',    zIndex: 1201, // Pastikan hanya melayang di atas konten
  }}>
         <Toolbar>
@@ -102,8 +107,8 @@ const RegisterAsSeller: React.FC = () => {
         </Toolbar>
       </AppBar>
 
-      <div
-            style={{
+      <IonContent>
+        <Grid sx={{
                 marginTop: '100px',
                 marginBottom:'100000px',
                 display: 'flex',
@@ -249,9 +254,12 @@ const RegisterAsSeller: React.FC = () => {
             Register
           </Button>
         </form>
-      </div>
+        </Grid>
+      </IonContent>
+      </IonPage>
+
     </ThemeProvider>
   );
 };
 
-export default RegisterAsSeller;
+export default JoinAsSeller;

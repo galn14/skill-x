@@ -84,7 +84,7 @@ const AddProduct = () => {
     console.log("Form submitted:", {
       productPhotos,
       productPhotoPreviews,
-      selectedService,
+      selectedService
     });
     handleClose(); // Close modal on submit
   };

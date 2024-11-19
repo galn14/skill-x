@@ -24,6 +24,7 @@ import { Route, BrowserRouter } from "react-router-dom";
 import EditAboutMe from './EditAboutMe';
 import EditPortoModal from './EditPortoModal';
 import AddProduct from './AddProduct';
+import AddSkill from './AddSkill';
 
 const profileSeller: React.FC = () => {
   const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
@@ -43,6 +44,11 @@ const profileSeller: React.FC = () => {
   const openAddProduct = () => {
     history.push('/AddProduct'); // Rute untuk modal
   };
+
+  const openAddSkill = () => {
+    history.push('/AddSkill'); // Rute untuk modal
+  };
+
   const AboutmetoggleCard = () => {
     setAboutMeIsOpen(!isAboutMeOpen); // Toggle state untuk buka/tutup konten
   };
@@ -297,7 +303,10 @@ const profileSeller: React.FC = () => {
           {/* Box containing the Add Icon and Arrow */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {/* Add Icon */}
+              <div>
             <IconButton
+              onClick={openAddSkill}
+
               sx={{
                 marginLeft: '1px',
               }}
@@ -305,6 +314,8 @@ const profileSeller: React.FC = () => {
             >
               <AddIcon />
             </IconButton>
+            <Route path="/AddSkill" component={AddSkill}/>
+            </div>
 
             {/* Arrow Icon based on state */}
             {isSkillOpen ? (
