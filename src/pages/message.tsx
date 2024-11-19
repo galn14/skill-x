@@ -120,7 +120,7 @@ const reviews = [
 
 const MessagePage: React.FC = () => {
     const history = useHistory();
-    const handleBack = () => history.goBack;
+    const handleBack = () => history.goBack();
     const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
     const [anchorElSeller, setAnchorElSeller] = React.useState<null | HTMLElement>(null);
     const [anchorElBuyer, setAnchorElBuyer] = React.useState<null | HTMLElement>(null);
@@ -131,14 +131,6 @@ const MessagePage: React.FC = () => {
     const openBuyer = Boolean(anchorElBuyer);
 
     const navigate = useHistory();
-
-    const handleClickSeller = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElSeller(anchorElSeller ? null : event.currentTarget);
-    };
-
-    const handleClickBuyer = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElBuyer(anchorElBuyer ? null : event.currentTarget);
-    };
 
     const handleClickReview = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElReview(anchorElReview ? null : event.currentTarget);
