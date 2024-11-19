@@ -12,7 +12,7 @@ import BrushIcon from '@mui/icons-material/Brush';
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import { Autoplay, Grid, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper/modules';
 import './Tab1.css';
-import { fetchMajors, } from '../api.service';
+import { fetchMajors,fetchServices } from '../api.service';
 import '@fontsource/poppins';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import '@fontsource/poppins';  // Import the font
@@ -42,6 +42,10 @@ const Tab1: React.FC = () => {
       fontFamily: '"Poppins"',  // Set font di tema
     },
   });
+  const [userInfo, setUserInfo] = React.useState(() => {
+    return JSON.parse(localStorage.getItem('userInfo') || '{}');
+  });
+  
 
   const handleMessageClick = () => {
     if (isLoggedIn) {
@@ -107,14 +111,42 @@ const CategoriesComponent = () => {
     getCategories();
 
     // Populate services with hardcoded data
-    console.log("Setting hardcoded services...");
-    setServices([
-      { id: '1', name: 'Editing Video', icon: '../public/icon/edit_video.png', link: '/service/editing-video' },
-      { id: '2', name: 'Logo Design', icon: '../public/icon/logo_design.png', link: '/service/logo-design' },
-      { id: '3', name: 'Build Website', icon: '../public/icon/building_website.png', link: '/service/website-development' },
-      { id: '4', name: 'Build Prototype', icon: '../public/icon/edit_video.png', link: '/service/build-prototype' },
-    ]);
+ 
   }, []);
+  interface Service{
+    id: string;
+    name: string;
+    icon: string;
+    link: string;
+  }
+  
+  const ServicesComponent = () => {
+    const [services, setServices] = useState<Service[]>([]); // Specify the type for state
+  }
+    useEffect(() => {
+      const getServices = async () => {
+        try {
+          console.log("Calling fetchServices..."); // Log to check if this part runs
+          const data: any[] = await fetchServices(); // Explicitly type the fetched data
+          console.log("Fetched services data:", data); // Log the fetched data to check it
+  
+          const formattedServices: Service[] = data.map((service: any) => ({
+            id: service.idService,
+            name: service.titleService,
+            icon: service.iconUrl,
+            link: service.link,
+          }));
+  
+          setServices(formattedServices); // Update state with formatted services
+        } catch (error) {
+          console.error('Error loading services:', error);
+          // Handle errors gracefully (e.g., display an error message)
+        }
+      };
+  
+      getServices(); // Call the function to load services on component mount
+    }, []); 
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -171,7 +203,7 @@ const CategoriesComponent = () => {
             }}
           >
             <Typography variant="h5" component="h3">
-              Hi Ailin, what are you looking for?
+              Hi {userInfo.name}, what are you looking for?
             </Typography>
           </Box>
 
