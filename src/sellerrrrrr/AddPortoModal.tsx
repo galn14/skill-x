@@ -13,25 +13,99 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  FormControlLabel,
+  Checkbox,
+  FormHelperText,
 } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useHistory } from "react-router-dom";
 import SwipeableViews from "react-swipeable-views";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { SelectChangeEvent } from '@mui/material';
+
+// Define enums for TypePortofolio and StatusPortofolio
+enum TypePortofolio {
+  PRODUCT = "Product",
+  PROJECT = "Project",
+}
+
+enum StatusPortofolio {
+  ON_GOING = "On Going",
+  COMPLETED = "Completed",
+}
+
+type FormData = {
+  title: string;
+  description: string;
+  link: string;
+  type: TypePortofolio; // Portfolio Type
+  status: StatusPortofolio; // Portfolio Status
+  dateCreated: string;
+  dateEnd: string;
+  isPresent: boolean;
+};
 
 const AddPortoModal = () => {
   const [open, setOpen] = useState(true); // Modal state
+  const [formData, setFormData] = useState<FormData>({
+    title: '',
+    description: '',
+    link: '',
+    type: TypePortofolio.PRODUCT, // Default value for 'type'
+    status: StatusPortofolio.ON_GOING, // Default value for 'status'
+    dateCreated: '',
+    dateEnd: '',
+    isPresent: false,
+  });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const history = useHistory();
+
+  // Handle form input changes
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name as string]: value });
+  };
+
+// Handle selection changes for type and status
+    const handleSelectChange = (
+        event: SelectChangeEvent<TypePortofolio | StatusPortofolio>, 
+        field: 'type' | 'status'
+    ) => {
+        setFormData({ ...formData, [field]: event.target.value });
+    };
+  
+
+  // Handle form submission
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    // Custom validation for required fields
+    const newErrors: { [key: string]: string } = {};
+    if (!formData.dateCreated) newErrors.dateCreated = "Date Created is required";
+    if (!formData.dateEnd) newErrors.dateEnd = "Date End is required";
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors); // Set errors if validation fails
+      return;
+    }
+
+    console.log(formData);  // Process the form data
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    history.push("/ProfileSeller"); // Redirect to the profile page
+  };
+  
   const [openDialog, setOpenDialog] = useState(false); // Dialog state for uploading images
   const [productPhotos, setProductPhotos] = useState<File[]>([]); // State for uploaded photos
   const [productPhotoPreviews, setProductPhotoPreviews] = useState<string[]>([]); // Preview images for the slider
   const [currentSlide, setCurrentSlide] = useState(0); // Current slide in the slider
- // const [selectedService, setSelectedService] = useState(""); // Selected service
 
-  const history = useHistory();
-
-  const services = ["Photography", "Web Development", "Graphic Design", "Tutoring", "Video Editing"];
-
-  // Handle removing photo
   const handleRemovePhoto = (index: number) => {
     setProductPhotos((prev) => prev.filter((_, i) => i !== index));
     setProductPhotoPreviews((prev) => prev.filter((_, i) => i !== index));
@@ -72,74 +146,162 @@ const AddPortoModal = () => {
     }
   };
 
-  // Modal close handler
-  const handleClose = () => {
-    setOpen(false);
-    history.push("/ProfileSeller"); // Redirect to the profile page
-  };
 
-  // Form submit handler
-  const handleFormSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log("Form submitted:", {
-      productPhotos,
-      productPhotoPreviews
-        });
-    handleClose(); // Close modal on submit
-  };
 
   return (
     <Modal
-      open={open}
-      onClose={handleClose}
+    open={open}
+    onClose={handleClose}
+    sx={{
+      display: "flex",
+      alignItems: "center", // Pusatkan modal secara vertikal
+      justifyContent: "center", // Pusatkan modal secara horizontal
+      padding: "20px",
+      overflow: "auto",
+      borderRadius: "8px",
+      
+    }}
+  >
+    <Box
       sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "20px",
-        overflow: "auto",
-        marginTop: '20px',
-        marginBottom: '20px'
+        backgroundColor: "white",
+      width: "350px",
+      borderRadius: "8px",
+      boxShadow: 24,
+      overflow: "auto",
+      maxHeight: "90vh", 
       }}
     >
       <Box
         sx={{
-          backgroundColor: "white",
-          width: "350px",
-          borderRadius: "8px",
-          boxShadow: 24,
-          overflow: "auto",
-          marginTop: '20px',
-        marginBottom: '20px'
+            position: "sticky", // Tetap di atas selama scroll
+            top: 0,
+            zIndex: 10, // Pastikan di atas elemen lain
+            height: "100px",
+            backgroundColor: "#0094FF",
+            borderRadius: "10px 10px 0 0",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "10px",
         }}
       >
-       <Box
-  sx={{
-    backgroundColor: "#0094FF",
-    borderRadius: "10px 10px 0 0",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center", // Pusatkan secara vertikal
-    padding: "10px", // Kurangi padding
-  }}
->
-  <DialogTitle
-    sx={{
-      margin: 0, // Pastikan tidak ada margin
-      color: "white",
-      fontSize: "18px",
-      textAlign: "center", // Pusatkan teks
-    }}
-  >
-    Add New Product
-  </DialogTitle>
-</Box>
+        <DialogTitle
+          sx={{
+            paddingTop: "20px",
+            margin: 0, // Pastikan tidak ada margin
+            color: "white",
+            fontSize: "18px",
+            textAlign: "center", // Pusatkan teks
+          }}
+        >
+          Add New Portofolio
+        </DialogTitle>
+      </Box>
 
+    <form onSubmit={handleSubmit} style={{ padding: "20px" }}>
 
-        <form onSubmit={handleFormSubmit} style={{
-            padding: "20px", // Add padding to the form
-          }}>
-          <Button
+            {/* Portfolio Title */}
+            <TextField
+            label="Title"
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            fullWidth
+            required
+            margin="normal"
+            />
+
+            {/* Portfolio Description */}
+            <TextField
+              label="Description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              fullWidth
+              required
+              multiline
+              rows={4}
+              margin="normal"
+            />
+
+                        {/* Portfolio Link */}
+            <TextField
+              label="Link"
+              name="link"
+              value={formData.link}
+              onChange={handleInputChange}
+              fullWidth
+              required
+              margin="normal"
+              placeholder="your figma, github, instagram. etc"
+            />
+
+<FormControl fullWidth required margin="normal">
+            <InputLabel>Type of Portfolio</InputLabel>
+            <Select
+                name="type"
+                value={formData.type}
+                required
+                onChange={(e) => handleSelectChange(e, 'type')}
+                label="Type of Portfolio"
+            >
+                {Object.values(TypePortofolio).map((type) => (
+                <MenuItem key={type} value={type}>
+                    {type}
+                </MenuItem>
+                ))}
+            </Select>
+            </FormControl>
+
+            <FormControl fullWidth required margin="normal">
+            <InputLabel>Status of Portfolio</InputLabel>
+            <Select
+                name="status"
+                value={formData.status}
+                onChange={(e) => handleSelectChange(e, 'status')}
+                label="Status of Portfolio"
+            >
+                {Object.values(StatusPortofolio).map((status) => (
+                <MenuItem key={status} value={status}>
+                    {status}
+                </MenuItem>
+                ))}
+            </Select>
+            </FormControl>
+
+            {/* Date Created */}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  label="Date Created"
+                  value={dayjs(formData.dateCreated)}
+                  onChange={(newValue: Dayjs | null) => {
+                    if (newValue) setFormData({ ...formData, dateCreated: newValue.toString() });
+                  }}
+                />
+                {errors.dateCreated && <FormHelperText error>{errors.dateCreated}</FormHelperText>}
+              </DemoContainer>
+            </LocalizationProvider>
+
+    {/* Date End */}
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  label="Date End"
+                  value={formData.isPresent ? null : dayjs(formData.dateEnd)}  // Set value to null if isPresent is true
+                  onChange={(newValue: Dayjs | null) => {
+                    if (!formData.isPresent && newValue) {
+                      setFormData({ ...formData, dateEnd: newValue.toString() });
+                    }
+                  }}
+                />
+                {errors.dateEnd && <FormHelperText error>{errors.dateEnd}</FormHelperText>}
+              </DemoContainer>
+            </LocalizationProvider>
+
+      
+<Button
             variant="outlined"
             color="primary"
             onClick={() => setOpenDialog(true)}
@@ -265,32 +427,20 @@ const AddPortoModal = () => {
               </Button>
             </DialogActions>
           </Dialog>
-          {/* Form Section */}
-          <FormControl fullWidth sx={{ marginTop:2, marginBottom: 2 }}>
-            <FormLabel>Product Name</FormLabel>
-            <TextField name="productName" required />
-          </FormControl>
-          <FormControl fullWidth sx={{ marginBottom: 2 }}>
-            <FormLabel>Description</FormLabel>
-            <TextField name="description" multiline rows={3} required />
-          </FormControl>
+ 
 
-          
-
-          <FormControl fullWidth sx={{ marginBottom: 2 }}>
-            <FormLabel>Price</FormLabel>
-            <TextField name="price" type="number" required />
-          </FormControl>
-
-          <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: "30px" }}>
+            {/* Submit Button */}
+            <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: "30px" }}>
             <Button variant="contained" color="error" onClick={handleClose}>
               Cancel
             </Button>
             <Button variant="contained" color="primary" type="submit">
               Submit
             </Button>
-          </Box>
-        </form>
+          </Box>  
+
+</form>
+
       </Box>
     </Modal>
   );

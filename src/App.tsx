@@ -72,6 +72,7 @@ import EditPortoModal from './sellerrrrrr/EditPortoModal';
 import AddProduct from './sellerrrrrr/AddProduct';
 import AddSkill from './sellerrrrrr/AddSkill';
 import AddPortoModal from './sellerrrrrr/AddPortoModal';
+import AddPorto from './sellerrrrrr/AddPorto';
 
 setupIonicReact();
 const theme = createTheme({
@@ -162,6 +163,7 @@ const App: React.FC = () => (
           <Route path="/AddProduct" component={AddProduct}/>
           <Route path="/AddSkill" component={AddSkill}/>
           <Route path="/AddPortoModal" component={AddPortoModal}/>
+          <Route path="/AddPorto" component={AddPorto}/>
 
           <Route exact path="/">
             <Redirect to="/login" />
