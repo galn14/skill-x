@@ -176,7 +176,6 @@ const AddPortoModal = () => {
         sx={{
             position: "sticky", // Tetap di atas selama scroll
             top: 0,
-            zIndex: 10, // Pastikan di atas elemen lain
             height: "100px",
             backgroundColor: "#0094FF",
             borderRadius: "10px 10px 0 0",

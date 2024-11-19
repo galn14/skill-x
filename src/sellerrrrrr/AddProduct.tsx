@@ -95,12 +95,12 @@ const AddProduct = () => {
       onClose={handleClose}
       sx={{
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: "center", // Pusatkan modal secara vertikal
+        justifyContent: "center", // Pusatkan modal secara horizontal
         padding: "20px",
         overflow: "auto",
-        marginTop: '20px',
-        marginBottom: '20px'
+        borderRadius: "8px",
+        
       }}
     >
       <Box
@@ -110,22 +110,25 @@ const AddProduct = () => {
           borderRadius: "8px",
           boxShadow: 24,
           overflow: "auto",
-          marginTop: '20px',
-        marginBottom: '20px'
+          maxHeight: "90vh", 
         }}
       >
        <Box
   sx={{
+    position: "sticky", // Tetap di atas selama scroll
+    top: 0,
+    height: "100px",
     backgroundColor: "#0094FF",
     borderRadius: "10px 10px 0 0",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center", // Pusatkan secara vertikal
-    padding: "10px", // Kurangi padding
+    alignItems: "center",
+    padding: "10px",
   }}
 >
   <DialogTitle
     sx={{
+      paddingTop: "20px",
       margin: 0, // Pastikan tidak ada margin
       color: "white",
       fontSize: "18px",

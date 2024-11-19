@@ -486,19 +486,7 @@ const profileSeller: React.FC = () => {
             </div>
 
             {/* The Edit Button positioned at the top-right corner */}
-            <div>
-              <IconButton
-               onClick={openPortoMeModal}
-              sx={{
-                marginLeft:'1px',
-              
-              }}
-              size="small"
-            >
-              <EditIcon />
-            </IconButton>
-            <Route path="/EditPortoModal" component={EditPortoModal}/>
-          </div>
+            
     {isPortoOpen ? (
               <ArrowDropUpIcon sx={{ color: "gray" }} onClick={PortotoggleCard} />
             ) : (
@@ -531,6 +519,19 @@ const profileSeller: React.FC = () => {
                     {item.description}
                   </Typography>
                 </TimelineContent>
+                <div>
+              <IconButton
+               onClick={openPortoMeModal}
+              sx={{
+                marginLeft:'1px',
+              
+              }}
+              size="small"
+            >
+              <EditIcon />
+            </IconButton>
+            <Route path="/EditPortoModal" component={EditPortoModal}/>
+          </div>
               </TimelineItem>
             ))}
           </Timeline>
