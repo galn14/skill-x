@@ -207,3 +207,32 @@ export const logout = async () => {
     throw error;
   }
 };
+
+export const getRegisterSellerStatus = async (userToken: string) => {
+  try {
+    const response = await axios.get(`${baseUrl}/user/request-seller-status`, {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+    return response.data; // This should return `{ status: "pending" }`
+  } catch (error: any) {
+    console.error('Error fetching register seller status:', error.response || error);
+    throw error.response?.data || error; // Ensure the error is propagated
+  }
+};
+
+export const requestSeller = async (userToken: string, payload: any) => {
+  try {
+    const response = await axios.post(`${baseUrl}/user/request-seller`, payload, {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data; // Return the response data
+  } catch (error: any) {
+    console.error('Error in requestSeller:', error.response || error);
+    throw error.response?.data || error; // Throw the error for further handling
+  }
+};

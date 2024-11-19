@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TextField,
   Button,
@@ -25,6 +25,9 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { requestSeller, getRegisterSellerStatus } from "../api.service"; // Import fungsi API
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebaseConfig'; // Import Firebase storage
 
 const JoinAsSeller: React.FC = () => {
   const history = useHistory();
@@ -36,12 +39,47 @@ const JoinAsSeller: React.FC = () => {
   const [studentCard, setStudentCard] = useState<File | null>(null);
   const [studentCardPreview, setStudentCardPreview] = useState<string | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
+  const [isLoading, setIsLoading] = useState(true);
+
 
   const theme = createTheme({
     typography: {
       fontFamily: '"Poppins"',
     },
   });
+
+  useEffect(() => {
+    const checkStatus = async () => {
+      const userToken = localStorage.getItem('userToken');
+      if (!userToken) {
+        console.log('No user token found.');
+        history.push('/login');
+        return;
+      }
+  
+      try {
+        const response = await getRegisterSellerStatus(userToken);
+        console.log('API Response:', response); // Log the API response
+        if (response.status === 'pending') {
+          history.push('/JoinAsSellerWait');
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching status:', error);
+        setIsLoading(false);
+      }
+    };
+  
+    checkStatus();
+  }, [history]);
+  
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Optional loading state
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,41 +90,75 @@ const JoinAsSeller: React.FC = () => {
     setTermsAccepted(e.target.checked);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      const validFormats = ['image/jpeg', 'image/png'];
-      const maxSizeInMB = 2; // Maksimal 2MB
-      if (!validFormats.includes(file.type)) {
-        alert('Please upload a JPEG or PNG image.');
-        return;
-      }
-      if (file.size > maxSizeInMB * 1024 * 1024) {
-        alert('File size must not exceed 2MB.');
-        return;
-      }
+    if (!file) return;
+  
+    const validFormats = ['image/jpeg', 'image/png'];
+    const maxSizeInMB = 2; // Maximum size 2MB
+  
+    if (!validFormats.includes(file.type)) {
+      alert('Please upload a JPEG or PNG image.');
+      return;
+    }
+    if (file.size > maxSizeInMB * 1024 * 1024) {
+      alert('File size must not exceed 2MB.');
+      return;
+    }
+  
+    try {
+      const storageRef = ref(storage, `student_cards/${file.name}`);
+      const snapshot = await uploadBytes(storageRef, file); // Upload file
+      const downloadURL = await getDownloadURL(snapshot.ref); // Get file URL
       setStudentCard(file);
-      setStudentCardPreview(URL.createObjectURL(file));
+      setStudentCardPreview(downloadURL);
+      console.log('File uploaded successfully:', downloadURL);
+    } catch (error: any) {
+      console.error('Error uploading file:', error.message);
+      alert(`Failed to upload the file: ${error.message}`);
     }
   };
-  
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!termsAccepted) {
       alert('Please agree to the terms and conditions.');
       return;
     }
-    if (!studentCard) {
+    if (!studentCardPreview) {
       alert('Please upload your student card.');
       return;
     }
 
-    console.log(data); // Replace with form submission logic
-    console.log('Selected Date:', valueDate);
-    console.log('Uploaded Student Card:', studentCard);
+    const payload = {
+      name: data.name,
+      email: data.email,
+      organization: data.kampus,
+      major: data.jurusan,
+      photo_url: studentCardPreview,
+      graduation_month: valueDate?.format('MMMM') || '',
+      graduation_year: valueDate?.year() || '',
+    };
 
-    alert('Form submitted successfully!');
+    setIsSubmitting(true);
+    const userToken = localStorage.getItem('userToken');
+    if (!userToken) {
+      alert('User is not logged in.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await requestSeller(userToken, payload);
+      alert(response.message || 'Request submitted successfully!');
+      history.push('/JoinAsSellerWait'); // Redirect after successful submission
+    } catch (error: any) {
+      console.error('Error submitting request:', error);
+      alert(error.response?.data?.message || 'Failed to submit request.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -250,8 +322,9 @@ const JoinAsSeller: React.FC = () => {
               marginTop: '16px',
               borderTop:'100px'
             }}
+            disabled={isSubmitting}
           >
-            Register
+          {isSubmitting ? "Submitting..." : "Register"}
           </Button>
         </form>
         </Grid>
