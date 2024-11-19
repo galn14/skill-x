@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Box, DialogTitle, FormControl, FormLabel, TextField, Button } from "@mui/material";
 import { useHistory } from 'react-router-dom';
 
-const EditAboutMe = () => {
+const EditPortoModal = () => {
   const [open, setOpen] = useState(true);  // Modal state to control opening/closing
   const history = useHistory();
 
@@ -11,7 +11,7 @@ const EditAboutMe = () => {
     history.push('/ProfileSeller');  // Redirect to home or main page
     setOpen(false);  // Close the modal
   };
-
+  
   // Form submit handler (example)
   const handleFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -55,7 +55,7 @@ const EditAboutMe = () => {
               fontSize: '18px',
             }}
           >
-            Edit Description
+            Edit Profile
           </DialogTitle>
         </Box>
 
@@ -69,6 +69,18 @@ const EditAboutMe = () => {
               gap: 2,
             }}
           >
+             {['title', 'tools', ].map((field) => (
+              <FormControl key={field}>
+                <FormLabel>{capitalize(field)}*</FormLabel>
+                <TextField
+                  sx={{ width: '100%' }}
+                  name={field}
+                  defaultValue={JSON.parse(localStorage.getItem('userInfo') || '{}')[field] || ''}
+                  autoFocus={field === 'name'}
+                  required
+                />
+              </FormControl>
+            ))}
             {['description'].map((field) => (
                 <FormControl key={field}>
                     <FormLabel>{capitalize(field)}*</FormLabel>
@@ -80,11 +92,10 @@ const EditAboutMe = () => {
                     required
                     multiline
                     rows={4}
-                    placeholder="Write about yourself here..."
+                    placeholder="Write about your project here..."
                     />
                 </FormControl>
                 ))}
-
 
             {/* Action Buttons */}
             <Box display="flex" justifyContent="space-between" mt={1}>
@@ -112,7 +123,7 @@ const EditAboutMe = () => {
   );
 };
 
-export default EditAboutMe;
+export default EditPortoModal;
 
 // Utility function for capitalizing field names
 const capitalize = (str: string) => {

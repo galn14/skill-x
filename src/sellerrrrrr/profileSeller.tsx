@@ -22,6 +22,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import EditProfileModal from './EditProfileModal'; // import modal yang baru dibuat
 import { Route, BrowserRouter } from "react-router-dom";
 import EditAboutMe from './EditAboutMe';
+import EditPortoModal from './EditPortoModal';
 
 const profileSeller: React.FC = () => {
   const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
@@ -34,6 +35,9 @@ const profileSeller: React.FC = () => {
 
   const openAboutMeModal = () => {
     history.push('/EditAboutMe'); // Rute untuk modal
+  };
+  const openPortoMeModal = () => {
+    history.push('/EditPortoModal'); // Rute untuk modal
   };
 
   const AboutmetoggleCard = () => {
@@ -357,8 +361,9 @@ const profileSeller: React.FC = () => {
             </IconButton>
 
             {/* The Edit Button positioned at the top-right corner */}
-            <IconButton
-              // onClick={handleOpenEdit}
+            <div>
+              <IconButton
+               onClick={openPortoMeModal}
               sx={{
                 marginLeft:'1px',
               
@@ -367,7 +372,8 @@ const profileSeller: React.FC = () => {
             >
               <EditIcon />
             </IconButton>
-
+            <Route path="/EditPortoModal" component={EditPortoModal}/>
+          </div>
     {isPortoOpen ? (
               <ArrowDropUpIcon sx={{ color: "gray" }} onClick={PortotoggleCard} />
             ) : (
