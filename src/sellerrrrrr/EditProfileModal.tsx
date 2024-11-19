@@ -1,28 +1,44 @@
 import React, { useState } from "react";
-import { Modal, Box, DialogTitle, FormControl, FormLabel, TextField, Button } from "@mui/material";
+import { Modal, Box, DialogTitle, FormControl, FormLabel, TextField, Button, InputLabel, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useHistory } from 'react-router-dom';
 
 const EditProfileModal = () => {
   const [open, setOpen] = useState(true);  // Modal state to control opening/closing
+  const [selectedMajor, setSelectedMajor] = useState('');  // For storing selected major
   const history = useHistory();
+
+  // Dummy data for majors
+  const majors = [
+    { id: 1, name: 'Computer Science' },
+    { id: 2, name: 'Information Systems' },
+    { id: 3, name: 'Business Administration' },
+    { id: 4, name: 'Electrical Engineering' },
+    { id: 5, name: 'Mechanical Engineering' },
+  ];
+
+  // Handle major selection change
+  const handleChange = (event: SelectChangeEvent<string>) => {
+    setSelectedMajor(event.target.value);  // Update selected major based on event
+  };
 
   // Close modal and redirect
   const handleCloseEdit = () => {
-    history.push('/ProfileSeller');  // Redirect to home or main page
+    history.push('/ProfileSeller');  // Redirect to the ProfileSeller page
     setOpen(false);  // Close the modal
   };
 
-  // Form submit handler (example)
+  // Form submit handler
   const handleFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Add your form submit logic here
+    // Add form submit logic here (e.g., update user info)
+    console.log('Form submitted with Major:', selectedMajor);  // Just for demonstration
     handleCloseEdit();  // Close modal on submit
   };
 
   return (
     <Modal
       open={open}
-      onClose={handleCloseEdit} // Close modal when clicking outside
+      onClose={handleCloseEdit}  // Close modal when clicking outside
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -69,7 +85,7 @@ const EditProfileModal = () => {
               gap: 2,
             }}
           >
-            {['name', 'organization', 'major', 'language'].map((field) => (
+            {['name', 'organization'].map((field) => (
               <FormControl key={field}>
                 <FormLabel>{capitalize(field)}*</FormLabel>
                 <TextField
@@ -82,6 +98,28 @@ const EditProfileModal = () => {
               </FormControl>
             ))}
 
+            {/* Major Dropdown */}
+            <FormControl fullWidth variant="outlined">
+            <FormLabel>Major</FormLabel>
+            <InputLabel id="major-label"></InputLabel>
+              <Select
+                labelId="major-label"
+                value={selectedMajor}
+                onChange={handleChange}  // Correct event handler for onChange
+                //label="Select Major"
+              >
+                {majors.map((major) => (
+                  <MenuItem key={major.id} value={major.name}>
+                    {major.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth sx={{ marginTop:2, marginBottom: 2 }}>
+            <FormLabel>Language</FormLabel>
+            <TextField name="language" required />
+          </FormControl>
             {/* Action Buttons */}
             <Box display="flex" justifyContent="space-between" mt={1}>
               <Button

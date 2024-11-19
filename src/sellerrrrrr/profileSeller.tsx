@@ -25,15 +25,87 @@ import EditAboutMe from './EditAboutMe';
 import EditPortoModal from './EditPortoModal';
 import AddProduct from './AddProduct';
 import AddSkill from './AddSkill';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Dialog, DialogTitle, DialogContent, DialogActions} from '@mui/material';
+import { Preferences } from '@capacitor/preferences';
+import CloseIcon from '@mui/icons-material/Close';
+import { useEffect } from 'react';
 
 const profileSeller: React.FC = () => {
   const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
   const [isSkillOpen, setSkillIsOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
 
   const openModal = () => {
     history.push('/EditProfileModal'); // Rute untuk modal
   };
 
+  useEffect(() => {
+    const loadImage = async () => {
+      const { value } = await Preferences.get({ key: 'profileImage' });
+      if (value) {
+        setImage(value);
+        setPreviewImage(value); 
+      }
+    };
+    loadImage();
+  }, []);
+  const [image, setImage] = useState<string | undefined>(undefined);
+
+  const captureImage = () => {
+    setModalOpen(true);
+  };
+
+  const handleCamera  = async () => {
+    try {
+      setModalOpen(false); // Close the modal immediately before opening the camera
+  
+      const photo = await Camera.getPhoto({
+        quality: 100,
+        allowEditing: false,
+        source: CameraSource.Camera,
+        resultType: CameraResultType.DataUrl,
+      });
+  
+      const imageUrl = photo.dataUrl;
+      setPreviewImage(imageUrl); // Set the preview image for validation
+      setModalOpen(true); // Reopen modal to show the preview
+    } catch (error) {
+      console.error('Error capturing image', error);
+    }
+  };
+
+  const handleGallery = async () => {
+    try {
+      const photo = await Camera.getPhoto({
+        quality: 100,
+        allowEditing: false,
+        source: CameraSource.Photos,
+        resultType: CameraResultType.DataUrl,
+      });
+
+      const imageUrl = photo.dataUrl;
+      setPreviewImage(imageUrl); // Set the preview image for validation
+      setModalOpen(true); // Open modal to show the preview
+    } catch (error) {
+      console.error('Error selecting image from gallery', error);
+    }
+  };
+
+  const confirmImage = async () => {
+    if (previewImage) {
+      setImage(previewImage); // Set the confirmed image as the profile image
+  
+      // Save to preferences
+      await Preferences.set({
+        key: 'profileImage',
+        value: previewImage,
+      });
+  
+      setModalOpen(false); // Close modal after confirming
+    }
+  };
 
   const openAboutMeModal = () => {
     history.push('/EditAboutMe'); // Rute untuk modal
@@ -151,11 +223,43 @@ const profileSeller: React.FC = () => {
       {/* Avatar */}
       <Grid item xs="auto">
         <Avatar
-          src="/assets/avatar.png" // Ganti dengan path gambar avatar Anda
+          src={image || '/path_to_profile_image'}// Ganti dengan path gambar avatar Anda
           alt="Avatar"
           style={{ width: '80px', height: '80px' }}
+          onClick={captureImage}
+
         />
       </Grid>
+      <Dialog open={modalOpen} onClose={() => setModalOpen(false)} fullWidth>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <DialogTitle>Select Image Source</DialogTitle>
+        <IconButton edge="end" color="inherit" onClick={() => setModalOpen(false)} aria-label="close">
+          <CloseIcon />
+        </IconButton>
+      </Toolbar>
+      
+      <DialogContent dividers>
+        {previewImage && (
+          <img
+            src={previewImage}
+            alt="Preview"
+            style={{ width: '100%', height: 'auto', marginBottom: '16px' }}
+          />
+        )}
+        <Button variant="contained" fullWidth onClick={handleCamera} sx={{ mb: 2 }}>
+          Take Photo with Camera
+        </Button>
+        <Button variant="contained" fullWidth onClick={handleGallery} sx={{ mb: 2 }}>
+          Upload from Gallery
+        </Button>
+        {previewImage && (
+          <Button variant="contained" color="success" fullWidth onClick={confirmImage}>
+            Confirm Profile Picture
+          </Button>
+        )}
+      </DialogContent>
+    </Dialog>
+
 
       {/* Info */}
       <Grid item xs>
