@@ -19,14 +19,19 @@ import SearchIcon from '@mui/icons-material/Search';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import PersonIcon from '@mui/icons-material/Person';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { IonPage, IonContent } from '@ionic/react';
 import '@fontsource/poppins';
 import { useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const FullstackDevelopment: React.FC = () => {
   const [isFavorited, setIsFavorited] = useState(false);
   const { state } = useLocation<any>();
   const { product } = state || {};
+  const history = useHistory();
+  const handleBack = () => history.goBack();
+
 
   const productData = product || {
     image: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
@@ -68,6 +73,9 @@ const FullstackDevelopment: React.FC = () => {
         >
           <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
             <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
+            <IconButton onClick={handleBack} color="primary">
+                            <ArrowBackIcon />
+                        </IconButton>
               <img
                 src="../public/SkillXLogo.png"
                 alt="SkillEx Logo"

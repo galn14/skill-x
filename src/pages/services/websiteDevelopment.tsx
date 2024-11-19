@@ -16,11 +16,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import { IonPage, IonContent } from '@ionic/react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '@fontsource/poppins';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory, Link } from 'react-router-dom';
 
 const WebsiteDevelopment: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const history = useHistory();
+  const handleBack = () => history.goBack();
   const isLoggedIn = !!localStorage.getItem('userToken');
 
   const sponsoredContent = [
@@ -86,6 +88,9 @@ const WebsiteDevelopment: React.FC = () => {
         >
           <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
             <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
+            <IconButton onClick={handleBack} color="primary">
+                            <ArrowBackIcon />
+                        </IconButton>
               <img
                 src="../public/SkillXLogo.png"
                 alt="SkillEx Logo"
