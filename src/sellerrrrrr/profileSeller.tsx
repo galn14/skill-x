@@ -23,6 +23,8 @@ import EditProfileModal from './EditProfileModal'; // import modal yang baru dib
 import { Route, BrowserRouter } from "react-router-dom";
 import EditAboutMe from './EditAboutMe';
 import EditPortoModal from './EditPortoModal';
+import AddPortoModal from './AddPortoModal';
+
 import AddProduct from './AddProduct';
 import AddSkill from './AddSkill';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -112,6 +114,9 @@ const profileSeller: React.FC = () => {
   };
   const openPortoMeModal = () => {
     history.push('/EditPortoModal'); // Rute untuk modal
+  };
+  const openAddPortoModal = () => {
+    history.push('/AddPortoModal'); // Rute untuk modal
   };
   const openAddProduct = () => {
     history.push('/AddProduct'); // Rute untuk modal
@@ -466,9 +471,9 @@ const profileSeller: React.FC = () => {
 
           {/* Icons */}
           <Box sx={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
-            
+            <div>
             <IconButton
-              // onClick={handleOpenEdit}
+             onClick={openAddPortoModal}
               sx={{
                 marginLeft:'1px',
               
@@ -477,6 +482,8 @@ const profileSeller: React.FC = () => {
             >
               <AddIcon />
             </IconButton>
+            <Route path="/AddPortoModal" component={AddPortoModal}/>
+            </div>
 
             {/* The Edit Button positioned at the top-right corner */}
             <div>

@@ -32,7 +32,7 @@ const JoinAsSeller: React.FC = () => {
 
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [valueDate, setDateValue] = useState<Dayjs | null>(dayjs());
-  const [data, setData] = useState({ name: '', kampus: '', jurusan: '' });
+  const [data, setData] = useState({ name: '', kampus: '', email:'',jurusan: '' });
   const [studentCard, setStudentCard] = useState<File | null>(null);
   const [studentCardPreview, setStudentCardPreview] = useState<string | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -147,7 +147,7 @@ const JoinAsSeller: React.FC = () => {
 
           <TextField name="name" label="Full Name" value={data.name} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
           <TextField name="kampus" label="University/Organization" value={data.kampus} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
-          <TextField name="email" label="University/Organization Email" value={data.name} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
+          <TextField name="email" label="University/Organization Email" value={data.email} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
           <TextField name="jurusan" label="Major" value={data.jurusan} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
 
           {/* Date Picker */}
