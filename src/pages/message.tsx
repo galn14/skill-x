@@ -117,6 +117,7 @@ const reviews = [
     },
 ];
 
+
 const MessagePage: React.FC = () => {
     const history = useHistory();
     const handleBack = () => history.goBack;
@@ -164,6 +165,12 @@ const MessagePage: React.FC = () => {
         }
       };
 
+      const navigateToChatRoom = (type: 'seller' | 'buyer', id: number, name: string, profileImage: string) => {
+        history.push({
+            pathname: `/chatroom/${type}/${id}`,
+            state: { userName: name, userId: id, profileImage: profileImage }, // huruf kecil untuk profileImage
+        });
+    };
     return (
         <IonPage>
             {/* AppBar for header */}
@@ -255,6 +262,7 @@ const MessagePage: React.FC = () => {
                         {sellers.map((seller, index) => (
                             <Box
                                 key={index}
+                                onClick={() => navigateToChatRoom('seller', seller.id, seller.name, seller.profileImage)} // Navigasi ke chatroom seller
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="space-between"
@@ -355,6 +363,7 @@ const MessagePage: React.FC = () => {
                         {buyers.map((buyer, index) => (
                             <Box
                                 key={index}
+                                onClick={() => navigateToChatRoom('buyer', buyer.id, buyer.name, buyer.profileImage)} // Navigasi ke chatroom buyer
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="space-between"

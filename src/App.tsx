@@ -1,4 +1,5 @@
 import { Redirect, Route } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -43,6 +44,8 @@ import WebsiteDevelopment from './pages/services/websiteDevelopment';
 // ROUTE UNTUK DETAILED SERVICE
 import FullstackDevelopment from './pages/detail_services/websiteDevelopment/fullstackDevelopment';
 
+import ChatRoom from './pages/chatRoom';
+
 import PrivateRoute from './components/PrivateRoute'; // Import the private route
 import { createTheme, ThemeProvider } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -72,6 +75,10 @@ import EditPortoModal from './sellerrrrrr/EditPortoModal';
 import AddProduct from './sellerrrrrr/AddProduct';
 import AddSkill from './sellerrrrrr/AddSkill';
 import AddPortoModal from './sellerrrrrr/AddPortoModal';
+
+type RouteParams = {
+  id: string;
+};
 
 setupIonicReact();
 const theme = createTheme({
@@ -162,6 +169,21 @@ const App: React.FC = () => (
           <Route path="/AddProduct" component={AddProduct}/>
           <Route path="/AddSkill" component={AddSkill}/>
           <Route path="/AddPortoModal" component={AddPortoModal}/>
+
+          <Route
+              path="/chatroom/:type/:id"
+              render={(props) => {
+                  const state = props.location.state as { userName: string; profileImage: string };
+                  return (
+                      <ChatRoom
+                          userName={state?.userName || 'Unknown User'}
+                          userId={props.match.params.id}
+                          profileImage={state?.profileImage || ''} // Pastikan default kosong
+                          initialMessages={[]} // Atur sesuai kebutuhan
+                      />
+                  );
+              }}
+          />
 
           <Route exact path="/">
             <Redirect to="/login" />
