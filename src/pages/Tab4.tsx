@@ -19,7 +19,7 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { updateUser, logout } from '../api.service';
+import { updateUser, logout, getRegisterSellerStatus, changeUserRole, getUserAndSellerData } from '../api.service';
 import { useHistory } from 'react-router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Preferences } from '@capacitor/preferences';
@@ -35,19 +35,25 @@ import JoinAsSeller from './JoinAsSeller';
 const Tab4: React.FC = () => {
   
   const [userName, setUserName] = useState<string | null>(null);
-  const [buyerData, setBuyerData] = useState<any>(null);
+  const [userData, setUserData] = useState<any>(null);
+  const [sellerData, setSellerData] = useState<any>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // For controlling menu open/close
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null); // Store the selected skill
   const [image, setImage] = useState<string | undefined>(undefined);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [skills, setSkills] = useState<any[]>([]); // State to store skills data
   const [userSkills, setUserSkills] = useState<any[]>([]); // State to store user skills
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
   const [isSkillsListVisible, setIsSkillsListVisible] = useState<boolean>(false); // State for toggling the skills dropdown
   const [editData, setEditData] = useState({ name: '', organization: '', major: '', language: '' });
-
+  const [status, setStatus] = useState<string | null>(null);
   const [setIsLoggedIn] = useState<boolean>(false);
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
+  const [isChangingRole, setIsChangingRole] = useState(false); // Loading state for role change
+
+  const history = useHistory();
+
 
   const handleNotificationButtonClick = () => {
     if (isLoggedIn) {
@@ -61,6 +67,80 @@ const Tab4: React.FC = () => {
 const [userInfo, setUserInfo] = React.useState(() => {
   return JSON.parse(localStorage.getItem('userInfo') || '{}');
 });
+
+useEffect(() => {
+  const fetchData = async () => {
+    const userToken = localStorage.getItem('userToken');
+    if (!userToken) {
+      history.push('/login'); // Redirect ke login jika token tidak ada
+      return;
+    }
+
+    try {
+      const { user, registerSeller } = await getUserAndSellerData(userToken);
+      setUserData(user);
+      setSellerData(registerSeller);
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+    }
+  };
+
+  fetchData();
+}, [history]);
+
+useEffect(() => {
+  const loadProfileImage = async () => {
+    const { value } = await Preferences.get({ key: 'profileImage' });
+    setProfileImage(value || userInfo.picture || '/path_to_default_google_picture');
+  };
+  loadProfileImage();
+}, [userInfo]);
+
+
+useEffect(() => {
+  const checkSellerStatus = async () => {
+    const userToken = localStorage.getItem('userToken');
+    if (!userToken) {
+      console.log('No user token found.');
+      return;
+    }
+
+    try {
+      const response = await getRegisterSellerStatus(userToken);
+      console.log('API Response:', response); // Log the API response
+      setStatus(response.status);
+    } catch (error) {
+      console.error('Error fetching status:', error);
+    }
+  };
+
+  checkSellerStatus();
+}, []);
+
+const handleJoinSellerClick = async () => {
+  if (status === 'accepted') {
+    try {
+      setIsChangingRole(true);
+      const userToken = localStorage.getItem('userToken');
+      if (!userToken) {
+        alert('User is not logged in.');
+        return;
+      }
+
+      const response = await changeUserRole(userToken, 'seller');
+      alert(response.message || 'Switched to Seller successfully!');
+      history.push('/profileSeller'); // Redirect ke halaman profil seller
+    } catch (error: any) {
+      alert(error.message || 'Failed to switch role.');
+    } finally {
+      setIsChangingRole(false);
+    }
+  } else if (isLoggedIn) {
+    history.push('/JoinAsSeller');
+  } else {
+    history.push('/login');
+  }
+};
 
 React.useEffect(() => {
   const handleStorageChange = () => {
@@ -185,7 +265,6 @@ const handleClose = () => {
       boxSizing: 'border-box',
     },
   };
-  const history = useHistory();
 
   const handleTransactionClick = () => {
     // Arahkan ke halaman transaksi
@@ -243,13 +322,15 @@ const handleClose = () => {
     }
   };
 
-  const handleJoinSellerClick = () => {
-    if (isLoggedIn) {
-      history.push('/JoinAsSeller'); // Redirect ke halaman message
-    } else {
-      history.push('/login'); // Redirect ke halaman login
-    }
-  };
+  // const handleJoinSellerClick = () => {
+  //   if (status === 'accepted') {
+  //     history.push('/profileSeller');
+  //   } else if (isLoggedIn) {
+  //     history.push('/JoinAsSeller');
+  //   } else {
+  //     history.push('/login');
+  //   }
+  // };
 
   useEffect(() => {
     // Set data untuk kartu
@@ -363,12 +444,13 @@ const handleClose = () => {
       {/* Avatar Section */}
       <Grid item xs="auto"  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px', marginLeft: '25px' }}>
         <Avatar
-          src={image || '/path_to_profile_image'}
-          alt="User Avatar"
+          src={userData?.photo_url || '/path_to_profile_image'}// Ganti dengan path gambar avatar Anda
+          alt={userData?.name || 'User Avatar'}
           sx={{ width: 85, height: 85, cursor: 'pointer' }}
           onClick={captureImage}
         />
       </Grid>
+
 
         <Grid item xs sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left', marginTop: '150px', marginLeft: '16px', height: '80px' }}>
           
@@ -396,7 +478,7 @@ const handleClose = () => {
               marginTop: '6px'
             }}
           >
-            Join as Seller
+          {status === 'accepted' ? 'Switch to Seller' : 'Join as Seller'}
           </Button>
           <Route path="/JoinAsSeller" component={JoinAsSeller } />
           </div>

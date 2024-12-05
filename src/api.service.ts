@@ -236,3 +236,102 @@ export const requestSeller = async (userToken: string, payload: any) => {
     throw error.response?.data || error; // Throw the error for further handling
   }
 };
+
+
+//
+// STATUS SELLER API
+//
+export const getUserAndSellerData = async (userToken: string) => {
+  try {
+    const response = await axios.get(`${baseUrl}/user/user-seller-data`, {
+      headers: {  
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+    return response.data; // { user: {...}, registerSeller: {...} }
+  } catch (error: any) {
+    console.error('Error fetching user and seller data:', error.response || error);
+    throw error.response?.data || error; // Ensure the error is propagated
+  }
+};
+
+export const changeUserRole = async (userToken: string, role: string) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/user/change-role`,
+      { role },
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || 'Failed to change role');
+  }
+};
+
+
+//
+// PORTOFOLIO API
+//
+export const getUserPortfolios = async (userToken: string) => {
+  try {
+    const response = await axios.get(`${baseUrl}/user/portfolios/view`, {
+      headers: { Authorization: `Bearer ${userToken}` },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching portfolios:', error.response || error);
+    throw error.response?.data || error;
+  }
+};
+
+export const createPortfolio = async (userToken: string, portfolioData: any) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/user/portfolios/create`,
+      portfolioData,
+      {
+        headers: { Authorization: `Bearer ${userToken}` },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Error creating portfolio:', error.response || error);
+    throw error.response?.data || error;
+  }
+};
+
+export const updatePortfolio = async (userToken: string, portfolioData: any) => {
+  try {
+    const response = await axios.put(
+      `${baseUrl}/user/portfolios/update`,
+      portfolioData,
+      {
+        headers: { Authorization: `Bearer ${userToken}` },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Error updating portfolio:', error.response || error);
+    throw error.response?.data || error;
+  }
+};
+
+export const deletePortfolio = async (userToken: string, portfolioId: string) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/user/portfolios/delete`,
+      { id: portfolioId },
+      {
+        headers: { Authorization: `Bearer ${userToken}` },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Error deleting portfolio:', error.response || error);
+    throw error.response?.data || error;
+  }
+};

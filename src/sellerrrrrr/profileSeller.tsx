@@ -24,7 +24,7 @@ import { Route, BrowserRouter } from "react-router-dom";
 import EditAboutMe from './EditAboutMe';
 import EditPortoModal from './EditPortoModal';
 import AddPortoModal from './AddPortoModal';
-
+import { getUserAndSellerData, changeUserRole, getUserPortfolios, deletePortfolio } from '../api.service';
 import AddProduct from './AddProduct';
 import AddSkill from './AddSkill';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -34,10 +34,86 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useEffect } from 'react';
 
 const profileSeller: React.FC = () => {
+  const [isChangingRole, setIsChangingRole] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
+  const [sellerData, setSellerData] = useState<any>(null);
+  const [image, setImage] = useState<string | undefined>(undefined); 
   const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
   const [isSkillOpen, setSkillIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
+  const [portfolios, setPortfolios] = useState<any[]>([]);
+
+  const history = useHistory();
+
+  const handleBackToBuyer = async () => {
+    try {
+      setIsChangingRole(true);
+      const userToken = localStorage.getItem('userToken');
+      if (!userToken) {
+        alert('User is not logged in.');
+        return;
+      }
+
+      const response = await changeUserRole(userToken, 'buyer');
+      alert(response.message || 'Role changed to Buyer successfully!');
+      history.push('/tab4'); // Redirect ke halaman utama Buyer
+    } catch (error: any) {
+      alert(error.message || 'Failed to change role.');
+    } finally {
+      setIsChangingRole(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchPortfolios = async () => {
+      const userToken = localStorage.getItem('userToken');
+      if (!userToken) {
+        history.push('/login');
+        return;
+      }
+      try {
+        const portfolioData = await getUserPortfolios(userToken);
+        setPortfolios(portfolioData);
+      } catch (error) {
+        console.error('Failed to fetch portfolios:', error);
+      }
+    };
+  
+    fetchPortfolios();
+  }, [history]);
+
+  const handleDeletePortfolio = async (portfolioId: string) => {
+    const userToken = localStorage.getItem('userToken');
+    if (!userToken) return;
+    try {
+      await deletePortfolio(userToken, portfolioId);
+      setPortfolios((prev) => prev.filter((p) => p.id !== portfolioId));
+    } catch (error) {
+      console.error('Error deleting portfolio:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const userToken = localStorage.getItem('userToken');
+      if (!userToken) {
+        history.push('/login'); // Redirect ke login jika token tidak ada
+        return;
+      }
+  
+      try {
+        const { user, registerSeller } = await getUserAndSellerData(userToken);
+        setUserData(user);
+        setSellerData(registerSeller);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+  
+    fetchData();
+  }, [history]);
+
 
   const openModal = () => {
     history.push('/EditProfileModal'); // Rute untuk modal
@@ -53,7 +129,6 @@ const profileSeller: React.FC = () => {
     };
     loadImage();
   }, []);
-  const [image, setImage] = useState<string | undefined>(undefined);
 
   const captureImage = () => {
     setModalOpen(true);
@@ -177,7 +252,6 @@ const profileSeller: React.FC = () => {
     },
   ];
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
-  const history = useHistory();
 
   const handleMessageButtonClick = () => {
     if (isLoggedIn) {
@@ -200,6 +274,20 @@ const profileSeller: React.FC = () => {
       fontFamily: '"Poppins"',
     },
   });
+
+  const handleCartButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear(); // Bersihkan semua data localStorage (opsional)
+    history.push('/login'); // Redirect ke halaman login
+  };
+
   return (
     <ThemeProvider theme={theme}>
 
@@ -228,8 +316,8 @@ const profileSeller: React.FC = () => {
       {/* Avatar */}
       <Grid item xs="auto">
         <Avatar
-          src={image || '/path_to_profile_image'}// Ganti dengan path gambar avatar Anda
-          alt="Avatar"
+          src={userData?.photo_url || '/path_to_profile_image'}// Ganti dengan path gambar avatar Anda
+          alt={userData?.name || 'User Avatar'}
           style={{ width: '80px', height: '80px' }}
           onClick={captureImage}
 
@@ -269,16 +357,16 @@ const profileSeller: React.FC = () => {
       {/* Info */}
       <Grid item xs>
         <Typography variant="h6" fontWeight="bold">
-          AileenLiexiuai
+          {sellerData?.name || 'Nama Pengguna'}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          BINUS University, Computer Science
+          {sellerData?.organization || 'Organisasi'} | {sellerData?.major || 'Jurusan'}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          🌍 Indonesia, English, Chinese
+          🌍 {userData?.language || 'Bahasa'}
         </Typography>
       </Grid>
-    </Grid>
+  </Grid>
 
     {/* Edit Button in Top-right Corner */}
     <div>
@@ -309,25 +397,31 @@ const profileSeller: React.FC = () => {
               <Typography variant="body2" color="textSecondary">
                 ⭐ Rating
               </Typography>
-              <Typography variant="h6">4.9</Typography>
+              <Typography variant="h6">{sellerData?.rating || 'N/A'}</Typography>
             </Grid>
             <Grid item xs={3}>
               <Typography variant="body2" color="textSecondary">
                 📅 Since
               </Typography>
-              <Typography variant="h6">2019</Typography>
+              <Typography variant="h6">
+              {new Date(sellerData?.created_at).getFullYear() || 'N/A'}
+              </Typography>
             </Grid>
             <Grid item xs={3}>
               <Typography variant="body2" color="textSecondary">
                 📦 Orders
               </Typography>
-              <Typography variant="h6">46</Typography>
+              <Typography variant="h6">
+              {sellerData?.orders || '0'}
+              </Typography>
             </Grid>
             <Grid item xs={3}>
               <Typography variant="body2" color="textSecondary">
                 🎓 Level
               </Typography>
-              <Typography variant="h6">2</Typography>
+              <Typography variant="h6">
+              {sellerData?.level || 'N/A'}
+              </Typography>
             </Grid>
           </Grid>
 
@@ -500,7 +594,7 @@ const profileSeller: React.FC = () => {
       {isPortoOpen && (
         <IonCardContent>
           <Timeline sx={{ marginLeft: '-150px' }}>
-            {portfolioData.map((item, index) => (
+           {portfolios.map((portfolio, index) => (
               <TimelineItem key={index} sx={{ marginLeft: '-20px' }}>
                 <TimelineSeparator sx={{ marginLeft: '-20px' }}>
                   <TimelineDot sx={{ marginLeft: '-20px' }} color="primary" />
@@ -510,13 +604,13 @@ const profileSeller: React.FC = () => {
                 </TimelineSeparator>
                 <TimelineContent>
                 <Typography variant="h3" sx={{ fontWeight: 700 }}>
-                {item.title}
+                  {portfolio.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {item.tools}
+                    {portfolio.tools}
                   </Typography>
                   <Typography variant="body2" sx={{ marginTop: "8px" }}>
-                    {item.description}
+                    {portfolio.description}
                   </Typography>
                 </TimelineContent>
                 <div>
@@ -593,9 +687,21 @@ const profileSeller: React.FC = () => {
             </IconButton>
             </div>
       </IonCard>
-
-
         </div>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleBackToBuyer}
+          disabled={isChangingRole} // Disabled saat proses berlangsung
+          sx={{
+            width: 'calc(100% - 32px)',
+            margin: '16px auto',
+            padding: '10px',
+          }}
+        >
+          {isChangingRole ? 'Switching...' : 'Back to Buyer'}
+        </Button>
       </IonContent>
     </IonPage>
     </ThemeProvider>
