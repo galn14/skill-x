@@ -4,24 +4,67 @@ import axios from './axiosConfig';
 
 const baseUrl = 'http://localhost:8080'; // Replace with your API base URL
 
-// POST request function
-// export const post = async (endpoint: string, body: any, options: any = {}) => {
-//   try {
-//     // Merge provided headers (like Authorization) with default headers
-//     const config = {
-//       headers: {
-//         ...options.headers, // Use provided headers
-//       },
-//     };
 
-//     // Perform the POST request with the provided body and config
-//     const response = await axios.post(`${baseUrl}/${endpoint}`, body, config);
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error during POST request', error);
-//     throw error;
-//   }
-// };
+export const fetchMessages = async (partnerID: any) => {
+  try {
+    const token = localStorage.getItem('userToken'); // Fetch token from localStorage
+    if (!token) {
+      throw new Error("Authentication token is missing.");
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`, // Attach token to the request
+      },
+    };
+
+    const response = await axios.get(`${baseUrl}/messages?partnerID=${partnerID}`, config);
+    return response.data; // Return the messages data
+  } catch (error) {
+    throw error; // Propagate error for handling
+  }
+};
+
+export const showMessage = async (partnerID: any, messageID: any) => {
+  try {
+    const token = localStorage.getItem('userToken'); // Fetch token from localStorage
+    if (!token) {
+      throw new Error("Authentication token is missing.");
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`, // Attach token to the request
+      },
+    };
+
+    const response = await axios.get(`${baseUrl}/messages/show?partnerID=${partnerID}&messageID=${messageID}`, config);
+    return response.data; // Return the specific message data
+  } catch (error) {
+    throw error; // Propagate error for handling
+  }
+};
+export const createMessage = async (messageData: any) => {
+  try {
+    const token = localStorage.getItem('userToken'); // Fetch token from localStorage
+    if (!token) {
+      throw new Error("Authentication token is missing.");
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`, // Attach token to the request
+      },
+    };
+
+    const response = await axios.post(`${baseUrl}/messages/newChat`, messageData, config);
+    return response.data; // Return the response after creating the message
+  } catch (error) {
+    throw error; // Propagate error for handling
+  }
+};
+
+
 
 export const fetchMajors = async () => {
   try {
