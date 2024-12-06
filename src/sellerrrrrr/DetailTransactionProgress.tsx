@@ -48,7 +48,7 @@ const DetailTransactionProgress: React.FC = () => {
   const [editText, setEditText] = useState("");
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const isMenuOpen = Boolean(anchorEl);
-
+  const [isLocked, setIsLocked] = useState(false);
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -69,6 +69,18 @@ const DetailTransactionProgress: React.FC = () => {
   ]);
   const [newItem, setNewItem] = useState("");
 
+  const handleCompleteOrder = () => {
+    const allToDoListCompleted = items.every(item => item.completed);
+    const allMeetingItemsCompleted = meetingTasks.every(meetingTask => meetingTask.completed);
+
+    if (allToDoListCompleted && allMeetingItemsCompleted) {
+      setStatus("Completed");
+      setIsLocked(true); // Lock editing and status changes
+    } else {
+      alert("Please complete all to-do items and meeting items before completing the order.");
+    }
+  };
+
   const handleAddItem = () => {
     if (newItem.trim() !== "") {
       setItems([...items, { id: Date.now().toString(), text: newItem, completed: false }]);
@@ -81,13 +93,21 @@ const DetailTransactionProgress: React.FC = () => {
   };
 
   const handleToggleCompletion = (id: string) => {
-    setItems(items.map((item) => (item.id === id ? { ...item, completed: !item.completed } : item)));
+    if (!isLocked) {
+      console.log(`Toggling completion for item ID: ${id}`);
+      setItems(items.map((item) =>
+        item.id === id ? { ...item, completed: !item.completed } : item
+      ));
+    } else {
+      console.log("To-do list is locked. Cannot toggle items.");
+    }
   };
-
   const handleEditClick = (id: string, currentText: string) => {
-    setEditingItemId(id);
-    setEditText(currentText);
-    setIsEditModalOpen(true);
+    if (!isLocked) {
+      setEditingItemId(id);
+      setEditText(currentText);
+      setIsEditModalOpen(true);
+    }
   };
 
   const handleEditModalClose = () => {
@@ -126,6 +146,19 @@ const DetailTransactionProgress: React.FC = () => {
     reorderedItems.splice(result.destination.index, 0, movedItem);
     setItems(reorderedItems);
   };
+  const [completed, setCompleted] = useState(false);
+  const [meetingTasks, setMeetingTasks] = useState([
+    { id: "1", text: "Review Agenda", completed: false },
+    { id: "2", text: "Diskusi Proyek Terbaru", completed: false },
+    { id: "3", text: "Perencanaan Langkah Selanjutnya", completed: false }
+  ]);
+
+  // Fungsi untuk menangani toggle status selesai
+  const handleToggleCompletionTask = (id: string) => {
+    setMeetingTasks(meetingTasks.map((task) => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -162,20 +195,16 @@ const DetailTransactionProgress: React.FC = () => {
               <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "#3CB232" }}>
                 {status}
               </Typography>
-              <IconButton onClick={handleMenuOpen} sx={{ color: "#3CB232", marginLeft: "1px" }} size="small">
-                <EditIcon />
-              </IconButton>
+              {!isLocked && (
+                <IconButton onClick={handleMenuOpen} sx={{ color: "#3CB232", marginLeft: "1px" }} size="small">
+                  <EditIcon />
+                </IconButton>
+              )}
             </Box>
 
-            <Menu
-              anchorEl={anchorEl}
-              open={isMenuOpen}
-              onClose={handleMenuClose}
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
-            >
-              {["Pending", "In Progress", "Complete", "Refunded"].map((option) => (
-                <MenuItem key={option} onClick={() => handleStatusChange(option)} selected={option === status}>
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+              {["Pending", "In Progress"].map((option) => (
+                <MenuItem key={option} onClick={() => handleStatusChange(option)} selected={option === status} disabled={isLocked}>
                   {option}
                 </MenuItem>
               ))}
@@ -217,7 +246,7 @@ const DetailTransactionProgress: React.FC = () => {
                             p={1}
                             borderColor="#ccc"
                           >
-                            <Checkbox
+                           <Checkbox
                               checked={item.completed}
                               onChange={() => handleToggleCompletion(item.id)}
                             />
@@ -245,20 +274,27 @@ const DetailTransactionProgress: React.FC = () => {
                 )}
               </Droppable>
             </DragDropContext>
-            <Box mt={2} display="flex">
-              <TextField
-                fullWidth
-                label="New Task"
-                variant="outlined"
-                value={newItem}
-                onChange={(e) => setNewItem(e.target.value)}
-              />
-              <Button variant="contained" color="primary" sx={{ ml: 1 }} onClick={handleAddItem}>
-                Add
-              </Button>
-            </Box>
-          </Box>
-          
+            {status !== "Completed" && (
+  <Box mt={2} display="flex">
+    <TextField
+      fullWidth
+      label="New Task"
+      variant="outlined"
+      value={newItem}
+      onChange={(e) => setNewItem(e.target.value)}
+    />
+    <Button 
+      variant="contained" 
+      color="primary" 
+      sx={{ ml: 1 }} 
+      onClick={handleAddItem}
+    >
+      Add
+    </Button>
+  </Box>
+)}
+</Box>
+
           <Modal open={isEditModalOpen} onClose={handleEditModalClose}>
             <Box
               sx={{
@@ -287,53 +323,102 @@ const DetailTransactionProgress: React.FC = () => {
               </Box>
             </Box>
           </Modal>
-          {/* Meeting Section */}
-          <Box mt={3} p={2} borderRadius={2} border={1} borderColor="#ccc" style={{ marginLeft: '20px', marginRight: '20px' }}>
-  <Typography variant="subtitle1" fontWeight="bold" mb={2}>
-    Meeting
-  </Typography>
-  
-  <Box display="flex" flexDirection="column" gap={1}>
-    <Box display="flex" alignItems="center">
-      <Checkbox defaultChecked />
-      <Typography variant="body2" ml={1}>Requirement / Brainstorming</Typography>
-    </Box>
-    <Box display="flex" alignItems="center">
-      <Checkbox />
-      <Typography variant="body2" ml={1}>Progress</Typography>
-    </Box>
-    <Box display="flex" alignItems="center">
-      <Checkbox />
-      <Typography variant="body2" ml={1}>Final</Typography>
-    </Box>
-  </Box>
+          <Modal open={isEditModalOpen} onClose={handleEditModalClose}>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                backgroundColor: 'white',
+                padding: 4,
+                borderRadius: 2,
+                boxShadow: 24,
+                minWidth: 300,
+              }}
+            >
+              <Typography variant="h6" mb={2}>Edit Task</Typography>
+              <TextField
+                fullWidth
+                label="Edit Task"
+                variant="outlined"
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+              />
+              <Box mt={2} display="flex" justifyContent="flex-end">
+                <Button variant="outlined" onClick={handleEditModalClose} sx={{ marginRight: 1 }}>Cancel</Button>
+                <Button variant="contained" color="primary" onClick={handleEditSave}>Save</Button>
+              </Box>
+            </Box>
+          </Modal>
+          
+          
+          <Box
+      mt={3}
+      p={2}
+      borderRadius={2}
+      border={1}
+      borderColor="#ccc"
+      sx={{ marginLeft: '20px', marginRight: '20px' }}
+    >
+      <Typography variant="subtitle1" fontWeight="bold" mb={2}>
+        Meeting
+      </Typography>
 
-  <Divider sx={{ my: 2 }} />
-  <Typography variant="body2" fontWeight="bold" sx={{ mb: 2 }}>
-  Upcoming Meeting: <span style={{ color: 'blue' }}>10-11-2024</span>
-</Typography>
+      <Box display="flex" flexDirection="column" gap={1}>
+        {meetingTasks.map((meetingTask) => (
+          <Box display="flex" alignItems="center" key={meetingTask.id}>
+            <Checkbox
+              checked={meetingTask.completed}
+              onChange={() => handleToggleCompletionTask(meetingTask.id)}
+            />
+            <Typography
+              variant="body2"
+              ml={1}
+              sx={{ textDecoration: meetingTask.completed ? 'line-through' : 'none' }}
+            >
+              {meetingTask.text}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
 
-{/* Create Meeting Button */}
-<Button
-  variant="contained"
-  size="small"
-  sx={{
-    mt: 2,
-    bgcolor: "#3CB232",
-    color: "white",
-    "&:hover": {
-      bgcolor: "#2a9e1e",
-    },
-    display: "block",
-    mx: "auto", // Center the button horizontally
-  }}
->
-  Create Meeting
-</Button>
-</Box>
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="body2" fontWeight="bold" sx={{ mb: 2 }}>
+        Upcoming Meeting: <span style={{ color: 'blue' }}>10-11-2024</span>
+      </Typography>
+
+      <Button
+        variant="contained"
+        size="small"
+        sx={{
+          mt: 2,
+          bgcolor: "#3CB232",
+          color: "white",
+          "&:hover": {
+            bgcolor: "#37A62B",
+          },
+        }}
+        onClick={() => {
+          // Logika untuk menambahkan meeting item baru
+          console.log('Add new meeting item');
+        }}
+        style={{ display: status !== "Completed" ? "block" : "none" }} // Kondisi untuk menyembunyikan button jika status sudah Completed
+
+      >
+        Add Meeting
+      </Button>
+    </Box>
+
 
 {/* Cancel Order Button */}
 <Box sx={{ mx: "20px" }}>
+<Button variant="contained" color="success" fullWidth sx={{ mt: 2 }} onClick={handleCompleteOrder}
+        style={{ display: status !== "Completed" ? "block" : "none" }} // Kondisi untuk menyembunyikan button jika status sudah Completed
+>
+              Complete Order
+</Button>
+
   <Button
     variant="contained"
     color="error"
