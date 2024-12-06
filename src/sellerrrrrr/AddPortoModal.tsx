@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { addPortfolio } from '../api.service';
 import { useHistory } from "react-router-dom";
 import SwipeableViews from "react-swipeable-views";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -80,20 +81,37 @@ const AddPortoModal = () => {
   
 
   // Handle form submission
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  // const handleSubmit = (event: React.FormEvent) => {
+  //   event.preventDefault();
 
-    // Custom validation for required fields
-    const newErrors: { [key: string]: string } = {};
-    if (!formData.dateCreated) newErrors.dateCreated = "Date Created is required";
-    if (!formData.dateEnd) newErrors.dateEnd = "Date End is required";
+  //   // Custom validation for required fields
+  //   const newErrors: { [key: string]: string } = {};
+  //   if (!formData.dateCreated) newErrors.dateCreated = "Date Created is required";
+  //   if (!formData.dateEnd) newErrors.dateEnd = "Date End is required";
     
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors); // Set errors if validation fails
-      return;
-    }
+  //   if (Object.keys(newErrors).length > 0) {
+  //     setErrors(newErrors); // Set errors if validation fails
+  //     return;
+  //   }
 
-    console.log(formData);  // Process the form data
+  //   console.log(formData);  // Process the form data
+  // };
+
+  const handleSubmit = async () => {
+    try {
+      const userToken = localStorage.getItem('userToken');
+      if (!userToken) {
+        alert('You are not logged in!');
+        history.push('/login');
+        return;
+      }
+      await addPortfolio(userToken, formData);
+      alert('Portfolio added successfully!');
+      history.push('/ProfileSeller'); // Kembali ke halaman profil
+    } catch (error) {
+      console.error('Error adding portfolio:', (error as any).message);
+      alert('Failed to add portfolio.');
+    }
   };
 
   const handleClose = () => {
@@ -433,7 +451,7 @@ const AddPortoModal = () => {
             <Button variant="contained" color="error" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary" type="submit">
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
               Submit
             </Button>
           </Box>  

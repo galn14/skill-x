@@ -276,62 +276,71 @@ export const changeUserRole = async (userToken: string, role: string) => {
 //
 // PORTOFOLIO API
 //
-export const getUserPortfolios = async (userToken: string) => {
+// Ambil semua portofolio user
+export const getUserPortfolios = async (token: string) => {
   try {
     const response = await axios.get(`${baseUrl}/user/portfolios/view`, {
-      headers: { Authorization: `Bearer ${userToken}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
-    return response.data;
-  } catch (error: any) {
-    console.error('Error fetching portfolios:', error.response || error);
-    throw error.response?.data || error;
+    console.log('API Response:', response.data);
+    return response.data; // Mengembalikan data portofolio
+  } catch (error) {
+    const err = error as any;
+    console.error('API Error:', err.response?.data || err.message);
+    throw error;
   }
 };
-
-export const createPortfolio = async (userToken: string, portfolioData: any) => {
+// Tambah portofolio baru
+export const addPortfolio = async (token: string, portfolioData: any) => {
   try {
-    const response = await axios.post(
-      `${baseUrl}/user/portfolios/create`,
-      portfolioData,
-      {
-        headers: { Authorization: `Bearer ${userToken}` },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    console.error('Error creating portfolio:', error.response || error);
-    throw error.response?.data || error;
+    const response = await axios.post(`${baseUrl}/user/portfolios/create`, portfolioData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data; // Mengembalikan data portofolio baru
+  } catch (error) {
+    const err = error as any;
+    console.error('Error adding portfolio:', err.response?.data || err.message);
+    throw error;
   }
 };
 
-export const updatePortfolio = async (userToken: string, portfolioData: any) => {
+// Edit portofolio
+export const editPortfolio = async (token: string, portfolioData: any) => {
   try {
-    const response = await axios.put(
-      `${baseUrl}/user/portfolios/update`,
-      portfolioData,
-      {
-        headers: { Authorization: `Bearer ${userToken}` },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    console.error('Error updating portfolio:', error.response || error);
-    throw error.response?.data || error;
+    const response = await axios.post(`${baseUrl}/user/portfolios/update`, portfolioData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data; // Mengembalikan data portofolio yang diupdate
+  } catch (error) {
+    const err = error as any;
+    console.error('Error editing portfolio:', err.response?.data || err.message);
+    throw error;
   }
 };
 
-export const deletePortfolio = async (userToken: string, portfolioId: string) => {
+// Hapus portofolio
+export const deletePortfolio = async (token: string, portfolioId: string) => {
   try {
     const response = await axios.post(
       `${baseUrl}/user/portfolios/delete`,
       { id: portfolioId },
       {
-        headers: { Authorization: `Bearer ${userToken}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       }
     );
-    return response.data;
-  } catch (error: any) {
-    console.error('Error deleting portfolio:', error.response || error);
-    throw error.response?.data || error;
+    return response.data; // Mengembalikan pesan sukses
+  } catch (error) {
+    const err = error as any;
+    console.error('Error deleting portfolio:', err.response?.data || err.message);
+    throw error;
   }
 };

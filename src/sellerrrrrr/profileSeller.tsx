@@ -24,7 +24,7 @@ import { Route, BrowserRouter } from "react-router-dom";
 import EditAboutMe from './EditAboutMe';
 import EditPortoModal from './EditPortoModal';
 import AddPortoModal from './AddPortoModal';
-import { getUserAndSellerData, changeUserRole, getUserPortfolios, deletePortfolio } from '../api.service';
+import { getUserAndSellerData, changeUserRole, getUserPortfolios, addPortfolio, editPortfolio, deletePortfolio  } from '../api.service';
 import AddProduct from './AddProduct';
 import AddSkill from './AddSkill';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -42,7 +42,7 @@ const profileSeller: React.FC = () => {
   const [isSkillOpen, setSkillIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
-  const [portfolios, setPortfolios] = useState<any[]>([]);
+  const [portfolios, setPortfolios] = useState<any[]>([]); // Pastikan ini array kosong
 
   const history = useHistory();
 
@@ -65,34 +65,80 @@ const profileSeller: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchPortfolios = async () => {
+  const fetchPortfolios = async () => {
+    try {
       const userToken = localStorage.getItem('userToken');
       if (!userToken) {
+        alert('You are not logged in!');
         history.push('/login');
         return;
       }
-      try {
-        const portfolioData = await getUserPortfolios(userToken);
-        setPortfolios(portfolioData);
-      } catch (error) {
-        console.error('Failed to fetch portfolios:', error);
-      }
-    };
   
-    fetchPortfolios();
-  }, [history]);
-
-  const handleDeletePortfolio = async (portfolioId: string) => {
-    const userToken = localStorage.getItem('userToken');
-    if (!userToken) return;
-    try {
-      await deletePortfolio(userToken, portfolioId);
-      setPortfolios((prev) => prev.filter((p) => p.id !== portfolioId));
+      const data = await getUserPortfolios(userToken);
+      console.log('Portfolios fetched:', data);
+  
+      // Pastikan state selalu berupa array
+      setPortfolios(data || []);
     } catch (error) {
-      console.error('Error deleting portfolio:', error);
+      if (error instanceof Error) {
+        console.error('Error fetching portfolios:', error.message);
+      } else {
+        console.error('Error fetching portfolios:', error);
+      }
+      alert('Failed to fetch portfolios.');
+      setPortfolios([]); // Set array kosong jika terjadi error
     }
   };
+  
+
+  useEffect(() => {
+    fetchPortfolios();
+  }, []);
+  
+  // Tambah portofolio baru
+  const handleAddPortfolio = async (newPortfolio: any) => {
+    try {
+      const userToken = localStorage.getItem('userToken');
+      if (!userToken) {
+        alert('You are not logged in!');
+        return;
+      }
+      const addedPortfolio = await addPortfolio(userToken, newPortfolio);
+      setPortfolios((prev) => [...prev, addedPortfolio]); // Update state dengan portofolio baru
+      alert('Portfolio added successfully!');
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error adding portfolio:', error.message);
+      } else {
+        console.error('Error adding portfolio:', error);
+      }
+      alert('Failed to add portfolio.');
+    }
+  };
+  
+  // Edit portofolio
+  const handleEditPortfolio = async (updatedPortfolio: any) => {
+    try {
+      const userToken = localStorage.getItem('userToken');
+      if (!userToken) {
+        alert('You are not logged in!');
+        return;
+      }
+      const editedPortfolio = await editPortfolio(userToken, updatedPortfolio);
+      setPortfolios((prev) =>
+        prev.map((portfolio) => (portfolio.id === editedPortfolio.id ? editedPortfolio : portfolio))
+      );
+      alert('Portfolio updated successfully!');
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error editing portfolio:', error.message);
+      } else {
+        console.error('Error editing portfolio:', error);
+      }
+      alert('Failed to update portfolio.');
+    }
+  };
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -593,42 +639,39 @@ const profileSeller: React.FC = () => {
       {/* Content (Hanya muncul jika isOpen true) */}
       {isPortoOpen && (
         <IonCardContent>
-          <Timeline sx={{ marginLeft: '-150px' }}>
-           {portfolios.map((portfolio, index) => (
-              <TimelineItem key={index} sx={{ marginLeft: '-20px' }}>
-                <TimelineSeparator sx={{ marginLeft: '-20px' }}>
-                  <TimelineDot sx={{ marginLeft: '-20px' }} color="primary" />
-                  {index < portfolioData.length - 1 && (
-                    <TimelineConnector sx={{ marginLeft: '-23px' }} /> // Adjust only the line's position
-                  )}
-                </TimelineSeparator>
-                <TimelineContent>
-                <Typography variant="h3" sx={{ fontWeight: 700 }}>
-                  {portfolio.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {portfolio.tools}
-                  </Typography>
-                  <Typography variant="body2" sx={{ marginTop: "8px" }}>
-                    {portfolio.description}
-                  </Typography>
-                </TimelineContent>
-                <div>
-              <IconButton
-               onClick={openPortoMeModal}
-              sx={{
-                marginLeft:'1px',
-              
-              }}
-              size="small"
-            >
-              <EditIcon />
-            </IconButton>
-            <Route path="/EditPortoModal" component={EditPortoModal}/>
-          </div>
-              </TimelineItem>
-            ))}
-          </Timeline>
+          <IonCardContent>
+  <Timeline sx={{ marginLeft: '-150px' }}>
+    {portfolios && portfolios.length > 0 ? ( // Tambahkan validasi
+      portfolios.map((portfolio, index) => (
+        <TimelineItem key={portfolio.id} sx={{ marginLeft: '-20px' }}>
+          <TimelineSeparator sx={{ marginLeft: '-20px' }}>
+            <TimelineDot sx={{ marginLeft: '-20px' }} color="primary" />
+            {index < portfolios.length - 1 && (
+              <TimelineConnector sx={{ marginLeft: '-23px' }} />
+            )}
+          </TimelineSeparator>
+          <TimelineContent>
+            <Typography variant="h3" sx={{ fontWeight: 700 }}>
+              {portfolio.title || 'Untitled'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {portfolio.status || 'No status available'}
+            </Typography>
+            <Typography variant="body2" sx={{ marginTop: '8px' }}>
+              {portfolio.description || 'No description available'}
+            </Typography>
+          </TimelineContent>
+        </TimelineItem>
+      ))
+    ) : (
+      <Typography>No portfolios available. Add one to get started!</Typography> // Tampilkan pesan fallback
+    )}
+  </Timeline>
+</IonCardContent>
+
+          <IonCardContent>
+</IonCardContent>
+
         </IonCardContent>
       )}
     </IonCard>

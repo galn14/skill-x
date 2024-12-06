@@ -17,6 +17,7 @@ import {
   Checkbox,
   FormHelperText,
 } from "@mui/material";
+import { addPortfolio } from '../api.service';
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useHistory } from "react-router-dom";
@@ -57,7 +58,7 @@ const AddPortoModal = () => {
     link: '',
     type: TypePortofolio.PRODUCT, // Default value for 'type'
     status: StatusPortofolio.ON_GOING, // Default value for 'status'
-    dateCreated: '',
+    dateCreated: new Date().toISOString().split('T')[0],
     dateEnd: '',
     isPresent: false,
   });
@@ -80,20 +81,26 @@ const AddPortoModal = () => {
   
 
   // Handle form submission
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
+    try {
+      const userToken = localStorage.getItem('userToken');
+      if (!userToken) {
+        alert('You are not logged in!');
+        history.push('/login');
+        return;
+      }
 
-    // Custom validation for required fields
-    const newErrors: { [key: string]: string } = {};
-    if (!formData.dateCreated) newErrors.dateCreated = "Date Created is required";
-    if (!formData.dateEnd) newErrors.dateEnd = "Date End is required";
-    
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors); // Set errors if validation fails
-      return;
+      await addPortfolio(userToken, formData); // API call
+      alert('Portfolio added successfully!');
+      history.push('/ProfileSeller'); // Redirect to profile page
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error adding portfolio:', error.message);
+      } else {
+        console.error('Error adding portfolio:', error);
+      }
+      alert('Failed to add portfolio.');
     }
-
-    console.log(formData);  // Process the form data
   };
 
   const handleClose = () => {
@@ -434,7 +441,7 @@ const AddPortoModal = () => {
             <Button variant="contained" color="error" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary" type="submit">
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
               Submit
             </Button>
           </Box>  
