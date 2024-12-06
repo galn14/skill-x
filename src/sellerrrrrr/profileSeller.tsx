@@ -44,6 +44,7 @@ const profileSeller: React.FC = () => {
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
   const [portfolios, setPortfolios] = useState<any[]>([]); // Pastikan ini array kosong
 
+
   const history = useHistory();
 
   const handleBackToBuyer = async () => {
