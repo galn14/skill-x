@@ -47,13 +47,7 @@ const Tab1: React.FC = () => {
   });
   
 
-  const handleMessageClick = () => {
-    if (isLoggedIn) {
-      history.push('/message'); // Arahkan ke halaman Message jika login
-    } else {
-      history.push('/login'); // Arahkan ke halaman Login jika belum login
-    }
-  };
+
 
   const handleMessageButtonClick = () => {
     if (isLoggedIn) {

@@ -75,9 +75,11 @@ import EditPortoModal from './sellerrrrrr/EditPortoModal';
 import AddProduct from './sellerrrrrr/AddProduct';
 import AddSkill from './sellerrrrrr/AddSkill';
 import AddPortoModal from './sellerrrrrr/AddPortoModal';
-import AddProductSubscribed from './sellerrrrrr/AddProductSubscribed';
+
 import ChatComponent from './pages/messagetest';
 
+
+import DetailTransactionProgress from './sellerrrrrr/DetailTransactionProgress';
 
 type RouteParams = {
   id: string;
@@ -172,8 +174,10 @@ const App: React.FC = () => (
           <Route path="/AddProduct" component={AddProduct}/>
           <Route path="/AddSkill" component={AddSkill}/>
           <Route path="/AddPortoModal" component={AddPortoModal}/>
-          <Route path="/AddProductSubscribed" component={AddProductSubscribed}/>
+
           <Route path="/messagetest" component={ChatComponent}/>
+
+          <Route path="/DetailTransactionProgress" component={DetailTransactionProgress}/>
 
           <Route
               path="/chatroom/:type/:id"

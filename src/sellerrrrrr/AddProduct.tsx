@@ -27,6 +27,9 @@ const AddProduct = () => {
   const [currentSlide, setCurrentSlide] = useState(0); // Current slide in the slider
   const [selectedService, setSelectedService] = useState(""); // Selected service
 
+  const [userData, setUserData] = useState<any>(null);
+const [sellerData, setSellerData] = useState<any>(null);
+
   const history = useHistory();
 
   const services = ["Photography", "Web Development", "Graphic Design", "Tutoring", "Video Editing"];
@@ -278,6 +281,13 @@ const AddProduct = () => {
             <FormLabel>Description</FormLabel>
             <TextField name="description" multiline rows={3} required />
           </FormControl>
+          {(userData && userData.isSubscribed && sellerData && sellerData.partnerIsSubscribed) && (
+ <FormControl fullWidth sx={{ marginTop: 2, marginBottom: 2 }}>
+  <FormLabel>Email Partner Seller</FormLabel>
+ 7
+    <TextField name="emailpartner" />
+</FormControl> )}
+
 
           {/* Dropdown for Services */}
           <FormControl fullWidth sx={{ marginBottom: 2 }}>
