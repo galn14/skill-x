@@ -1,6 +1,6 @@
 // src/services/api.service.ts
 import { auth, provider, signInWithPopup } from './firebaseConfig';
-import axios from 'axios';
+import axios from './axiosConfig';
 
 const baseUrl = 'http://localhost:8080'; // Replace with your API base URL
 
