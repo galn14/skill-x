@@ -54,7 +54,25 @@ const Tab4: React.FC = () => {
 
   const history = useHistory();
 
-
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      const cachedImage = localStorage.getItem('profileImage');
+      if (cachedImage) {
+        setProfileImage(cachedImage);
+        return;
+      }
+  
+      if (userData?.photo_url) {
+        setProfileImage(userData.photo_url);
+        localStorage.setItem('profileImage', userData.photo_url);
+      } else {
+        setProfileImage('/default-profile-image.png');
+      }
+    };
+  
+    fetchProfileImage();
+  }, [userData]);
+  
   const handleNotificationButtonClick = () => {
     if (isLoggedIn) {
       history.push('/notification'); // Redirect ke halaman message
@@ -78,6 +96,7 @@ useEffect(() => {
 
     try {
       const { user, registerSeller } = await getUserAndSellerData(userToken);
+      console.log('User Data:', user); // Log data untuk memastikan photo_url ada
       setUserData(user);
       setSellerData(registerSeller);
     } catch (error) {
@@ -87,6 +106,25 @@ useEffect(() => {
 
   fetchData();
 }, [history]);
+
+useEffect(() => {
+  const fetchProfileImage = async () => {
+    const cachedImage = localStorage.getItem('profileImage');
+    if (cachedImage) {
+      setProfileImage(cachedImage);
+      return;
+    }
+
+    if (userData?.photo_url) {
+      setProfileImage(userData.photo_url);
+      localStorage.setItem('profileImage', userData.photo_url);
+    } else {
+      setProfileImage('/default-profile-image.png');
+    }
+  };
+
+  fetchProfileImage();
+}, [userData]);
 
 useEffect(() => {
   const loadProfileImage = async () => {
@@ -444,10 +482,10 @@ const handleClose = () => {
       {/* Avatar Section */}
       <Grid item xs="auto"  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px', marginLeft: '25px' }}>
         <Avatar
-          src={userData?.photo_url || '/path_to_profile_image'}// Ganti dengan path gambar avatar Anda
-          alt={userData?.name || 'User Avatar'}
-          sx={{ width: 85, height: 85, cursor: 'pointer' }}
-          onClick={captureImage}
+  src={profileImage || '/default-profile-image.png'}
+  alt={userData?.name || 'User Avatar'}
+  sx={{ width: 85, height: 85, cursor: 'pointer' }}
+  onClick={captureImage}
         />
       </Grid>
 
