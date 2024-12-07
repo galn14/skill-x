@@ -8,7 +8,7 @@ import {
   IonCardContent,
   IonCardSubtitle,
 } from '@ionic/react';
-import {   Button,  Toolbar, AppBar, IconButton, Box, Typography, Card, CardContent, Grid, Avatar, Chip } from '@mui/material';
+import {   Button,  Toolbar, AppBar, IconButton, Box, Typography, Card, CardContent, Grid, Avatar, Chip, Icon } from '@mui/material';
 import { notificationsOutline } from 'ionicons/icons';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
@@ -639,38 +639,92 @@ const profileSeller: React.FC = () => {
 
       {/* Content (Hanya muncul jika isOpen true) */}
       {isPortoOpen && (
-        <IonCardContent>
-          <IonCardContent>
-  <Timeline sx={{ marginLeft: '-150px' }}>
-    {portfolios && portfolios.length > 0 ? ( // Tambahkan validasi
-      portfolios.map((portfolio, index) => (
-        <TimelineItem key={portfolio.id} sx={{ marginLeft: '-20px' }}>
-          <TimelineSeparator sx={{ marginLeft: '-20px' }}>
-            <TimelineDot sx={{ marginLeft: '-20px' }} color="primary" />
-            {index < portfolios.length - 1 && (
-              <TimelineConnector sx={{ marginLeft: '-23px' }} />
-            )}
-          </TimelineSeparator>
-          <TimelineContent>
-            <Typography variant="h3" sx={{ fontWeight: 700 }}>
-              {portfolio.title || 'Untitled'}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {portfolio.status || 'No status available'}
-            </Typography>
-            <Typography variant="body2" sx={{ marginTop: '8px' }}>
-              {portfolio.description || 'No description available'}
-            </Typography>
-          </TimelineContent>
-        </TimelineItem>
-      ))
-    ) : (
-      <Typography>No portfolios available. Add one to get started!</Typography> // Tampilkan pesan fallback
-    )}
-  </Timeline>
-</IonCardContent>
+  <IonCardContent>
+    <Timeline sx={{ marginLeft: "-150px" }}>
+      {portfolios && portfolios.length > 0 ? (
+        portfolios.map((portfolio, index) => (
+          <TimelineItem key={portfolio.id} sx={{ marginLeft: "-20px" }}>
+            <TimelineSeparator>
+              <TimelineDot color="primary" />
+              {index < portfolios.length - 1 && <TimelineConnector />}
+            </TimelineSeparator>
+            <TimelineContent>
+              {/* Header dengan Judul dan Tombol Edit */}
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="h3" sx={{ fontWeight: 700 }}>
+                  {portfolio.title || "Untitled"}
+                </Typography>
+                <Box>
+                  <IconButton
+                    onClick={() =>
+                      history.push(`/EditPortoModal?id=${portfolio.id}`)
+                    }
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Box>
+              </Box>
 
-          <IonCardContent>
+              {/* Status */}
+              <Typography variant="body2" color="text.secondary">
+                Status: {portfolio.status || "No status available"}
+              </Typography>
+
+              {/* Description */}
+              <Typography variant="body2" sx={{ marginTop: "8px" }}>
+                Description: {portfolio.description || "No description available"}
+              </Typography>
+
+              {/* Link */}
+              <Typography variant="body2" sx={{ marginTop: "8px" }}>
+                Link:{" "}
+                {portfolio.link ? (
+                  <a
+                    href={portfolio.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {portfolio.link}
+                  </a>
+                ) : (
+                  "No link provided"
+                )}
+              </Typography>
+
+              {/* Dates */}
+              <Typography variant="body2" sx={{ marginTop: "8px" }}>
+                Date Created: {portfolio.DateCreated || "N/A"}
+              </Typography>
+              <Typography variant="body2">
+                Date End:{" "}
+                {portfolio.DateEnd || (portfolio.isPresent ? "Present" : "N/A")}
+              </Typography>
+
+              {/* Gambar */}
+              {portfolio.image && (
+                <Box sx={{ marginTop: "16px", textAlign: "center" }}>
+                  <img
+                    src={portfolio.image}
+                    alt={portfolio.title || "Portfolio Image"}
+                    style={{
+                      maxWidth: "100%",
+                      height: "auto",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                    }}
+                  />
+                </Box>
+              )}
+            </TimelineContent>
+          </TimelineItem>
+        ))
+      ) : (
+        <Typography>No portfolios available. Add one to get started!</Typography>
+      )}
+    </Timeline>
+  
+
+<IonCardContent>
 </IonCardContent>
 
         </IonCardContent>
