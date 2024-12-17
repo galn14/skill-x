@@ -75,7 +75,7 @@ import EditPortoModal from './sellerrrrrr/EditPortoModal';
 import AddProduct from './sellerrrrrr/AddProduct';
 import AddSkill from './sellerrrrrr/AddSkill';
 import AddPortoModal from './sellerrrrrr/AddPortoModal';
-
+import SearchPage from './pages/search'
 import ChatComponent from './pages/messagetest';
 
 
@@ -174,6 +174,7 @@ const App: React.FC = () => (
           <Route path="/AddProduct" component={AddProduct}/>
           <Route path="/AddSkill" component={AddSkill}/>
           <Route path="/AddPortoModal" component={AddPortoModal}/>
+          <Route path="/search" component={SearchPage}/>
 
           <Route path="/messagetest" component={ChatComponent}/>
 
