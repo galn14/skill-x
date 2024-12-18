@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
   TextField,
   Button,
@@ -14,6 +14,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
 } from '@mui/material';
 import {IonContent,IonPage} from '@ionic/react';
 
@@ -25,7 +30,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { requestSeller, getRegisterSellerStatus } from "../api.service"; // Import fungsi API
+import { requestSeller, getRegisterSellerStatus, fetchMajors } from "../api.service"; // Import fungsi API
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../firebaseConfig'; // Import Firebase storage
 
@@ -42,7 +47,7 @@ const JoinAsSeller: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
   const [isLoading, setIsLoading] = useState(true);
-
+  const [majors, setMajors] = useState<any[]>([]); // State untuk daftar majors
 
   const theme = createTheme({
     typography: {
@@ -74,6 +79,19 @@ const JoinAsSeller: React.FC = () => {
     };
   
     checkStatus();
+
+        // Fetch daftar majors
+        const loadMajors = async () => {
+          try {
+            const majorsData = await fetchMajors(); // Ambil data dari API
+            setMajors(majorsData); // Simpan di state
+          } catch (error) {
+            console.error('Error fetching majors:', error);
+          }
+        };
+    
+        loadMajors();
+
   }, [history]);
   
 
@@ -161,6 +179,14 @@ const JoinAsSeller: React.FC = () => {
     }
   };
 
+  const handleMajorChange = (event: SelectChangeEvent<string>) => {
+    const { value } = event.target; // Ambil nilai yang dipilih
+    setData((prevData) => ({
+      ...prevData,
+      jurusan: value, // Perbarui state dengan jurusan yang dipilih
+    }));
+  };
+
   return (
     <ThemeProvider theme={theme}>
           <IonPage>
@@ -220,8 +246,25 @@ const JoinAsSeller: React.FC = () => {
           <TextField name="name" label="Full Name" value={data.name} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
           <TextField name="kampus" label="University/Organization" value={data.kampus} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
           <TextField name="email" label="University/Organization Email" value={data.email} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
-          <TextField name="jurusan" label="Major" value={data.jurusan} onChange={handleInputChange} fullWidth variant="outlined" required sx={{ marginBottom: '16px' }} />
 
+          {/* Major Dropdown */}
+          <FormControl fullWidth sx={{ marginBottom: '16px' }}>
+                <InputLabel id="major-select-label">Major</InputLabel>
+                <Select
+                  labelId="major-select-label"
+                  value={data.jurusan}
+                  onChange={handleMajorChange}
+                  required
+                >
+                  {majors.map((major) => (
+                    <MenuItem key={major.idMajor} value={major.titleMajor}>
+                      {major.titleMajor}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+          
           {/* Date Picker */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>

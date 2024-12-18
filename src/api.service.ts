@@ -136,7 +136,7 @@ export const fetchMajors = async () => {
         Authorization: `Bearer ${token}`, // Attach token to the request
       },
     };
-    const response = await axios.get(`${baseUrl}/majors/adminfetch`, config);
+    const response = await axios.get(`${baseUrl}/majors`, config);
     return response.data; // Return the majors data
   } catch (error) {
     throw error; // Propagate error for handling

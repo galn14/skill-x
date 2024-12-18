@@ -46,7 +46,7 @@ const Tab4: React.FC = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
   const [isSkillsListVisible, setIsSkillsListVisible] = useState<boolean>(false); // State for toggling the skills dropdown
-  const [editData, setEditData] = useState({ name: '', organization: '', major: '', language: '' });
+  const [editData, setEditData] = useState({ name: '', organization: '', language: '' });
   const [status, setStatus] = useState<string | null>(null);
   const [setIsLoggedIn] = useState<boolean>(false);
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
@@ -493,7 +493,7 @@ const handleClose = () => {
         <Grid item xs sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left', marginTop: '150px', marginLeft: '16px', height: '80px' }}>
           
         <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '2px' }}>{userInfo.name || 'Nama Pengguna'}</Typography>
-        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: '6px' }}> {userInfo.organization || 'Universitas'} | {userInfo.major || 'major'}</Typography>
+        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: '6px' }}> {userInfo.organization || 'Universitas'} | {userInfo.major || ''}</Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
           <LanguageIcon fontSize="small" sx={{ marginRight: 0.5 }} />
@@ -590,7 +590,7 @@ const handleClose = () => {
           gap: 2,
         }}
       >
-        {['name', 'organization', 'major', 'language'].map((field) => (
+        {['name', 'organization', 'language'].map((field) => (
           <FormControl key={field}>
             <FormLabel>{capitalize(field)}*</FormLabel>
             <TextField
