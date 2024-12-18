@@ -1,4 +1,5 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Route, Redirect, useLocation } from 'react-router-dom';
+
 import { useParams } from 'react-router-dom';
 import {
   IonApp,
@@ -54,6 +55,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import '@fontsource/poppins';  // Import the font
+import sellerApproval from './admin/sellerApproval';
 
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -91,7 +93,13 @@ const theme = createTheme({
   },
 });
 
-const App: React.FC = () => (
+const App: React.FC = () => {
+  //const { user } = useAuth(); // Contoh auth check
+  //const isAdmin = user?.role === 'admin';
+  const routesWithTabs = ['/tab1', '/tab2', '/tab3', '/tab4'];
+  const showTabs = routesWithTabs.includes(location.pathname);
+
+  return (
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <GlobalStyles
@@ -104,6 +112,10 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
+        
+        <Route path="/sellerApproval" component={sellerApproval}/>
+
+
           <Route exact path="/login">
             <LoginPage />
           </Route>
@@ -201,7 +213,7 @@ const App: React.FC = () => (
 
         </IonRouterOutlet>
 
-
+        {showTabs && (
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">
             <div style={{ fontSize: 30 }}>
@@ -224,9 +236,11 @@ const App: React.FC = () => (
             </div>
           </IonTabButton>
         </IonTabBar>
+        )}
       </IonTabs>
     </IonReactRouter>
   </ThemeProvider>
-);
+  );
+};
 
 export default App;
