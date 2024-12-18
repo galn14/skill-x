@@ -12,7 +12,7 @@ import BrushIcon from '@mui/icons-material/Brush';
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import { Autoplay, Grid, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper/modules';
 import './Tab1.css';
-import { fetchMajors,fetchServices } from '../api.service';
+import { fetchMajors,fetchServices, searchProducts} from '../api.service';
 import '@fontsource/poppins';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import '@fontsource/poppins';  // Import the font
@@ -21,6 +21,9 @@ import { useHistory } from 'react-router';
 
 
 const Tab1: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>(''); // State untuk input search
+  const [searchResults, setSearchResults] = useState<any[]>([]); // State untuk hasil pencarian
+  const [isLoading, setIsLoading] = useState<boolean>(false); // State untuk loading indikator
   const [setIsLoggedIn] = useState<boolean>(false);
   const history = useHistory();
   const [categories, setCategories] = useState<any[]>([]);
@@ -46,9 +49,6 @@ const Tab1: React.FC = () => {
     return JSON.parse(localStorage.getItem('userInfo') || '{}');
   });
   
-
-
-
   const handleMessageButtonClick = () => {
     if (isLoggedIn) {
       history.push('/message'); // Redirect ke halaman message
@@ -141,6 +141,23 @@ const CategoriesComponent = () => {
       getServices(); // Call the function to load services on component mount
     }, []); 
 
+    const handleSearch = async () => {
+      if (!searchQuery.trim()) return; // Jangan jalankan jika query kosong
+      setIsLoading(true);
+      try {
+        const response = await searchProducts(searchQuery);
+        if (response.success) {
+          setSearchResults(response.data); // Update hasil pencarian
+        } else {
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.error('Error searching products:', error);
+        setSearchResults([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   return (
     <ThemeProvider theme={theme}>
@@ -220,8 +237,46 @@ const CategoriesComponent = () => {
               placeholder="Search the right services"
               sx={{ flex: 1, color: '#333' }}
               inputProps={{ 'aria-label': 'search the right services' }}
+              value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()} // Jalankan saat enter ditekan
             />
           </Box>
+
+          {/* Loading Indicator */}
+        {isLoading && (
+          <Typography sx={{ textAlign: 'center', marginTop: '10px' }}>
+            Loading...
+          </Typography>
+        )}
+
+        {/* Search Results */}
+        {!isLoading && searchResults && searchResults.length > 0 ? (
+          <Box sx={{ marginTop: '10px', padding: '10px' }}>
+            {searchResults.map((product) => (
+              <Box
+                key={product.uid}
+                sx={{
+                  border: '1px solid #ddd',
+                  borderRadius: '10px',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                <Typography variant="h6">{product.nameProduct}</Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {product.description}
+                </Typography>
+                <Typography variant="body1" color="primary">
+                  Price: {product.price}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        ) : (
+          !isLoading && <Typography>No products found</Typography>
+        )}
           
           <Box
             sx={{ backgroundColor: 'white', borderTopLeftRadius: '30px', borderBottomLeftRadius:'30px', marginLeft:'10px', marginTop:'20px'}}
