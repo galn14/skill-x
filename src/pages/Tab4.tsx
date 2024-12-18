@@ -507,7 +507,7 @@ const handleClose = () => {
             variant="contained" 
             size="small" 
             sx={{
-              width: '120px',
+              width: '150px',
               backgroundColor: '#2196f3', 
               color: '#fff', 
               borderRadius: '20px', 
