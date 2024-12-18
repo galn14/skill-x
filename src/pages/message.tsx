@@ -25,30 +25,9 @@ import ChatIcon from '@mui/icons-material/Chat';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
-import {  fetchConversations } from '../api.service';  // Adjust path to where the fetchConvo function is defined
+import {  fetchConversations, fetchUserDetails } from '../api.service';  // Adjust path to where the fetchConvo function is defined
 
 
-const sellers = [
-    {
-        id: 1,
-        name: 'AileenLiexiuai',
-        slogan: 'Interested in creating a portfolio website',
-        profileImage: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
-        unreadMessages: 3,
-    },
-
-];
-
-const buyers = [
-    {
-        id: 1,
-        name: 'John Doe',
-        slogan: 'I want to place a bulk order.',
-        profileImage: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
-        unreadMessages: 4,
-    },
-    
-];
 
 
 
@@ -65,7 +44,8 @@ const MessagePage: React.FC = () => {
     const openSeller = Boolean(anchorElSeller);
     const openBuyer = Boolean(anchorElBuyer);
     const navigate = useHistory();
-
+    const [participants, setParticipants] = useState<string[]>([]);
+    
     const handleClickReview = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElReview(anchorElReview ? null : event.currentTarget);
     };
@@ -75,36 +55,88 @@ const MessagePage: React.FC = () => {
         setAnchorElBuyer(null);
     };
     
-    useEffect(() => {
-        const getConversations = async () => {
-            const userInfoString = localStorage.getItem('userInfo');
-            if (!userInfoString) {
-                console.error('User info is not available in localStorage.');
-                return;
-            }
-    
-            try {
-                const userInfo = JSON.parse(userInfoString);
-                const userId: string | undefined = userInfo.uid;
-    
-                if (!userId) {
-                    console.error('User ID is missing in userinfo.');
-                    return;
-                }
-    
-                console.log('Fetching conversations for user ID:', userId);
-    
-                const data = await fetchConversations(userId); // userId is guaranteed to be valid here
-                setConversations(data);
-                console.log('Fetched conversations:', data);
-            } catch (error) {
-                console.error('Failed to parse userinfo or fetch conversations:', error);
-            }
-        };
-    
-        getConversations();
-    }, []);
+    type LastMessage = {
+        id: string;
+        isRead: boolean;
+        messageContent: string;
+        receiverID: string;
+        senderID: string;
+        timestamp: string;
+      };
+      
+      type Conversation = {
+        id: string;
+        participants: string[];
+        lastMessage?: LastMessage;
+      };
+      
+      type ParticipantDetails = {
+        name: string;
+        photo_url: string;
+      };
+      type Seller = {
+        id: number;
+        name: string;
+        slogan: string;
+        profileImage: string;
+        unreadMessages: number;
+      };
+      
+      const [sellers, setSellers] = useState<Seller[]>([]);
+      
 
+      useEffect(() => {
+        const getConversationsAndParticipants = async () => {
+          const userInfoString = localStorage.getItem('userInfo');
+          if (!userInfoString) {
+            console.error('User info is not available in localStorage.');
+            return;
+          }
+      
+          try {
+            const userInfo = JSON.parse(userInfoString);
+            const userId: string = userInfo.uid;
+      
+            if (!userId) {
+              console.error('User ID is missing in userInfo.');
+              return;
+            }
+      
+            const conversationData = await fetchConversations(userId);
+            const conversationList: Conversation[] = conversationData.data; // Explicitly type this as Conversation[]
+      
+            // Prepare sellers array
+            const sellerPromises = conversationList.map(async (conversation: Conversation, index: number) => {
+              const participantId = conversation.participants.find(
+                (participant: string) => participant !== userId
+              );
+      
+              if (!participantId) return null;
+      
+              // Fetch participant details
+              const participantDetails: ParticipantDetails = await fetchUserDetails(participantId);
+      
+              return {
+                id: index + 1, // Or use conversation.id for a unique identifier
+                name: participantDetails.name || 'Unknown',
+                slogan: conversation.lastMessage?.messageContent || 'No slogan available',
+                profileImage: participantDetails.photo_url || 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
+                unreadMessages: conversation.lastMessage?.isRead ? 0 : 1, // Example calculation
+              };
+            });
+      
+            const sellersData = await Promise.all(sellerPromises);
+            setSellers(sellersData.filter((seller) => seller !== null) as Seller[]); // Remove null entries and cast as Seller[]
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+      
+        getConversationsAndParticipants();
+      }, []);
+      
+    
+    
     const handleNotificationButtonClick = () => {
         if (isLoggedIn) {
           history.push('/notification'); // Redirect ke halaman message
@@ -127,6 +159,19 @@ const MessagePage: React.FC = () => {
             state: { userName: name, userId: id, profileImage: profileImage }, // huruf kecil untuk profileImage
         });
     };
+
+    
+    const buyers = [
+        {
+            id: 1,
+            name: 'John Doe',
+            slogan: 'I want to place a bulk order.',
+            profileImage: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
+            unreadMessages: 4,
+        },
+        
+    ];
+    
     return (
         <IonPage>
             {/* AppBar for header */}
@@ -218,7 +263,7 @@ const MessagePage: React.FC = () => {
                         {sellers.map((seller, index) => (
                             <Box
                                 key={index}
-                                onClick={() => navigateToChatRoom('seller', seller.id, seller.name, seller.profileImage)} // Navigasi ke chatroom seller
+                                onClick={() => navigateToChatRoom('seller', seller.id, seller.name, seller.profileImage, )} // Navigasi ke chatroom seller
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="space-between"

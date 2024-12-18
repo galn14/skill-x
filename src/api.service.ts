@@ -34,6 +34,33 @@ export const fetchConversations = async (userId: string | null) => {
   }
 };
 
+// Fetch user details by their UID
+export const fetchUserDetails = async (uid: string) => {
+  try {
+    const token = localStorage.getItem('userToken'); // Fetch token from localStorage
+    if (!token) {
+      throw new Error("Authentication token is missing.");
+    }
+
+    if (!uid) {
+      throw new Error("UID is required."); // Ensure uid is provided
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`, // Attach token to the request
+        'Content-Type': 'application/json',
+      },
+    };
+
+    // Make the GET request to fetch user details
+    const response = await axios.get(`${baseUrl}/user?uid=${uid}`, config);
+    return response.data; // Return the user details data
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    throw error; // Propagate error for handling
+  }
+};
 
 
 export const fetchMessages = async (partnerID: any) => {
