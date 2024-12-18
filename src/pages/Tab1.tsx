@@ -7,9 +7,6 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import SearchIcon from '@mui/icons-material/Search';
-import ComputerIcon from '@mui/icons-material/Computer';
-import BrushIcon from '@mui/icons-material/Brush';
-import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import { Autoplay, Grid, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper/modules';
 import './Tab1.css';
 import { fetchMajors,fetchServices, searchProducts} from '../api.service';
@@ -22,6 +19,7 @@ import { useHistory } from 'react-router';
 
 const Tab1: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>(''); // State untuk input search
+  const [searchTerm, setSearchTerm] = useState(''); // Menyimpan nilai pencarian
   const [searchResults, setSearchResults] = useState<any[]>([]); // State untuk hasil pencarian
   const [isLoading, setIsLoading] = useState<boolean>(false); // State untuk loading indikator
   const [setIsLoggedIn] = useState<boolean>(false);
@@ -72,6 +70,11 @@ const handleCartButtonClick = () => {
     history.push('/login'); // Redirect ke halaman login
   }
 };
+
+  // Filter kategori berdasarkan nilai pencarian
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
 interface Category {
   id: string;
@@ -278,45 +281,69 @@ const CategoriesComponent = () => {
           !isLoading && <Typography>No products found</Typography>
         )}
           
-          <Box
-            sx={{ backgroundColor: 'white', borderTopLeftRadius: '30px', borderBottomLeftRadius:'30px', marginLeft:'10px', marginTop:'20px'}}
-            >
-             
-            <div className="categories">
-            {categories.length > 0 ? (
-              <Swiper slidesPerView={3} freeMode={true} spaceBetween={10}>
-                {categories.map((category) => (
-                  <SwiperSlide key={category.id} style={{ width: 'auto', flexShrink: 0 }}>
-                    <Card sx={{ width: '100%', height: 200, margin: '10px', borderRadius: '10px', border: '1px solid #007bff', '&:hover': {
-                      backgroundColor: '#f0f0f0', // Warna latar belakang berubah saat hover
-                      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Efek bayangan saat hover
-                      transitionDuration: '0.5ms'
-                    }, }}>
-                      <CardActionArea href={category.link} style={{ height: '100%' }}>
-                        <CardContent
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: '10px',
-                            height: '100%'
-                          }}
+          {/* Categories */}
+      <Box
+        sx={{
+          backgroundColor: 'white',
+          borderTopLeftRadius: '30px',
+          borderBottomLeftRadius: '30px',
+          marginLeft: '10px',
+          marginTop: '20px',
+        }}
+      >
+        <div className="categories">
+          {filteredCategories.length > 0 ? (
+            <Swiper slidesPerView={3} freeMode={true} spaceBetween={10}>
+              {filteredCategories.map((category) => (
+                <SwiperSlide key={category.id} style={{ width: 'auto', flexShrink: 0 }}>
+                  <Card
+                    sx={{
+                      width: '100%',
+                      height: 200,
+                      margin: '10px',
+                      borderRadius: '10px',
+                      border: '1px solid #007bff',
+                      '&:hover': {
+                        backgroundColor: '#f0f0f0', // Warna latar belakang berubah saat hover
+                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Efek bayangan saat hover
+                        transitionDuration: '0.5ms',
+                      },
+                    }}
+                  >
+                    {/* Semua kategori diarahkan ke halaman yang sama */}
+                    <CardActionArea href="/categories" style={{ height: '100%' }}>
+                      <CardContent
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          height: '100%',
+                        }}
+                      >
+                        <img
+                          src={category.icon}
+                          alt={category.name}
+                          style={{ width: '80px', height: '70px', marginBottom: '30px' }}
+                        />
+                        <Typography
+                          variant="body2"
+                          component="div"
+                          sx={{ marginTop: '10px', textAlign: 'center' }}
                         >
-                          <img src={category.icon} alt={category.name} style={{ width: '80px', height: '70px', marginBottom: '30px' }} />
-                          <Typography variant="body2" component="div" sx={{ marginTop: '10px', textAlign: 'center' }}>
-                            {category.name}
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-               ) : (
-                <p>No categories available.</p>
-              )}
-            </div>
-          </Box>
+                          {category.name}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            <p>No categories available.</p>
+          )}
+        </div>
+      </Box>
         </Box>
           
         <Box
