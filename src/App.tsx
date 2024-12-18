@@ -77,8 +77,6 @@ import AddProduct from './sellerrrrrr/AddProduct';
 import AddSkill from './sellerrrrrr/AddSkill';
 import AddPortoModal from './sellerrrrrr/AddPortoModal';
 import SearchPage from './pages/search'
-import ChatComponent from './pages/messagetest';
-
 
 import DetailTransactionProgress from './sellerrrrrr/DetailTransactionProgress';
 
@@ -180,9 +178,6 @@ const App: React.FC = () => (
           <Route path="/AddSkill" component={AddSkill}/>
           <Route path="/AddPortoModal" component={AddPortoModal}/>
           <Route path="/search" component={SearchPage}/>
-
-          <Route path="/messagetest" component={ChatComponent}/>
-
           <Route path="/DetailTransactionProgress" component={DetailTransactionProgress}/>
 
           <Route
