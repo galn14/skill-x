@@ -208,6 +208,33 @@ const Categories: React.FC = () => {
     }
   };
 
+  const getCategoryColor = (categoryName: string) => {
+    switch (categoryName.toUpperCase()) {
+      case 'COMPUTER SCIENCE':
+        return '#0094FF';
+      case 'VISUAL COMMUNICATION DESIGN':
+      case 'INTERACTIVE DESIGN AND TECHNOLOGY':
+      case 'DESIGN INTERIOR':
+        return '#FF4081';
+      case 'COMMUNICATIONS':
+      case 'PUBLIC RELATIONS':
+        return '#9C27B0';
+      case 'ENTREPRENEURSHIP BUSINESS CREATION':
+      case 'DIGITAL BUSINESS INNOVATION':
+        return '#43A047';
+      default:
+        return '#0094FF'; // Default color
+    }
+  };  
+
+  useEffect(() => {
+    if (categoryFromUrl) {
+      setSelectedCategory(categoryFromUrl);
+    }
+    console.log('Selected Category:', selectedCategory); // Debugging
+  }, [categoryFromUrl]);
+  
+
   return (
     <IonPage>
       <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
@@ -235,41 +262,47 @@ const Categories: React.FC = () => {
       </AppBar>
 
       <IonContent fullscreen>
-        <Box sx={{ padding: '10px', marginTop: '90px' }}>
-          <Box sx={{ backgroundColor: '#0094FF', borderRadius: '20px', padding: '15px', marginBottom: '20px' }}>
-            <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
-              {selectedCategory || 'All Categories'}
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#fff', fontSize: '14px', marginTop: '5px' }}>
-              Find any opportunities in related major!
-            </Typography>
-          </Box>
-        </Box>
+      <Box sx={{ padding: '10px', marginTop: '90px' }}>
+        <Box
+                sx={{
+                backgroundColor: getCategoryColor(selectedCategory || 'All Categories'),
+                borderRadius: '20px',
+                padding: '15px',
+                marginBottom: '20px',
+                }}
+            >
+                <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>
+                {selectedCategory || 'All Categories'}
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#fff', fontSize: '14px', marginTop: '5px' }}>
+                Find any opportunities in related major!
+                </Typography>
+            </Box>
+    </Box>
 
         <IonList>
           {filteredCategories.map((category, catIndex) => (
             <Box key={catIndex} sx={{ marginBottom: '20px' }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '10px' }}>
-                {category.categoryName}
-              </Typography>
               {category.services.map((service: Service) => (
                 <IonCard key={service.id} style={{ marginBottom: '20px' }}>
                   <IonCardHeader onClick={() => toggleCard(service.id)} style={{ cursor: 'pointer' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Box sx={{
-                        backgroundColor: '#FF4081',
-                        color: '#fff',
-                        width: '80px',
-                        height: '40px',
-                        borderRadius: '10px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        fontSize: '40px',
-                        marginRight: '15px',
-                      }}>
+                    <Box
+                        sx={{
+                            backgroundColor: getCategoryColor(category.categoryName),
+                            color: '#fff',
+                            width: '80px',
+                            height: '40px',
+                            borderRadius: '10px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            fontSize: '40px',
+                            marginRight: '15px',
+                        }}
+                        >
                         {service.icon}
-                      </Box>
+                        </Box>
                       <Typography variant="h6" sx={{ flex: 1 }}>
                         {service.title}
                       </Typography>
