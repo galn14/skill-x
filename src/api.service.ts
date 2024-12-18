@@ -445,3 +445,16 @@ export const deletePortfolio = async (token: string, portfolioId: string) => {
     throw error;
   }
 };
+
+// Fungsi untuk mencari produk
+export const searchProducts = async (query: string) => {
+  try {
+    const response = await axios.get(`${baseUrl}/products/search`, {
+      params: { query },
+    });
+    return response.data; // Mengembalikan hasil pencarian
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    throw error;
+  }
+};

@@ -7,12 +7,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import SearchIcon from '@mui/icons-material/Search';
-import ComputerIcon from '@mui/icons-material/Computer';
-import BrushIcon from '@mui/icons-material/Brush';
-import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import { Autoplay, Grid, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper/modules';
 import './Tab1.css';
-import { fetchMajors,fetchServices } from '../api.service';
+import { fetchMajors,fetchServices, searchProducts} from '../api.service';
 import '@fontsource/poppins';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import '@fontsource/poppins';  // Import the font
@@ -21,6 +18,10 @@ import { useHistory } from 'react-router';
 
 
 const Tab1: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>(''); // State untuk input search
+  const [searchTerm, setSearchTerm] = useState(''); // Menyimpan nilai pencarian
+  const [searchResults, setSearchResults] = useState<any[]>([]); // State untuk hasil pencarian
+  const [isLoading, setIsLoading] = useState<boolean>(false); // State untuk loading indikator
   const [setIsLoggedIn] = useState<boolean>(false);
   const history = useHistory();
   const [categories, setCategories] = useState<any[]>([]);
@@ -46,9 +47,6 @@ const Tab1: React.FC = () => {
     return JSON.parse(localStorage.getItem('userInfo') || '{}');
   });
   
-
-
-
   const handleMessageButtonClick = () => {
     if (isLoggedIn) {
       history.push('/message'); // Redirect ke halaman message
@@ -72,6 +70,19 @@ const handleCartButtonClick = () => {
     history.push('/login'); // Redirect ke halaman login
   }
 };
+
+const handleCategoryClick = (category: string) => {
+  // Menavigasi ke halaman Categories dengan data kategori yang dipilih
+  history.push({
+    pathname: '/categories',
+    state: { category }, // Mengirim kategori yang dipilih ke halaman Categories
+  });
+};
+
+  // Filter kategori berdasarkan nilai pencarian
+  const filteredCategories = categories.filter((category) =>
+    category.name.toUpperCase().includes(searchTerm.toUpperCase())
+  );
 
 interface Category {
   id: string;
@@ -141,6 +152,25 @@ const CategoriesComponent = () => {
       getServices(); // Call the function to load services on component mount
     }, []); 
 
+    const handleSearch = async () => {
+      if (!searchQuery.trim()) return; // Jangan jalankan jika query kosong
+      setIsLoading(true);
+      try {
+        const response = await searchProducts(searchQuery);
+        if (response.success) {
+          setSearchResults(response.data); // Update hasil pencarian
+        } else {
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.error('Error searching products:', error);
+        setSearchResults([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    
 
   return (
     <ThemeProvider theme={theme}>
@@ -220,48 +250,109 @@ const CategoriesComponent = () => {
               placeholder="Search the right services"
               sx={{ flex: 1, color: '#333' }}
               inputProps={{ 'aria-label': 'search the right services' }}
+              value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()} // Jalankan saat enter ditekan
             />
           </Box>
-          
-          <Box
-            sx={{ backgroundColor: 'white', borderTopLeftRadius: '30px', borderBottomLeftRadius:'30px', marginLeft:'10px', marginTop:'20px'}}
-            >
-             
-            <div className="categories">
-            {categories.length > 0 ? (
-              <Swiper slidesPerView={3} freeMode={true} spaceBetween={10}>
-                {categories.map((category) => (
-                  <SwiperSlide key={category.id} style={{ width: 'auto', flexShrink: 0 }}>
-                    <Card sx={{ width: '100%', height: 200, margin: '10px', borderRadius: '10px', border: '1px solid #007bff', '&:hover': {
-                      backgroundColor: '#f0f0f0', // Warna latar belakang berubah saat hover
-                      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Efek bayangan saat hover
-                      transitionDuration: '0.5ms'
-                    }, }}>
-                      <CardActionArea href={category.link} style={{ height: '100%' }}>
-                        <CardContent
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: '10px',
-                            height: '100%'
-                          }}
-                        >
-                          <img src={category.icon} alt={category.name} style={{ width: '80px', height: '70px', marginBottom: '30px' }} />
-                          <Typography variant="body2" component="div" sx={{ marginTop: '10px', textAlign: 'center' }}>
-                            {category.name}
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-               ) : (
-                <p>No categories available.</p>
-              )}
-            </div>
+
+          {/* Loading Indicator */}
+        {isLoading && (
+          <Typography sx={{ textAlign: 'center', marginTop: '10px' }}>
+            Loading...
+          </Typography>
+        )}
+
+        {/* Search Results */}
+        {!isLoading && searchResults && searchResults.length > 0 ? (
+          <Box sx={{ marginTop: '10px', padding: '10px' }}>
+            {searchResults.map((product) => (
+              <Box
+                key={product.uid}
+                sx={{
+                  border: '1px solid #ddd',
+                  borderRadius: '10px',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                <Typography variant="h6">{product.nameProduct}</Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {product.description}
+                </Typography>
+                <Typography variant="body1" color="primary">
+                  Price: {product.price}
+                </Typography>
+              </Box>
+            ))}
           </Box>
+        ) : (
+          !isLoading && <Typography>No products found</Typography>
+        )}
+          
+          {/* Categories */}
+<Box
+  sx={{
+    backgroundColor: 'white',
+    borderTopLeftRadius: '30px',
+    borderBottomLeftRadius: '30px',
+    marginLeft: '10px',
+    marginTop: '20px',
+  }}
+>
+  <div className="categories">
+    {filteredCategories.length > 0 ? (
+      <Swiper slidesPerView={3} freeMode={true} spaceBetween={10}>
+        {filteredCategories.map((category) => (
+          <SwiperSlide key={category.id} style={{ width: 'auto', flexShrink: 0 }}>
+            <Card
+              sx={{
+                width: '100%',
+                height: 200,
+                margin: '10px',
+                borderRadius: '10px',
+                border: '1px solid #007bff',
+                '&:hover': {
+                  backgroundColor: '#f0f0f0',
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                  transitionDuration: '0.5ms',
+                },
+              }}
+            >
+              <CardActionArea href={`/categories?category=${category.name.toUpperCase()}`} style={{ height: '100%' }}>
+                <CardContent
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                  }}
+                >
+                  <img
+                    src={category.icon}
+                    alt={category.name}
+                    style={{ width: '80px', height: '70px', marginBottom: '30px' }}
+                  />
+                  <Typography
+                    variant="body2"
+                    component="div"
+                    sx={{ marginTop: '10px', textAlign: 'center' }}
+                  >
+                    {category.name}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    ) : (
+      <p>No categories available.</p>
+    )}
+  </div>
+</Box>
         </Box>
           
         <Box

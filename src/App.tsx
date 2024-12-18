@@ -37,6 +37,7 @@ import InteractiveDesignTechnology from './pages/category/idt';
 import PublicRelation from './pages/category/public-relation';
 import Communication from './pages/category/communication';
 import EntreprenurhsipBusinessCreation from './pages/category/ebc';
+import Categories from './pages/category/categories';
 
 // ROUTE UNTUK SERVICES
 import WebsiteDevelopment from './pages/services/websiteDevelopment';
@@ -146,6 +147,10 @@ const App: React.FC = () => (
           </Route>
           <Route path="/category/entrepenurship-business-creation"> 
             <EntreprenurhsipBusinessCreation/>
+          </Route>
+
+          <Route path="/categories">
+            <Categories/>
           </Route>
 
           <Route path="/service/website-development"> 
