@@ -5,6 +5,37 @@ import axios from './axiosConfig';
 const baseUrl = 'http://localhost:8080'; // Replace with your API base URL
 
 
+
+
+export const fetchConversations = async (userId: string | null) => {
+  try {
+    const token = localStorage.getItem('userToken'); // Fetch token from localStorage
+    if (!token) {
+      throw new Error("Authentication token is missing.");
+    }
+
+    if (!userId) {
+      throw new Error("User ID is required."); // Ensure userId is provided
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`, // Attach token to the request
+        'Content-Type': 'application/json',
+      },
+    };
+
+    // Append userId as a query parameter in the request URL
+    const response = await axios.get(`${baseUrl}/conversations?userId=${userId}`, config); 
+    return response.data; // Return the conversations data
+  } catch (error) {
+    console.error('Error fetching conversations:', error);
+    throw error; // Propagate error for handling
+  }
+};
+
+
+
 export const fetchMessages = async (partnerID: any) => {
   try {
     const token = localStorage.getItem('userToken'); // Fetch token from localStorage

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     AppBar,
     Toolbar,
@@ -25,6 +25,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
+import {  fetchConversations } from '../api.service';  // Adjust path to where the fetchConvo function is defined
 
 
 const sellers = [
@@ -52,17 +53,17 @@ const buyers = [
 
 
 const MessagePage: React.FC = () => {
+
     const history = useHistory();
     const handleBack = () => history.goBack();
     const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
     const [anchorElSeller, setAnchorElSeller] = React.useState<null | HTMLElement>(null);
     const [anchorElBuyer, setAnchorElBuyer] = React.useState<null | HTMLElement>(null);
     const [anchorElReview, setAnchorElReview] = React.useState<null | HTMLElement>(null);
-
+    const [conversations, setConversations] = useState([]);
     const openReview = Boolean(anchorElReview);
     const openSeller = Boolean(anchorElSeller);
     const openBuyer = Boolean(anchorElBuyer);
-
     const navigate = useHistory();
 
     const handleClickReview = (event: React.MouseEvent<HTMLElement>) => {
@@ -73,6 +74,36 @@ const MessagePage: React.FC = () => {
         setAnchorElSeller(null);
         setAnchorElBuyer(null);
     };
+    
+    useEffect(() => {
+        const getConversations = async () => {
+            const userInfoString = localStorage.getItem('userInfo');
+            if (!userInfoString) {
+                console.error('User info is not available in localStorage.');
+                return;
+            }
+    
+            try {
+                const userInfo = JSON.parse(userInfoString);
+                const userId: string | undefined = userInfo.uid;
+    
+                if (!userId) {
+                    console.error('User ID is missing in userinfo.');
+                    return;
+                }
+    
+                console.log('Fetching conversations for user ID:', userId);
+    
+                const data = await fetchConversations(userId); // userId is guaranteed to be valid here
+                setConversations(data);
+                console.log('Fetched conversations:', data);
+            } catch (error) {
+                console.error('Failed to parse userinfo or fetch conversations:', error);
+            }
+        };
+    
+        getConversations();
+    }, []);
 
     const handleNotificationButtonClick = () => {
         if (isLoggedIn) {
