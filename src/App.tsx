@@ -27,6 +27,7 @@ import LogoutPage from './pages/LogoutPage';
 import MessagePage from './pages/message';
 import NotificationPage from './pages/notification';
 import CartPage from './pages/cart';
+import PaymentPage from './pages/payment';
 import '@ionic/react/css/core.css';
 
 // ROUTE UNTUK JURUSAN
@@ -154,29 +155,8 @@ const App: React.FC = () => {
           <Route path="/cart">
             <CartPage/>
           </Route>
-          <Route path="/category/computer-science"> 
-            <ComputerScience/>
-          </Route>
-          <Route path="/category/visual-communication-design"> 
-            <VisualCommunicationDesign/>
-          </Route>
-          <Route path="/category/interior-design"> 
-            <InteriorDesign/>
-          </Route>
-          <Route path="/category/digital-business-innovation"> 
-            <DigitalBusinessInnovation/>
-          </Route>
-          <Route path="/category/interactive-design-and-technology"> 
-            <InteractiveDesignTechnology/>
-          </Route>
-          <Route path="/category/public-relation"> 
-            <PublicRelation/>
-          </Route>
-          <Route path="/category/communication"> 
-            <Communication/>
-          </Route>
-          <Route path="/category/entrepenurship-business-creation"> 
-            <EntreprenurhsipBusinessCreation/>
+          <Route path="/payment">
+            <PaymentPage/>
           </Route>
 
           <Route path="/categories">

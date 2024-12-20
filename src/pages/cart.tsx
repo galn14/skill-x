@@ -70,6 +70,19 @@ const CartPage: React.FC = () => {
         }
     };
 
+    const handleBuy = () => {
+        history.push('/payment'); // Navigasi ke Payment Page
+    };
+
+    const handleProceedToPayment = () => {
+        const selectedProducts = cartItems.filter((item) =>
+            selectedItems.includes(item.id)
+        );
+        localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+        history.push('/payment'); // Navigasi ke halaman PaymentPage
+    };
+
+
     const [cartItems, setCartItems] = useState([
         {
           id: 1,
@@ -262,6 +275,7 @@ const CartPage: React.FC = () => {
                             <Button
                                 variant="contained"
                                 color="primary"
+                                onClick={handleProceedToPayment}
                                 sx={{
                                 borderRadius: '8px',
                                 width: '80px',
