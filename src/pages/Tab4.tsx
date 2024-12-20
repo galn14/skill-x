@@ -28,7 +28,7 @@ import { useEffect, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import JoinAsSeller from './JoinAsSeller';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage } from '../firebaseConfig'; // Sesuaikan path dengan file konfigurasi Firebase Anda
 
 const Tab4: React.FC = () => {
@@ -346,36 +346,42 @@ const handleClose = () => {
     try {
       const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
       const userId = userInfo.uid;
-  
+
       if (!userId) {
         console.error('User ID not found');
         setProfileImage('/default-profile-image.png');
         return;
       }
-  
+
+      // Cek di localStorage untuk cache
+      const cachedImage = localStorage.getItem('profileImage');
+      if (cachedImage) {
+        setProfileImage(cachedImage);
+        return;
+      }
+
       // Ambil URL dari Firebase Storage
       const storageRef = ref(storage, `profile_photos/${userId}/profile_photo.jpg`);
       const downloadURL = await getDownloadURL(storageRef);
-      console.log("asu", downloadURL)
-      setProfileImage(downloadURL); // Set gambar ke state
+      setProfileImage(downloadURL);
       localStorage.setItem('profileImage', downloadURL); // Simpan URL untuk caching
     } catch (error) {
       console.error('Error fetching profile image:', error);
-      setProfileImage('/default-profile-image.png'); // Set gambar default jika gagal
+      setProfileImage('/default-profile-image.png');
     }
   };
   
   useEffect(() => {
     fetchProfileImage(); // Panggil saat komponen dimuat
   }, []);
-  
+
   const handleProfileImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-  
+
     const validFormats = ['image/jpeg', 'image/png'];
-    const maxSizeInMB = 2; // Maximum size 2MB
-  
+    const maxSizeInMB = 2;
+
     if (!validFormats.includes(file.type)) {
       alert('Please upload a JPEG or PNG image.');
       return;
@@ -384,34 +390,56 @@ const handleClose = () => {
       alert('File size must not exceed 2MB.');
       return;
     }
-  
+
     try {
-      // Ambil userInfo dari localStorage
       const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-      const userId = userInfo.uid; // Pastikan UID tersedia
-  
+      const userId = userInfo.uid;
+
       if (!userId) {
         alert('User ID not found in userInfo. Please log in again.');
         return;
       }
-  
-      const storageRef = ref(storage, `profile_photos/${userId}/${file.name}`);
-      const snapshot = await uploadBytes(storageRef, file); // Upload file ke Firebase
-      const downloadURL = await getDownloadURL(snapshot.ref); // Ambil URL file
-  
-      // Update foto profil pada state dan localStorage
-      setPreviewImage(downloadURL);
-      setImage(downloadURL);
-  
+
+      const storageRef = ref(storage, `profile_photos/${userId}/profile_photo.jpg`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      setProfileImage(downloadURL);
+      localStorage.setItem('profileImage', downloadURL);
+
       const updatedUserData = { ...userInfo, photo_url: downloadURL };
       localStorage.setItem('userInfo', JSON.stringify(updatedUserData));
-  
+
       alert('Profile image uploaded successfully!');
     } catch (error: any) {
       console.error('Error uploading file:', error.message);
       alert(`Failed to upload the file: ${error.message}`);
     }
   };
+
+  const handleProfileImageDelete = async () => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+      const userId = userInfo.uid;
+
+      if (!userId) {
+        alert('User ID not found in userInfo. Please log in again.');
+        return;
+      }
+
+      const storageRef = ref(storage, `profile_photos/${userId}/profile_photo.jpg`);
+      await deleteObject(storageRef);
+
+      setProfileImage('/default-profile-image.png');
+      localStorage.removeItem('profileImage');
+
+      alert('Profile image deleted successfully!');
+    } catch (error: any) {
+      console.error('Error deleting profile image:', error.message);
+      alert(`Failed to delete the profile image: ${error.message}`);
+    }
+  };
+
   return (
     <IonPage>
        <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
@@ -438,10 +466,10 @@ const handleClose = () => {
       {/* Avatar Section */}
       <Grid item xs="auto"  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px', marginLeft: '25px' }}>
         <Avatar
-  src={profileImage || '/default-profile-image.png'}
-  alt={userData?.name || 'User Avatar'}
-  sx={{ width: 85, height: 85, cursor: 'pointer' }}
-  onClick={captureImage}
+          src={profileImage || '/default-profile-image.png'}
+          alt={userData?.name || 'User Avatar'}
+          sx={{ width: 85, height: 85, cursor: 'pointer' }}
+          onClick={captureImage}
         />
       </Grid>
 
@@ -621,6 +649,10 @@ const handleClose = () => {
     <Button variant="contained" fullWidth onClick={handleGallery} sx={{ mb: 2 }}>
       Upload from Gallery
     </Button>
+    <Button variant="contained" fullWidth onClick={handleProfileImageDelete} sx={{ mb: 2 }}>
+      Delete Profile Image
+    </Button>
+
     {previewImage && (
       <Button variant="contained" color="success" fullWidth onClick={confirmImage}>
         Confirm Profile Picture
