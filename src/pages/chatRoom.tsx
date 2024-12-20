@@ -6,10 +6,11 @@ import {
 import { Box, TextField, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
+import { navigate } from 'ionicons/icons';
 
 type Message = {
     id: number;
-    sender: 'user' | 'other'; // Anda bisa menyesuaikan ini dengan kebutuhan
+    sender: 'user' | 'other'; // Adjusted to make sender values clearer
     text: string;
     timestamp: string;
 };
@@ -17,22 +18,23 @@ type Message = {
 type ChatRoomProps = {
     userName: string;
     userId: string;
-    profileImage: string; // Tambahkan ini
+    profileImage: string;
     initialMessages: Message[];
 };
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ userName, userId, profileImage, initialMessages }) => {
     const [chatMessages, setChatMessages] = useState<Message[]>(initialMessages);
     const [newMessage, setNewMessage] = useState<string>('');
-    const history = useHistory();
-    const handleBack = () => history.goBack();
+    const navigate = useHistory();
+
+    const handleBack = () => navigate.goBack();
 
     const handleSendMessage = () => {
         if (newMessage.trim()) {
-            setChatMessages([
-                ...chatMessages,
+            setChatMessages((prevMessages) => [
+                ...prevMessages,
                 {
-                    id: chatMessages.length + 1,
+                    id: prevMessages.length + 1,
                     sender: 'user',
                     text: newMessage,
                     timestamp: new Date().toLocaleString(),
@@ -43,100 +45,98 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ userName, userId, profileImage, ini
     };
 
     return (
-    <IonPage>
-        <Box style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-            {/* Header */}
-            <Box
-                style={{
-                    backgroundColor: '#0094FF',
-                    color: 'white',
-                    padding: '10px 16px',
-                    fontWeight: 600,
-                    display: 'flex',
-                    alignItems: 'center',
-                }}
-            >
-                <IconButton onClick={handleBack} color="primary">
+        <IonPage>
+            <Box style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+                {/* Header */}
+                <Box
+                    style={{
+                        backgroundColor: '#0094FF',
+                        color: 'white',
+                        padding: '10px 16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                >
+                    <IconButton onClick={handleBack} style={{ color: 'white', marginRight: '8px' }}>
                         <ArrowBackIcon />
                     </IconButton>
-                <img
+                    <img
                         src={profileImage}
-                        alt=""
+                        alt={userName}
                         style={{
-                            width: '60px',
-                            height: '60px',
+                            width: '40px',
+                            height: '40px',
                             borderRadius: '50%',
                             marginRight: '12px',
                         }}
                     />
-                {userName}
-            </Box>
+                    <span style={{ fontWeight: 600, fontSize: '16px' }}>{userName}</span>
+                </Box>
 
-            {/* Messages Display */}
-            <Box
-                style={{
-                    flexGrow: 1,
-                    padding: '16px',
-                    overflowY: 'auto',
-                    backgroundColor: '#F5F5F5',
-                }}
-            >
-                {chatMessages.map((msg) => (
-                    <Box
-                        key={msg.id}
-                        style={{
-                            display: 'flex',
-                            justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                            marginBottom: '8px',
-                        }}
-                    >
+                {/* Messages Display */}
+                <Box
+                    style={{
+                        flexGrow: 1,
+                        padding: '16px',
+                        overflowY: 'auto',
+                        backgroundColor: '#F5F5F5',
+                    }}
+                >
+                    {chatMessages.map((msg) => (
                         <Box
+                            key={msg.id}
                             style={{
-                                maxWidth: '70%',
-                                padding: '10px',
-                                borderRadius: '8px',
-                                backgroundColor: msg.sender === 'user' ? '#0094FF' : '#E0E0E0',
-                                color: msg.sender === 'user' ? 'white' : 'black',
-                                wordWrap: 'break-word',
+                                display: 'flex',
+                                justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+                                marginBottom: '8px',
                             }}
                         >
-                            {msg.text}
+                            <Box
+                                style={{
+                                    maxWidth: '70%',
+                                    padding: '10px',
+                                    borderRadius: '8px',
+                                    backgroundColor: msg.sender === 'user' ? '#0094FF' : '#E0E0E0',
+                                    color: msg.sender === 'user' ? 'white' : 'black',
+                                    wordWrap: 'break-word',
+                                }}
+                            >
+                                {msg.text}
+                            </Box>
                         </Box>
-                    </Box>
-                ))}
-            </Box>
+                    ))}
+                </Box>
 
-            {/* Input Section */}
-            <Box
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '10px',
-                    borderTop: '1px solid #E0E0E0',
-                }}
-            >
-                <TextField
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Type a message"
-                    style={{ marginRight: '8px' }}
-                />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSendMessage}
-                    disabled={!newMessage.trim()}
+                {/* Input Section */}
+                <Box
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '10px',
+                        borderTop: '1px solid #E0E0E0',
+                    }}
                 >
-                    Send
-                </Button>
+                    <TextField
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        placeholder="Type a message"
+                        style={{ marginRight: '8px' }}
+                    />
+                    <Button
+                        variant="contained"
+                        style={{ backgroundColor: '#0094FF', color: 'white' }}
+                        onClick={handleSendMessage}
+                        disabled={!newMessage.trim()}
+                    >
+                        Send
+                    </Button>
+                </Box>
             </Box>
-        </Box>
-    </IonPage>
+        </IonPage>
     );
 };
-
 
 export default ChatRoom;
