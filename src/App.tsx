@@ -199,6 +199,7 @@ const App: React.FC = () => {
           <Route path="/AddSkill" component={AddSkill}/>
           <Route path="/AddPortoModal" component={AddPortoModal}/>
           <Route path="/search" component={SearchPage}/>
+
           <Route path="/DetailTransactionProgress" component={DetailTransactionProgress}/>
 
           <Route

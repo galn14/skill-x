@@ -23,6 +23,7 @@ import EditProfileModal from './EditProfileModal'; // import modal yang baru dib
 import { Route, BrowserRouter } from "react-router-dom";
 import EditAboutMe from './EditAboutMe';
 import EditPortoModal from './EditPortoModal';
+
 import AddPortoModal from './AddPortoModal';
 import { getUserAndSellerData, changeUserRole, getUserPortfolios, addPortfolio, editPortfolio, deletePortfolio  } from '../api.service';
 import AddProduct from './AddProduct';
@@ -39,7 +40,7 @@ const profileSeller: React.FC = () => {
   const [sellerData, setSellerData] = useState<any>(null);
   const [image, setImage] = useState<string | undefined>(undefined); 
   const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
-  const [isSkillOpen, setSkillIsOpen] = useState(false);
+  
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
   const [portfolios, setPortfolios] = useState<any[]>([]); // Pastikan ini array kosong
@@ -251,10 +252,7 @@ const profileSeller: React.FC = () => {
   const AboutmetoggleCard = () => {
     setAboutMeIsOpen(!isAboutMeOpen); // Toggle state untuk buka/tutup konten
   };
-  const SkilltoggleCard = () => {
-    setSkillIsOpen(!isSkillOpen); // Toggle state untuk buka/tutup konten
-  };
-
+ 
   const [isPortoOpen, setPortoIsOpen] = useState(true);
 
   const PortotoggleCard = () => {
@@ -308,6 +306,47 @@ const profileSeller: React.FC = () => {
     }
   };
 
+  const initialSkills = [
+    "Database Design",
+    "Software Engineering",
+    "Problem Solving",
+    "Web Development",
+    "Data Science",
+    "Machine Learning",
+    "Mobile Development",
+    "AI Research",
+    "Cybersecurity",
+    "Cloud Computing",
+    "Game Development",
+    "UI/UX Design"
+  ];
+
+  const [skills, setSkills] = useState(initialSkills);
+  const [isSkillOpen, setIsSkillOpen] = useState(true);
+
+  // Fungsi untuk membuka/menutup card
+  const SkilltoggleCard = () => {
+    setIsSkillOpen(!isSkillOpen);
+  };
+
+  // Fungsi untuk menghapus skill
+  const handleDeleteSkill = (skillLabel: string) => {
+    const updatedSkills = skills.filter((skill) => skill !== skillLabel);
+    setSkills(updatedSkills);
+  };
+  
+
+  // Fungsi untuk menambah skill baru
+  const handleAddSkill = () => {
+    if (skills.length < 12) {
+      // Navigate to the AddSkill page if there are less than 12 skills
+      history.push('/AddSkill'); // Navigate to the AddSkill page
+    } else {
+      // Show an alert if there are already 12 skills
+      alert("You can only add up to 12 skills.");
+    }
+  };
+
   const handleNotificationButtonClick = () => {
     if (isLoggedIn) {
       history.push('/notification'); // Redirect ke halaman message
@@ -333,6 +372,15 @@ const profileSeller: React.FC = () => {
   const handleLogout = () => {
     localStorage.clear(); // Bersihkan semua data localStorage (opsional)
     history.push('/login'); // Redirect ke halaman login
+  };
+
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [skillName, setSkillName] = useState("");
+  const [skillLevel, setSkillLevel] = useState("");
+
+  // Open modal
+  const openEditSkill = () => {
+    setEditModalOpen(true);
   };
 
   return (
@@ -472,6 +520,68 @@ const profileSeller: React.FC = () => {
             </Grid>
           </Grid>
 
+           <IonCard style={{ cursor: "pointer" }}>
+      {/* Header Card */}
+      <IonCardHeader>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          {/* Judul Card */}
+          <IonCardTitle>
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Skills
+            </Typography>
+          </IonCardTitle>
+
+          {/* Box containing Add Icon, Edit Icon, and Arrow */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
+            <div>
+              {/* Add Icon */}
+              <IconButton onClick={handleAddSkill} sx={{ marginLeft: '1px' }} size="small">
+                <AddIcon />
+              </IconButton>
+
+              {/* Edit Icon */}
+              <IconButton onClick={() => alert("Edit skill functionality")} sx={{ marginLeft: "1px" }} size="small">
+                <EditIcon />
+              </IconButton>
+
+              {/* Arrow Icon based on state */}
+              {isSkillOpen ? (
+                <ArrowDropUpIcon sx={{ color: "gray" }} onClick={SkilltoggleCard} />
+              ) : (
+                <ArrowDropDownIcon sx={{ color: "gray" }} onClick={SkilltoggleCard} />
+              )}
+            </div>
+          </Box>
+        </Box>
+      </IonCardHeader>
+
+      {/* Konten Card (Hanya tampil jika isOpen true) */}
+      {isSkillOpen && (
+        <IonCardContent>
+          <Box>
+            {/* Chips Konten dengan tombol Hapus */}
+            {skills.map((skill, index) => (
+              <Chip
+                key={index}
+                label={skill}
+                onDelete={() => handleDeleteSkill(skill)}
+                style={{ marginRight: "8px", marginBottom: "8px" }}
+                deleteIcon={<CloseIcon />}
+              />
+            ))}
+          </Box>
+        </IonCardContent>
+      )}
+    </IonCard>
+
+
+
         
           <IonCard  style={{ cursor: 'pointer' }}>
             {/* Header Card */}
@@ -530,67 +640,7 @@ const profileSeller: React.FC = () => {
             )}
           </IonCard>
 
-    <IonCard
-      style={{
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-        cursor: 'pointer',
-      }}
-    >
-      {/* Header Card */}
-      <IonCardHeader>
-        <Box sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}>
-          {/* Judul Card */}
-          <IonCardTitle>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Skills
-            </Typography>
-          </IonCardTitle>
-
-          {/* Box containing the Add Icon and Arrow */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {/* Add Icon */}
-              <div>
-            <IconButton
-              onClick={openAddSkill}
-
-              sx={{
-                marginLeft: '1px',
-              }}
-              size="small"
-            >
-              <AddIcon />
-            </IconButton>
-            <Route path="/AddSkill" component={AddSkill}/>
-            </div>
-
-            {/* Arrow Icon based on state */}
-            {isSkillOpen ? (
-              <ArrowDropUpIcon sx={{ color: 'gray' }}  onClick={SkilltoggleCard}/>
-            ) : (
-              <ArrowDropDownIcon sx={{ color: 'gray' }} onClick={SkilltoggleCard} />
-            )}
-          </Box>
-        </Box>
-      </IonCardHeader>
-
-      {/* Konten Card (Hanya tampil jika isOpen true) */}
-      {isSkillOpen && (
-        <IonCardContent>
-          <Box>
-            {/* Chips Konten */}
-            <Chip
-              label="Database Design"
-              style={{ marginRight: '8px', marginBottom: '8px' }}
-            />
-            <Chip label="Software Engineering" style={{ marginBottom: '8px' }} />
-          </Box>
-        </IonCardContent>
-      )}
-    </IonCard>
+   
 
 {/*portfolio*/}
 <IonCard style={{ cursor: "pointer"}}>
