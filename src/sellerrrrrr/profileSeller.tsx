@@ -326,7 +326,7 @@ const profileSeller: React.FC = () => {
   ];
 
   const [skills, setSkills] = useState(initialSkills);
-  const [isSkillOpen, setIsSkillOpen] = useState(true);
+  const [isSkillOpen, setIsSkillOpen] = useState(false);
 
   // Fungsi untuk membuka/menutup card
   const SkilltoggleCard = () => {
@@ -636,7 +636,42 @@ const profileSeller: React.FC = () => {
             </Grid>
           </Grid>
 
-           <IonCard style={{ cursor: "pointer" }}>
+        
+
+
+    <IonCard style={{ cursor: 'pointer', border: 'none', boxShadow: 'none' }}>
+  {/* Header Card */}
+  <IonCardHeader>
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <IonCardTitle>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          About Me
+        </Typography>
+      </IonCardTitle>
+
+      <Box sx={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
+        <div>
+          <IconButton onClick={openAboutMeModal} sx={{ marginLeft: '1px' }} size="small">
+            <EditIcon />
+          </IconButton>
+          <Route path="/EditAboutMe" component={EditAboutMe} />
+        </div>
+      </Box>
+    </Box>
+  </IonCardHeader>
+
+  <IonCardContent>
+    <Box>
+      <Typography variant="body1" sx={{ marginBottom: '10px' }}>
+        As a BINUS University Computer Science major graduating in 2026, I am a highly motivated
+        individual with a keen interest in exploring new opportunities, particularly in the realms of
+        personal development and relationships.
+      </Typography>
+    </Box>
+  </IonCardContent>
+</IonCard>
+
+<IonCard style={{ cursor: "pointer" }}>
       {/* Header Card */}
       <IonCardHeader>
         <Box
@@ -691,49 +726,6 @@ const profileSeller: React.FC = () => {
                 deleteIcon={<CloseIcon />}
               />
             ))}
-          </Box>
-        </IonCardContent>
-      )}
-    </IonCard>
-
-
-
-    <IonCard style={{ cursor: 'pointer' }}>
-      {/* Header Card */}
-      <IonCardHeader>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <IonCardTitle>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              About Me
-            </Typography>
-          </IonCardTitle>
-
-          <Box sx={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
-            <div>
-              <IconButton onClick={openAboutMeModal} sx={{ marginLeft: '1px' }} size="small">
-                <EditIcon />
-              </IconButton>
-              <Route path="/EditAboutMe" component={EditAboutMe} />
-            </div>
-
-            {isAboutMeOpen ? (
-              <ArrowDropUpIcon sx={{ color: 'gray' }} onClick={AboutmetoggleCard} />
-            ) : (
-              <ArrowDropDownIcon sx={{ color: 'gray' }} onClick={AboutmetoggleCard} />
-            )}
-          </Box>
-        </Box>
-      </IonCardHeader>
-
-      {/* Content Card (Only visible if isAboutMeOpen is true) */}
-      {isAboutMeOpen && (
-        <IonCardContent>
-          <Box>
-            <Typography variant="body1" sx={{ marginBottom: '10px' }}>
-              As a BINUS University Computer Science major graduating in 2026, I am a highly motivated
-              individual with a keen interest in exploring new opportunities, particularly in the realms of
-              personal development and relationships.
-            </Typography>
           </Box>
         </IonCardContent>
       )}
