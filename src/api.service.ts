@@ -63,7 +63,7 @@ export const fetchUserDetails = async (uid: string) => {
 };
 
 
-export const fetchMessages = async (partnerID: any) => {
+export const fetchMessages = async (conversationID: any) => {
   try {
     const token = localStorage.getItem('userToken'); // Fetch token from localStorage
     if (!token) {
@@ -73,10 +73,11 @@ export const fetchMessages = async (partnerID: any) => {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`, // Attach token to the request
+        'Content-Type': 'application/json',
       },
     };
 
-    const response = await axios.get(`${baseUrl}/messages?partnerID=${partnerID}`, config);
+    const response = await axios.get(`${baseUrl}/messages?conversationID=${conversationID}`, config);
     return response.data; // Return the messages data
   } catch (error) {
     throw error; // Propagate error for handling

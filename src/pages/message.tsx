@@ -25,7 +25,8 @@ import ChatIcon from '@mui/icons-material/Chat';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
-import {  fetchConversations, fetchUserDetails } from '../api.service';  // Adjust path to where the fetchConvo function is defined
+
+import {  fetchConversations, fetchMessages, fetchUserDetails } from '../api.service';  // Adjust path to where the fetchConvo function is defined
 
 
 
@@ -149,16 +150,30 @@ const MessagePage: React.FC = () => {
         if (isLoggedIn) {
           history.push('/cart'); // Redirect ke halaman message
         } else {
-          history.push('/login'); // Redirect ke halaman login
+            history.push('/login'); // Redirect ke halaman login
         }
       };
 
-      const navigateToChatRoom = (type: 'seller' | 'buyer', id: number, name: string, profileImage: string) => {
-        history.push({
-            pathname: `/chatroom/${type}/${id}`,
-            state: { userName: name, userId: id, profileImage: profileImage }, // huruf kecil untuk profileImage
-        });
-    };
+      const navigateToChatRoom = async (conversationID: string, id?: number, name?: string, profileImage?: string) => {
+        try {
+          // Fetch messages for the conversation
+          const response = await fetchMessages(conversationID);
+      
+          if (response && response.data) {
+            // Pass the messages and other data to ChatRoom
+            history.push('/chatroom', {
+              state: {
+                messages: response.data,
+                conversationID,
+                userName: "Recipient Name", // Replace with the actual name
+                profileImage: "Recipient Image URL", // Replace with the actual image URL
+              },
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        }
+      };
 
     
     const buyers = [

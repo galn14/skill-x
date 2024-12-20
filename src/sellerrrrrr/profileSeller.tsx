@@ -33,6 +33,8 @@ import { Dialog, DialogTitle, DialogContent, DialogActions} from '@mui/material'
 import { Preferences } from '@capacitor/preferences';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect } from 'react';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { storage } from '../firebaseConfig'; // Sesuaikan path dengan file konfigurasi Firebase Anda
 
 const profileSeller: React.FC = () => {
   const [isChangingRole, setIsChangingRole] = useState(false);
@@ -40,11 +42,10 @@ const profileSeller: React.FC = () => {
   const [sellerData, setSellerData] = useState<any>(null);
   const [image, setImage] = useState<string | undefined>(undefined); 
   const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
-  
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
   const [portfolios, setPortfolios] = useState<any[]>([]); // Pastikan ini array kosong
-
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
 
   const history = useHistory();
 
@@ -383,6 +384,104 @@ const profileSeller: React.FC = () => {
     setEditModalOpen(true);
   };
 
+  const fetchProfileImage = async () => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+      const userId = userInfo.uid;
+
+      if (!userId) {
+        console.error('User ID not found');
+        setProfileImage('/default-profile-image.png');
+        return;
+      }
+
+      // Cek di localStorage untuk cache
+      const cachedImage = localStorage.getItem('profileImage');
+      if (cachedImage) {
+        setProfileImage(cachedImage);
+        return;
+      }
+
+      // Ambil URL dari Firebase Storage
+      const storageRef = ref(storage, `profile_photos/${userId}/profile_photo.jpg`);
+      const downloadURL = await getDownloadURL(storageRef);
+      setProfileImage(downloadURL);
+      localStorage.setItem('profileImage', downloadURL); // Simpan URL untuk caching
+    } catch (error) {
+      console.error('Error fetching profile image:', error);
+      setProfileImage('/default-profile-image.png');
+    }
+  };
+  
+  useEffect(() => {
+    fetchProfileImage(); // Panggil saat komponen dimuat
+  }, []);
+
+  const handleProfileImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const validFormats = ['image/jpeg', 'image/png'];
+    const maxSizeInMB = 2;
+
+    if (!validFormats.includes(file.type)) {
+      alert('Please upload a JPEG or PNG image.');
+      return;
+    }
+    if (file.size > maxSizeInMB * 1024 * 1024) {
+      alert('File size must not exceed 2MB.');
+      return;
+    }
+
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+      const userId = userInfo.uid;
+
+      if (!userId) {
+        alert('User ID not found in userInfo. Please log in again.');
+        return;
+      }
+
+      const storageRef = ref(storage, `profile_photos/${userId}/profile_photo.jpg`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      setProfileImage(downloadURL);
+      localStorage.setItem('profileImage', downloadURL);
+
+      const updatedUserData = { ...userInfo, photo_url: downloadURL };
+      localStorage.setItem('userInfo', JSON.stringify(updatedUserData));
+
+      alert('Profile image uploaded successfully!');
+    } catch (error: any) {
+      console.error('Error uploading file:', error.message);
+      alert(`Failed to upload the file: ${error.message}`);
+    }
+  };
+
+  const handleProfileImageDelete = async () => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+      const userId = userInfo.uid;
+
+      if (!userId) {
+        alert('User ID not found in userInfo. Please log in again.');
+        return;
+      }
+
+      const storageRef = ref(storage, `profile_photos/${userId}/profile_photo.jpg`);
+      await deleteObject(storageRef);
+
+      setProfileImage('/default-profile-image.png');
+      localStorage.removeItem('profileImage');
+
+      alert('Profile image deleted successfully!');
+    } catch (error: any) {
+      console.error('Error deleting profile image:', error.message);
+      alert(`Failed to delete the profile image: ${error.message}`);
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
 
@@ -411,43 +510,57 @@ const profileSeller: React.FC = () => {
       {/* Avatar */}
       <Grid item xs="auto">
         <Avatar
-          src={userData?.photo_url || '/path_to_profile_image'}// Ganti dengan path gambar avatar Anda
+          src={profileImage || '/default-profile-image.png'}
           alt={userData?.name || 'User Avatar'}
-          style={{ width: '80px', height: '80px' }}
+          sx={{ width: 85, height: 85, cursor: 'pointer' }}
           onClick={captureImage}
-
         />
       </Grid>
       <Dialog open={modalOpen} onClose={() => setModalOpen(false)} fullWidth>
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <DialogTitle>Select Image Source</DialogTitle>
-        <IconButton edge="end" color="inherit" onClick={() => setModalOpen(false)} aria-label="close">
-          <CloseIcon />
-        </IconButton>
-      </Toolbar>
-      
-      <DialogContent dividers>
-        {previewImage && (
-          <img
-            src={previewImage}
-            alt="Preview"
-            style={{ width: '100%', height: 'auto', marginBottom: '16px' }}
-          />
-        )}
-        <Button variant="contained" fullWidth onClick={handleCamera} sx={{ mb: 2 }}>
-          Take Photo with Camera
-        </Button>
-        <Button variant="contained" fullWidth onClick={handleGallery} sx={{ mb: 2 }}>
-          Upload from Gallery
-        </Button>
-        {previewImage && (
-          <Button variant="contained" color="success" fullWidth onClick={confirmImage}>
-            Confirm Profile Picture
-          </Button>
-        )}
-      </DialogContent>
-    </Dialog>
+  <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+    <DialogTitle>Select Image Source</DialogTitle>
+    <IconButton edge="end" color="inherit" onClick={() => setModalOpen(false)} aria-label="close">
+      <CloseIcon />
+    </IconButton>
+  </Toolbar>
+  
+  <DialogContent dividers>
+    {previewImage && (
+      <img
+        src={previewImage}
+        alt="Preview"
+        style={{ width: '100%', height: 'auto', marginBottom: '16px' }}
+      />
+    )}
+    <input
+      type="file"
+      accept="image/*"
+      onChange={handleProfileImageUpload}
+      style={{ display: 'none' }}
+      id="profile-image-input"
+    />
+    <label htmlFor="profile-image-input">
+      <Button variant="outlined" color="secondary" component="span" fullWidth>
+        Choose File
+      </Button>
+    </label>
+    <Button variant="contained" fullWidth onClick={handleCamera} sx={{ mb: 2 }}>
+      Take Photo with Camera
+    </Button>
+    <Button variant="contained" fullWidth onClick={handleGallery} sx={{ mb: 2 }}>
+      Upload from Gallery
+    </Button>
+    <Button variant="contained" fullWidth onClick={handleProfileImageDelete} sx={{ mb: 2 }}>
+      Delete Profile Image
+    </Button>
 
+    {previewImage && (
+      <Button variant="contained" color="success" fullWidth onClick={confirmImage}>
+        Confirm Profile Picture
+      </Button>
+    )}
+  </DialogContent>
+</Dialog>
 
       {/* Info */}
       <Grid item xs>
