@@ -41,12 +41,18 @@ const profileSeller: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
   const [sellerData, setSellerData] = useState<any>(null);
   const [image, setImage] = useState<string | undefined>(undefined); 
-  const [isAboutMeOpen, setAboutMeIsOpen] = useState(false);
+  const [isAboutMeOpen, setAboutMeIsOpen] = useState(true);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [portfolios, setPortfolios] = useState<any[]>([]); // Pastikan ini array kosong
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
 
+          
+  const AboutmetoggleCard = () => {
+    setAboutMeIsOpen(prevState => !prevState);
+  };
+  
+  
   const history = useHistory();
 
   const handleBackToBuyer = async () => {
@@ -250,9 +256,6 @@ const profileSeller: React.FC = () => {
     history.push('/AddSkill'); // Rute untuk modal
   };
 
-  const AboutmetoggleCard = () => {
-    setAboutMeIsOpen(!isAboutMeOpen); // Toggle state untuk buka/tutup konten
-  };
  
   const [isPortoOpen, setPortoIsOpen] = useState(true);
 
@@ -695,63 +698,47 @@ const profileSeller: React.FC = () => {
 
 
 
-        
-          <IonCard  style={{ cursor: 'pointer' }}>
-            {/* Header Card */}
-           
-            <IonCardHeader>
-            <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-              <IonCardTitle>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                  About Me
-                </Typography>
-              </IonCardTitle>
+    <IonCard style={{ cursor: 'pointer' }}>
+      {/* Header Card */}
+      <IonCardHeader>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <IonCardTitle>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              About Me
+            </Typography>
+          </IonCardTitle>
 
-              <Box sx={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
-              <div>
-              <IconButton
-               onClick={openAboutMeModal}
-              sx={{
-                marginLeft:'1px',
-              
-              }}
-              size="small"
-            >
-              <EditIcon />
-            </IconButton>
-            <Route path="/EditAboutMe" component={EditAboutMe}/>
-          </div>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
+            <div>
+              <IconButton onClick={openAboutMeModal} sx={{ marginLeft: '1px' }} size="small">
+                <EditIcon />
+              </IconButton>
+              <Route path="/EditAboutMe" component={EditAboutMe} />
+            </div>
 
-            
-              {isAboutMeOpen ? (
-                  <ArrowDropUpIcon sx={{ color: 'gray' }} onClick={AboutmetoggleCard}/>
-                ) : (
-                  <ArrowDropDownIcon sx={{ color: 'gray' }} onClick={AboutmetoggleCard} />
-                )}
-            </Box>
-            </Box>
-
-            </IonCardHeader>
-
-            {/* Konten Card (Hanya tampil jika isOpen true) */}
-            {isAboutMeOpen && (
-              <IonCardContent>
-                <Box>
-                  <Typography variant="body1" sx={{ marginBottom: '10px' }}>
-                  As a BINUS University Computer Science major graduating in 2026, I am a highly motivated
-                  individual with a keen interest in exploring new opportunities, particularly in the realms of
-                  personal development and relationships.
-                  </Typography>
-                </Box>
-              </IonCardContent>
+            {isAboutMeOpen ? (
+              <ArrowDropUpIcon sx={{ color: 'gray' }} onClick={AboutmetoggleCard} />
+            ) : (
+              <ArrowDropDownIcon sx={{ color: 'gray' }} onClick={AboutmetoggleCard} />
             )}
-          </IonCard>
+          </Box>
+        </Box>
+      </IonCardHeader>
+
+      {/* Content Card (Only visible if isAboutMeOpen is true) */}
+      {isAboutMeOpen && (
+        <IonCardContent>
+          <Box>
+            <Typography variant="body1" sx={{ marginBottom: '10px' }}>
+              As a BINUS University Computer Science major graduating in 2026, I am a highly motivated
+              individual with a keen interest in exploring new opportunities, particularly in the realms of
+              personal development and relationships.
+            </Typography>
+          </Box>
+        </IonCardContent>
+      )}
+    </IonCard>
+
 
    
 
