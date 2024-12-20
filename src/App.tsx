@@ -191,8 +191,6 @@ const App: React.FC = () => {
           <Route path="/service/Full Stack Development"> 
             <FullstackDevelopment/>
           </Route>
-
-          <Route path="/message" component={MessagePage} exact />
           <Route path="/notification" component={NotificationPage} exact/>
 
           <Route path="/tab4" exact><Tab4 /></Route>
