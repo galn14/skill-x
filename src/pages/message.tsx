@@ -38,7 +38,7 @@ const MessagePage: React.FC = () => {
     useEffect(() => {
         const fetchConversationsAndParticipants = async () => {
             try {
-                const conversations = await fetchConversations(userId);
+                const conversations = await fetchConversations();
                 const sellerData = await Promise.all(
                     conversations.data.map(async (conversation: Conversation) => {
                         const otherParticipant = conversation.participants.find((p) => p !== userId);

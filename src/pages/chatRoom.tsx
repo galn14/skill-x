@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IonPage, IonContent } from '@ionic/react';
 import { Box, TextField, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
+import { fetchMessages, fetchConversations, sendMessage } from '../api.service';
 
 type Message = {
     id: string;
-    sender: string;
-    text: string;
+    senderID: string;
+    receiverID: string;
+    messageContent: string;
     timestamp: string;
+    isRead: boolean;
 };
 
 type ChatRoomProps = {
@@ -19,24 +22,105 @@ type ChatRoomProps = {
 };
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileImage, initialMessages }) => {
-    const [messages, setMessages] = useState<Message[]>(initialMessages);
+    const [messages, setMessages] = useState<Message[]>(initialMessages || []);
     const [newMessage, setNewMessage] = useState<string>('');
+    const [receiverID, setReceiverID] = useState<string>('');
     const history = useHistory();
+    const currentUserId = JSON.parse(localStorage.getItem('userInfo') || '{}').uid || '';
 
-    const handleBack = () => history.goBack();
+    // Fetch participants and determine receiverID
+    useEffect(() => {
+        const loadConversation = async () => {
+            try {
+                const response = await fetchConversations();
+                if (response.success && response.data) {
+                    const conversation = response.data.find(
+                        (conv: any) => conv.id === conversationID
+                    );
 
-    const handleSendMessage = () => {
+                    if (conversation && conversation.participants && Array.isArray(conversation.participants)) {
+                        const foundReceiverID = conversation.participants.find(
+                            (p: string) => p !== currentUserId
+                        );
+                        if (foundReceiverID) {
+                            setReceiverID(foundReceiverID);
+                        } else {
+                            console.error('Receiver ID not found in participants');
+                        }
+                    } else {
+                        console.error('Conversation not found or invalid');
+                    }
+                } else {
+                    console.error('Failed to fetch conversations');
+                }
+            } catch (error) {
+                console.error('Error fetching conversation:', error);
+            }
+        };
+
+        loadConversation();
+    }, [conversationID, currentUserId]);
+
+    // Fetch all messages for the conversation
+    useEffect(() => {
+        const loadMessages = async () => {
+            try {
+                const response = await fetchMessages(conversationID);
+                if (response.success && response.data) {
+                    const parsedMessages: Message[] = Object.entries(response.data).map(([key, value]: [string, any]) => ({
+                        id: key,
+                        senderID: value.senderID,
+                        receiverID: value.receiverID,
+                        messageContent: value.messageContent,
+                        timestamp: value.timestamp,
+                        isRead: value.isRead,
+                    }));
+                    setMessages(parsedMessages);
+                }
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        };
+
+        loadMessages();
+    }, [conversationID]);
+
+    const handleSendMessage = async () => {
         if (newMessage.trim()) {
-            const newMsg: Message = {
-                id: `${messages.length + 1}`,
-                sender: 'user',
-                text: newMessage,
-                timestamp: new Date().toISOString(),
-            };
-            setMessages([...messages, newMsg]);
-            setNewMessage('');
+            if (!receiverID) {
+                console.error('Receiver ID is missing. Please ensure participants are loaded.');
+                return;
+            }
+
+            try {
+                const messageData = {
+                    receiverID,
+                    messageContent: newMessage,
+                };
+
+                const response = await sendMessage(messageData);
+                if (response.success && response.data?.id) {
+                    const newMsg: Message = {
+                        id: response.data.id,
+                        senderID: currentUserId,
+                        receiverID,
+                        messageContent: newMessage,
+                        timestamp: new Date().toISOString(),
+                        isRead: false,
+                    };
+
+                    setMessages((prevMessages) => [...prevMessages, newMsg]);
+                    setNewMessage('');
+                } else {
+                    console.error('Invalid response from server:', response);
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
         }
     };
+
+    const handleBack = () => history.goBack();
 
     return (
         <IonPage>
@@ -81,7 +165,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
                             key={msg.id}
                             style={{
                                 display: 'flex',
-                                justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+                                justifyContent: msg.senderID === currentUserId ? 'flex-end' : 'flex-start',
                                 marginBottom: '8px',
                             }}
                         >
@@ -90,12 +174,12 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
                                     maxWidth: '70%',
                                     padding: '10px',
                                     borderRadius: '8px',
-                                    backgroundColor: msg.sender === 'user' ? '#0094FF' : '#E0E0E0',
-                                    color: msg.sender === 'user' ? 'white' : 'black',
+                                    backgroundColor: msg.senderID === currentUserId ? '#0094FF' : '#E0E0E0',
+                                    color: msg.senderID === currentUserId ? 'white' : 'black',
                                     wordWrap: 'break-word',
                                 }}
                             >
-                                {msg.text}
+                                {msg.messageContent}
                             </Box>
                         </Box>
                     ))}

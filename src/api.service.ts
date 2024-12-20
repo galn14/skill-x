@@ -5,34 +5,67 @@ import axios from './axiosConfig';
 const baseUrl = 'http://localhost:8080'; // Replace with your API base URL
 
 
+// Fetch all conversations
+export const fetchConversations = async () => {
+    try {
+        const token = localStorage.getItem('userToken');
+        if (!token) throw new Error('Authentication token is missing.');
 
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
 
-export const fetchConversations = async (userId: string | null) => {
-  try {
-    const token = localStorage.getItem('userToken'); // Fetch token from localStorage
-    if (!token) {
-      throw new Error("Authentication token is missing.");
+        const response = await axios.get(`${baseUrl}/conversations`, config);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching conversations:', error);
+        throw error;
     }
-
-    if (!userId) {
-      throw new Error("User ID is required."); // Ensure userId is provided
-    }
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`, // Attach token to the request
-        'Content-Type': 'application/json',
-      },
-    };
-
-    // Append userId as a query parameter in the request URL
-    const response = await axios.get(`${baseUrl}/conversations?userId=${userId}`, config); 
-    return response.data; // Return the conversations data
-  } catch (error) {
-    console.error('Error fetching conversations:', error);
-    throw error; // Propagate error for handling
-  }
 };
+
+// Fetch messages for a specific conversation
+export const fetchMessages = async (conversationID: string) => {
+    try {
+        const token = localStorage.getItem('userToken');
+        if (!token) throw new Error('Authentication token is missing.');
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        const response = await axios.get(`${baseUrl}/messages?conversationID=${conversationID}`, config);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        throw error;
+    }
+};
+
+// Send a message
+export const sendMessage = async (messageData: { receiverID: string; messageContent: string }) => {
+    try {
+        const token = localStorage.getItem('userToken');
+        if (!token) throw new Error('Authentication token is missing.');
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        const response = await axios.post(`${baseUrl}/messages-send`, messageData, config);
+        return response.data;
+    } catch (error) {
+        console.error('Error sending message:', error);
+        throw error;
+    }
+};
+
+
 
 // Fetch user details by their UID
 export const fetchUserDetails = async (uid: string) => {
@@ -62,27 +95,23 @@ export const fetchUserDetails = async (uid: string) => {
   }
 };
 
-
-export const fetchMessages = async (conversationID: any) => {
-  try {
-    const token = localStorage.getItem('userToken'); // Fetch token from localStorage
-    if (!token) {
-      throw new Error("Authentication token is missing.");
-    }
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`, // Attach token to the request
-        'Content-Type': 'application/json',
+export const Message = async (receiverID: string, messageContent: string) => {
+  const token = localStorage.getItem('userToken');
+  const response = await axios.post(
+      `${baseUrl}/messages-send`,
+      {
+          receiverID, // ID lawan bicara
+          messageContent, // Isi pesan
       },
-    };
-
-    const response = await axios.get(`${baseUrl}/messages?conversationID=${conversationID}`, config);
-    return response.data; // Return the messages data
-  } catch (error) {
-    throw error; // Propagate error for handling
-  }
+      {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      }
+  );
+  return response.data; // Response { success: boolean, data: { id: string } }
 };
+
 
 export const showMessage = async (partnerID: any, messageID: any) => {
   try {
@@ -103,25 +132,7 @@ export const showMessage = async (partnerID: any, messageID: any) => {
     throw error; // Propagate error for handling
   }
 };
-export const createMessage = async (messageData: any) => {
-  try {
-    const token = localStorage.getItem('userToken'); // Fetch token from localStorage
-    if (!token) {
-      throw new Error("Authentication token is missing.");
-    }
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`, // Attach token to the request
-      },
-    };
-
-    const response = await axios.post(`${baseUrl}/messages/newChat`, messageData, config);
-    return response.data; // Return the response after creating the message
-  } catch (error) {
-    throw error; // Propagate error for handling
-  }
-};
 
 
 
