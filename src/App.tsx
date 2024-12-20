@@ -55,7 +55,12 @@ import HomeIcon from '@mui/icons-material/Home';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import '@fontsource/poppins';  // Import the font
+
 import sellerApproval from './admin/sellerApproval';
+import majorManagement from './admin/majorManagement';
+import serviceManagement from './admin/serviceManagement';
+import skillManagement from './admin/skillManagement';
+import reviewManagement from './admin/reviewManagement';
 
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -114,6 +119,10 @@ const App: React.FC = () => {
         <IonRouterOutlet>
         
         <Route path="/sellerApproval" component={sellerApproval}/>
+        <Route path="/majorManagement" component={majorManagement}/>
+        <Route path="/serviceManagement" component={serviceManagement}/>
+        <Route path="/skillManagement" component={skillManagement}/>
+        <Route path="/reviewManagement" component={reviewManagement}/>
 
 
           <Route exact path="/login">

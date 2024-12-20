@@ -7,6 +7,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Back Icon
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'; // Next Icon
 import NotificationsIcon from '@mui/icons-material/Notifications'; // Notification Icon
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Account Icon
+import SidebarAdmin from './sidebarAdmin';
 
 const sellerApproval: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<string>('Seller Approval'); // Track selected item
@@ -43,45 +44,7 @@ const sellerApproval: React.FC = () => {
                 overflowY: 'auto', // Make the sidebar scrollable if the content exceeds the viewport height
               }}
             >
-              <img
-                src="public\SkillXLogo.png"
-                alt="SkillX Logo"
-                style={{ marginLeft: '20px', marginTop: '20px', width: '120px', marginBottom:'20px' }}
-              />
-              <Typography variant="h6" style={{ marginBottom: '10px', color: '#000', fontWeight: 'bold' }}>
-                Admin
-              </Typography>
-              <nav>
-                {[
-                  'Dashboard',
-                  'Seller Approval',
-                  'Major Management',
-                  'Service Management',
-                  'Skills Management',
-                  'Review Management',
-                  'Transaction Monitoring',
-                  'User Monitoring',
-                  'Subscription',
-                  'Report Management',
-                  'Help and Support',
-                  'Account Setting',
-                ].map((item) => (
-                  <div
-                    key={item}
-                    onClick={() => setSelectedItem(item)} // Set selected item when clicked
-                    style={{
-                      padding: '10px',
-                      backgroundColor: selectedItem === item ? '#1976D2' : '#E9F3FF', // Highlight selected item
-                      color: selectedItem === item ? '#fff' : '#000',
-                      borderRadius: '5px',
-                      marginBottom: '5px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {item}
-                  </div>
-                ))}
-              </nav>
+                    <SidebarAdmin setSelectedItem={setSelectedItem} />
             </div>
           )}
 
@@ -143,25 +106,27 @@ const sellerApproval: React.FC = () => {
             }}
           >
             {/* Header */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '20px',
-              }}
-            >
-              <Typography variant="h4" style={{ fontWeight: 'bold' }}>
-                Seller Approval
-              </Typography>
+            <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 2,
+          flexDirection: { xs: 'column', sm: 'row' }, // Responsive layout
+          gap: 2,
+        }}
+      >
+        <Typography variant="h4" fontWeight="bold">
+          Seller Approval
+        </Typography>
 
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <Button variant="outlined" startIcon={<SortIcon />}>
-                  Sort
-                </Button>
-                <TextField label="Search name" variant="outlined" size="small" />
-              </div>
-            </div>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}> {/* Wrap for smaller screens */}
+          <Button variant="outlined" startIcon={<SortIcon />}>
+            Sort
+          </Button>
+          <TextField label="Search name" variant="outlined" size="small" />
+        </Box>
+      </Box>
 
             {/* Grid Content */}
             <Grid container spacing={2} justifyContent="center">
