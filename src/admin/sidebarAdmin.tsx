@@ -22,7 +22,6 @@ const SidebarAdmin: React.FC<SidebarAdminProps> = ({ setSelectedItem }) => {
   const history = useHistory();
   const location = useLocation(); // Get current route
   const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
     { text: 'Seller Approval', icon: <ApprovalIcon />, path: '/sellerApproval' },
     { text: 'Major Management', icon: <ManageIcon />, path: '/majorManagement' },
     { text: 'Service Management', icon: <BuildIcon />, path: '/serviceManagement' },
@@ -33,7 +32,6 @@ const SidebarAdmin: React.FC<SidebarAdminProps> = ({ setSelectedItem }) => {
     { text: 'Subscription', icon: <SubscriptionsIcon />, path: '/subscription' },
     { text: 'Report Management', icon: <ReportIcon />, path: '/reportManagement' },
     { text: 'Help and Support', icon: <HelpIcon />, path: '/helpAndSupport' },
-    { text: 'Account Setting', icon: <SettingsIcon />, path: '/accountSetting' },
   ];
 
   // Update selected item based on current route

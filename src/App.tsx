@@ -61,6 +61,12 @@ import majorManagement from './admin/majorManagement';
 import serviceManagement from './admin/serviceManagement';
 import skillManagement from './admin/skillManagement';
 import reviewManagement from './admin/reviewManagement';
+import userMonitoring from './admin/userMonitoring';
+import transactionMonitoring from './admin/transactionMonitoring';
+import subscription from './admin/subscription';
+import reportManagement from './admin/reportManagement';
+import helpAndSupport from './admin/helpAndSupport';
+
 
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -123,6 +129,11 @@ const App: React.FC = () => {
         <Route path="/serviceManagement" component={serviceManagement}/>
         <Route path="/skillManagement" component={skillManagement}/>
         <Route path="/reviewManagement" component={reviewManagement}/>
+        <Route path="/userMonitoring"  component={userMonitoring}/>
+        <Route path="/transactionMonitoring"  component={transactionMonitoring}/>
+        <Route path="/subscription"  component={subscription}/>
+        <Route path="/reportManagement"  component={reportManagement}/>
+        <Route path="/helpAndSupport"  component={helpAndSupport}/>
 
 
           <Route exact path="/login">
