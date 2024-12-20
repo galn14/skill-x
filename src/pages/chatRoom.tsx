@@ -1,45 +1,39 @@
 import React, { useState } from 'react';
-import {
-    IonPage,
-    IonContent,
-} from '@ionic/react';
+import { IonPage, IonContent } from '@ionic/react';
 import { Box, TextField, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
-import { navigate } from 'ionicons/icons';
 
 type Message = {
-    id: number;
-    sender: 'user' | 'other'; // Adjusted to make sender values clearer
+    id: string;
+    sender: string;
     text: string;
     timestamp: string;
 };
 
 type ChatRoomProps = {
+    conversationID: string;
     userName: string;
-    userId: string;
     profileImage: string;
     initialMessages: Message[];
 };
 
-const ChatRoom: React.FC<ChatRoomProps> = ({ userName, userId, profileImage, initialMessages }) => {
-    const [chatMessages, setChatMessages] = useState<Message[]>(initialMessages);
+const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileImage, initialMessages }) => {
+    const [messages, setMessages] = useState<Message[]>(initialMessages);
     const [newMessage, setNewMessage] = useState<string>('');
-    const navigate = useHistory();
+    const history = useHistory();
 
-    const handleBack = () => navigate.goBack();
+    const handleBack = () => history.goBack();
 
     const handleSendMessage = () => {
         if (newMessage.trim()) {
-            setChatMessages((prevMessages) => [
-                ...prevMessages,
-                {
-                    id: prevMessages.length + 1,
-                    sender: 'user',
-                    text: newMessage,
-                    timestamp: new Date().toLocaleString(),
-                },
-            ]);
+            const newMsg: Message = {
+                id: `${messages.length + 1}`,
+                sender: 'user',
+                text: newMessage,
+                timestamp: new Date().toISOString(),
+            };
+            setMessages([...messages, newMsg]);
             setNewMessage('');
         }
     };
@@ -82,7 +76,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ userName, userId, profileImage, ini
                         backgroundColor: '#F5F5F5',
                     }}
                 >
-                    {chatMessages.map((msg) => (
+                    {messages.map((msg) => (
                         <Box
                             key={msg.id}
                             style={{

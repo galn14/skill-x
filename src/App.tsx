@@ -213,21 +213,42 @@ const App: React.FC = () => {
 
           <Route path="/DetailTransactionProgress" component={DetailTransactionProgress}/>
 
-          <Route
-              path="/chatroom/:type/:id"
-              render={(props) => {
-                  const state = props.location.state as { userName: string; profileImage: string };
-                  return (
-                      <ChatRoom
-                          userName={state?.userName || 'Unknown User'}
-                          userId={props.match.params.id}
-                          profileImage={state?.profileImage || ''} // Pastikan default kosong
-                          initialMessages={[]} // Atur sesuai kebutuhan
-                      />
-                  );
-              }}
-          />
+         {/* Redirect root to messages */}
+         <Route exact path="/">
+                    <Redirect to="/messages" />
+                </Route>
 
+                {/* Route for MessagePage */}
+                <Route exact path="/messages">
+                    <MessagePage />
+                </Route>
+
+                {/* Route for ChatRoom */}
+                <Route
+                    exact
+                    path="/chat/:conversationID"
+                    render={(props) => {
+                        const { conversationID } = props.match.params;
+                        const state = props.location.state as {
+                            userName: string;
+                            profileImage: string;
+                            initialMessages: any[];
+                        } || {
+                            userName: 'Unknown',
+                            profileImage: '',
+                            initialMessages: [],
+                        };
+
+                        return (
+                            <ChatRoom
+                                conversationID={conversationID}
+                                userName={state.userName}
+                                profileImage={state.profileImage}
+                                initialMessages={state.initialMessages}
+                            />
+                        );
+                    }}
+                />
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>
