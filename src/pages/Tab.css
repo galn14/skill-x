@@ -1,0 +1,379 @@
+.custom-toolbar {
+  background-color: #ffffff;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  padding: 10px 20px; /* Menambah padding horizontal */
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  height: 82.53px;
+  display: flex-end;
+  align-items: center; /* Memastikan semua elemen berada di tengah vertikal */
+  justify-content: space-between; 
+}
+
+.logo-container {
+  flex: 0 0 auto; /* Logo tidak akan memanjang */
+  display: flex;
+  align-items: center; /* Memastikan logo berada di tengah secara vertikal */
+}
+
+.logo {
+  height: 40px; /* Ukuran logo */
+}
+
+.spacer {
+  flex: 1; /* Spacer mengambil ruang yang tersedia di tengah */
+}
+
+.icon-container {
+  display: flex; /* Menggunakan flexbox untuk ikon */
+  align-items: center; /* Memastikan ikon berada di tengah secara vertikal */
+}
+
+.icon-container ion-button {
+  background: transparent; /* Menghapus latar belakang tombol */
+  box-shadow: none; /* Menghapus bayangan */
+  border: none; /* Menghapus batas tombol */
+  --background: transparent; /* Menghapus latar belakang */
+  padding: 5px; /* Padding tombol lebih kecil */
+  margin-left: 10px; /* Jarak antar tombol */
+}
+
+.icon-container ion-icon {
+  font-size: 24px; /* Ukuran ikon */
+  color: #333; /* Warna ikon */
+}
+
+ion-badge {
+  position: absolute; /* Badge di posisi absolut */
+  top: 5px; /* Posisi badge dari atas */
+  right: 5px; /* Posisi badge dari kanan */
+  font-size: 0.7em; /* Ukuran font badge */
+  --background: #f44336; /* Warna badge */
+}
+
+
+/* Profile section styling */
+.profile-section {
+  display: flex; /* Menggunakan Flexbox untuk tata letak */
+  align-items: center; /* Menjaga agar avatar dan teks berada di tengah secara vertikal */
+  padding: 16px;
+  background-color: #f7f7f7;
+  margin-top: 120px; /* To offset the fixed header */
+}
+
+.avatar {
+  width: 100px; /* Ukuran avatar */
+  height: 100px; /* Ukuran avatar */
+  margin-right: 16px; /* Jarak antara avatar dan teks */
+  cursor: pointer;
+  border: 2px solid #ddd;
+  border-radius: 50%; /* Membuat avatar menjadi bulat */
+}
+
+.edit-button {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.user-details {
+  flex: 1; /* Menggunakan sisa ruang yang tersedia untuk teks */
+  text-align: left; /* Menjaga teks rata kiri */
+}
+
+.user-details h3 {
+  font-size: 1.4em;
+  margin: 8px 0 4px;
+  color: #333;
+}
+
+.user-details p {
+  font-size: 0.9em;
+  color: #777;
+  margin: 0;
+}
+
+.join-button {
+  margin-top: 8px;
+  --border-radius: 12px;
+  font-size: 0.8em;
+}
+
+
+
+/* Modal Styles */
+.modal-header {
+  background-color: #f8f8f8; /* Light background for the header */
+  border-bottom: 1px solid #ddd;
+  color: #333; /* Dark text color */
+  padding: 16px; /* Add padding to the header */
+}
+
+.modal-header h1 {
+  font-size: 1.5rem; /* Title font size */
+  margin: 0; /* Remove default margin */
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  padding: 16px; /* Space around the modal content */
+  height: 50vh; /* Set the height to 50% of the viewport height */
+  justify-content: center; /* Center content vertically */
+  align-items: stretch; 
+  --min-width: 300px;
+  --max-width: 500px;/* Max height to 50% of the viewport height */
+}
+
+.preview-image {
+  width: 100px; /* Set fixed width for circular preview */
+  height: 100px; /* Set fixed height for circular preview */
+  border-radius: 50%; /* Make it circular */
+  margin: 0 auto 16px; /* Center the image and add bottom margin */
+}
+
+.modal-content .ion-button {
+  margin-top: 8px; /* Space between buttons */
+  background-color: #007aff; /* Primary button color */
+  color: white; /* White text color */
+  font-size: 1rem; /* Button font size */
+}
+.modal-content .ion-button:hover {
+  background-color: #e0e0e0; /* Light grey on hover */
+}
+
+ion-modal {
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black backdrop */
+}
+
+
+
+
+/* Section titles */
+/* Full-width background for the message */
+.CompletePurchaseWrapper {
+  width: 100%; /* Full width of the screen */
+  background-color: #FF4D00; /* Background color */
+  margin: 0; /* Remove any margin */
+  padding: 0; /* Remove any padding */
+  
+}
+
+/* Section title styles */
+.CompletePurchase h3 {
+  font-size: 13;
+  font-weight: bold;
+  color: white; /* Ensure text is readable */
+  text-align: left; /* Center the text */
+  margin: 0; /* Reset margins */
+  padding: 2px 17px; 
+}
+
+.ion-content{
+  background-color: #f7f7f7;
+}
+
+/* "Complete your purchase now!" section */
+.scrollable-grid {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent wrapping of child elements */
+}
+
+.flex-row {
+  display: flex; /* Use flexbox for horizontal layout */
+}
+
+.flex-row .ion-col {
+  flex: 0 0 auto; /* Prevent flex-grow and allow items to keep their width */
+  margin-right: 10px; /* Optional: Add some space between columns */
+
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 8px;
+  width: 90%; /* Ensures the card takes full width of the column */
+  padding: 100 10px; 
+  box-sizing: border-box;
+  border-color: #ABABAB;
+}
+
+
+.productcontent{
+  padding-left: 25px;
+}
+
+.image-wrapper {
+  width: 125px; /* Width of the container */
+  height: 100px; /* Height of the container */
+  margin-right: 10px;
+  display: flex;
+  justify-content: center; /* Center-align horizontally */
+  align-items: center; /* Center-align vertically */
+  overflow: hidden; /* Ensures image doesn't overflow */
+  border-radius: 8px; /* Optional: Add rounded corners */
+}
+
+.image-wrapper img {
+  width: 100%; /* Ensure the image takes up the full width */
+  height: auto; /* Keep aspect ratio */
+  object-fit: cover; /* Cover the container while maintaining aspect ratio */
+}
+
+.product-card h5 {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #333;
+  margin: 4px 0;
+  padding: 0 10px; /* Fixed padding on the left and right */
+  white-space: nowrap; /* Prevents text from wrapping to the next line */
+  overflow: hidden; /* Hides overflow text */
+  text-overflow: ellipsis; /* Adds ellipsis for overflow */
+  
+}
+
+
+
+.product-card p {
+  font-size: 0.8em;
+  color: #888;
+  margin: 0;
+  padding: 0 10px; /* Fixed padding on the left and right */
+  white-space: nowrap; /* Prevents text from wrapping to the next line */
+  overflow: hidden; /* Hides overflow text */
+  text-overflow: ellipsis; /* Adds ellipsis for overflow */
+}
+
+/* "On Progress" Section */
+
+.OnProgressWrapper {
+  width: 100%; /* Full width of the screen */
+  background-color: #3CB232; /* Background color */
+  margin: 0; /* Remove any margin */
+  padding: 0; /* Remove any padding */
+  
+}
+
+.OnProgress h3 {
+  font-size: 13;
+  font-weight: bold;
+  color: white; /* Ensure text is readable */
+  text-align: left; /* Center the text */
+  padding: 2px 17px; 
+  margin: 0; /* Reset margins */
+
+}
+
+
+.progress-card {
+  border: 1px solid #ccc; /* Add border with light gray color */
+  border-radius: 5px; /* Optional: rounded corners */
+  padding: 10px; /* Optional: add padding inside the card */
+  margin-top: 10px; /* Optional: space between title and card */
+}
+
+.on-progress-item h5 {
+  font-size: 1em; /* Keep the font size consistent */
+  font-weight: 600;
+  color: #333;
+  align-items: center;
+  padding: 0 10px;
+   }
+
+.on-progress-item .center-content{
+  align-items: center;
+  display: flex;
+  align-items: center;      /* Center vertically */
+  justify-content: center;
+}
+
+.next-meeting h4 {
+  font-size: 1em; /* Keep the font size consistent */
+  font-weight: 600;
+  color: #007aff;
+  padding: 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.next-meeting p {
+  font-size: 0.8em;
+  color: #888;
+  margin: 0;
+}
+
+
+.on-progress-item{
+  border: 1px solid #ABABAB; /* Add border with light gray color */
+  border-radius: 9.15px; /* Optional: rounded corners */
+  padding: 10px;
+  width: 150px;
+}
+
+.progress-card p {
+   /* Optional: add padding inside the card */
+  margin-top: 10px;
+  
+}
+
+/* Menu list styling */
+IonList {
+  padding: 0;
+}
+
+IonList IonItem {
+  --padding-start: 16px;
+  font-size: 1em;
+  color: #333;
+}
+
+IonItem IonIcon {
+  color: #ff9800; /* orange color for icons */
+}
+
+.custom-divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 16px 0;
+}
+
+/* Logout button styling */
+IonButton[color="danger"] {
+  --background: #e57373;
+  --border-radius: 8px;
+  margin: 16px;
+  font-size: 1em;
+  color: #fff;
+}
+
+/* Badge styling */
+IonBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.7em;
+  --background: #f44336; /* red color for cart badge */
+}
+
+.cart-icon,
+.notifications-icon,
+.mail-icon {
+  position: relative;
+  margin-left: 10px;
+}

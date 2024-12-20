@@ -28,9 +28,8 @@ import { useEffect, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import JoinAsSeller from './JoinAsSeller';
-
-
-
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebaseConfig'; // Sesuaikan path dengan file konfigurasi Firebase Anda
 
 const Tab4: React.FC = () => {
   
@@ -54,25 +53,7 @@ const Tab4: React.FC = () => {
 
   const history = useHistory();
 
-  useEffect(() => {
-    const fetchProfileImage = async () => {
-      const cachedImage = localStorage.getItem('profileImage');
-      if (cachedImage) {
-        setProfileImage(cachedImage);
-        return;
-      }
-  
-      if (userData?.photo_url) {
-        setProfileImage(userData.photo_url);
-        localStorage.setItem('profileImage', userData.photo_url);
-      } else {
-        setProfileImage('/default-profile-image.png');
-      }
-    };
-  
-    fetchProfileImage();
-  }, [userData]);
-  
+
   const handleNotificationButtonClick = () => {
     if (isLoggedIn) {
       history.push('/notification'); // Redirect ke halaman message
@@ -86,53 +67,6 @@ const [userInfo, setUserInfo] = React.useState(() => {
   return JSON.parse(localStorage.getItem('userInfo') || '{}');
 });
 
-useEffect(() => {
-  const fetchData = async () => {
-    const userToken = localStorage.getItem('userToken');
-    if (!userToken) {
-      history.push('/login'); // Redirect ke login jika token tidak ada
-      return;
-    }
-
-    try {
-      const { user, registerSeller } = await getUserAndSellerData(userToken);
-      console.log('User Data:', user); // Log data untuk memastikan photo_url ada
-      setUserData(user);
-      setSellerData(registerSeller);
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-    }
-  };
-
-  fetchData();
-}, [history]);
-
-useEffect(() => {
-  const fetchProfileImage = async () => {
-    const cachedImage = localStorage.getItem('profileImage');
-    if (cachedImage) {
-      setProfileImage(cachedImage);
-      return;
-    }
-
-    if (userData?.photo_url) {
-      setProfileImage(userData.photo_url);
-      localStorage.setItem('profileImage', userData.photo_url);
-    } else {
-      setProfileImage('/default-profile-image.png');
-    }
-  };
-
-  fetchProfileImage();
-}, [userData]);
-
-useEffect(() => {
-  const loadProfileImage = async () => {
-    const { value } = await Preferences.get({ key: 'profileImage' });
-    setProfileImage(value || userInfo.picture || '/path_to_default_google_picture');
-  };
-  loadProfileImage();
-}, [userInfo]);
 
 
 useEffect(() => {
@@ -325,25 +259,6 @@ const handleClose = () => {
     history.push('/review');
   };
 
-  const [ completePurchase, setCompletePurchase] = useState<any[]>([]);
-
-  useEffect(() => {
-    setCompletePurchase([
-      { id: 1, name: 'Package Powerpoint', icon: '../public/image 1.png', seller: 'dikadika' },
-      { id: 2, name: 'Visual Communication Design', icon:'public/web-design-internet-website-responsive-software-concept 1.png', seller: 'aileenliexiuai' },
-      { id: 3, name: 'Copywriting (Caption)', icon: 'public/high-angle-hand-correcting-grammar-mistakes 1.png', seller: 'galn' },
-    ]);
-  }, []);
-  type ProgressItem = {
-    id: number;
-    name: string;
-    nextMeeting: string;
-    completion: string;
-  };
-  
-  const [progressData, setProgressData] = useState<ProgressItem[]>([]);
-
-
   const handleMessageButtonClick = () => {
     if (isLoggedIn) {
       history.push('/message'); // Redirect ke halaman message
@@ -359,38 +274,6 @@ const handleClose = () => {
       history.push('/login'); // Redirect ke halaman login
     }
   };
-
-  // const handleJoinSellerClick = () => {
-  //   if (status === 'accepted') {
-  //     history.push('/profileSeller');
-  //   } else if (isLoggedIn) {
-  //     history.push('/JoinAsSeller');
-  //   } else {
-  //     history.push('/login');
-  //   }
-  // };
-
-  useEffect(() => {
-    // Set data untuk kartu
-    setProgressData([
-      {id: 1,
-        name: 'Package Database Website',
-        nextMeeting: '09-29-2024',
-        completion: '09-31-2024'
-      },
-      { id: 2,
-        name: 'Visual Communication Design',
-        nextMeeting: '10-05-2024',
-        completion: '10-10-2024'
-      },
-      {id: 3,
-        name: 'Copywriting (Caption)',
-        nextMeeting: '11-15-2024',
-        completion: '11-20-2024'
-      },
-    ]);
-  }, []);
-
 
   useEffect(() => {
     document.body.style.fontFamily = 'Poppins, sans-serif';
@@ -446,7 +329,11 @@ const handleClose = () => {
     try {
       const response = await logout();
       console.log('Logout successful:', response);
-
+  
+      // Clear local storage
+      localStorage.removeItem('userInfo');
+      localStorage.removeItem('profileImage');
+  
       // Optional: Navigate to login page after logout
       history.push('/login');
     } catch (error) {
@@ -455,8 +342,77 @@ const handleClose = () => {
     }
   };
 
+  const fetchProfileImage = async () => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+      const userId = userInfo.uid;
+  
+      if (!userId) {
+        console.error('User ID not found');
+        setProfileImage('/default-profile-image.png');
+        return;
+      }
+  
+      // Ambil URL dari Firebase Storage
+      const storageRef = ref(storage, `profile_photos/${userId}/profile_photo.jpg`);
+      const downloadURL = await getDownloadURL(storageRef);
+      console.log("asu", downloadURL)
+      setProfileImage(downloadURL); // Set gambar ke state
+      localStorage.setItem('profileImage', downloadURL); // Simpan URL untuk caching
+    } catch (error) {
+      console.error('Error fetching profile image:', error);
+      setProfileImage('/default-profile-image.png'); // Set gambar default jika gagal
+    }
+  };
+  
+  useEffect(() => {
+    fetchProfileImage(); // Panggil saat komponen dimuat
+  }, []);
+  
+  const handleProfileImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+  
+    const validFormats = ['image/jpeg', 'image/png'];
+    const maxSizeInMB = 2; // Maximum size 2MB
+  
+    if (!validFormats.includes(file.type)) {
+      alert('Please upload a JPEG or PNG image.');
+      return;
+    }
+    if (file.size > maxSizeInMB * 1024 * 1024) {
+      alert('File size must not exceed 2MB.');
+      return;
+    }
+  
+    try {
+      // Ambil userInfo dari localStorage
+      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+      const userId = userInfo.uid; // Pastikan UID tersedia
+  
+      if (!userId) {
+        alert('User ID not found in userInfo. Please log in again.');
+        return;
+      }
+  
+      const storageRef = ref(storage, `profile_photos/${userId}/${file.name}`);
+      const snapshot = await uploadBytes(storageRef, file); // Upload file ke Firebase
+      const downloadURL = await getDownloadURL(snapshot.ref); // Ambil URL file
+  
+      // Update foto profil pada state dan localStorage
+      setPreviewImage(downloadURL);
+      setImage(downloadURL);
+  
+      const updatedUserData = { ...userInfo, photo_url: downloadURL };
+      localStorage.setItem('userInfo', JSON.stringify(updatedUserData));
+  
+      alert('Profile image uploaded successfully!');
+    } catch (error: any) {
+      console.error('Error uploading file:', error.message);
+      alert(`Failed to upload the file: ${error.message}`);
+    }
+  };
   return (
- 
     <IonPage>
        <AppBar position="fixed" style={{ backgroundColor: 'white', borderBottomLeftRadius: '30px', borderBottomRightRadius: '30px', height: '82px', paddingTop: '25px' }}>
         <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
@@ -631,229 +587,47 @@ const handleClose = () => {
 
   <br></br>
       <br></br>
-        <Dialog open={modalOpen} onClose={() => setModalOpen(false)} fullWidth>
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <DialogTitle>Select Image Source</DialogTitle>
-        <IconButton edge="end" color="inherit" onClick={() => setModalOpen(false)} aria-label="close">
-          <CloseIcon />
-        </IconButton>
-      </Toolbar>
-      
-      <DialogContent dividers>
-        {previewImage && (
-          <img
-            src={previewImage}
-            alt="Preview"
-            style={{ width: '100%', height: 'auto', marginBottom: '16px' }}
-          />
-        )}
-        <Button variant="contained" fullWidth onClick={handleCamera} sx={{ mb: 2 }}>
-          Take Photo with Camera
-        </Button>
-        <Button variant="contained" fullWidth onClick={handleGallery} sx={{ mb: 2 }}>
-          Upload from Gallery
-        </Button>
-        {previewImage && (
-          <Button variant="contained" color="success" fullWidth onClick={confirmImage}>
-            Confirm Profile Picture
-          </Button>
-        )}
-      </DialogContent>
-    </Dialog>
-
-
-      <div className="CompletePurchaseWrapper" style={{ width: '100%' }}>
-  {/* Red background section only for the message */}
-  <Typography
-    variant="h6"
-    style={{
-      color: 'white',
-      textAlign: 'left',
-      padding: '2px 17px',
-      backgroundColor: '#FF4D00', // Red background only for the text
-    }}
-  >
-    Complete your purchase now!
-  </Typography>
-
-  <CardContent>
-    <div className="scrollable-grid" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
-      {/* Wrap the columns in a div that uses flexbox */}
-      <div style={{ display: 'flex' }}>
-        {completePurchase.map((item) => (
-          <Card
-            key={item.id}
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              margin: '8px',
-              width: '125px', // Adjust the card width to fit in the scrollable container
-              height: '200px',
-              padding: '10px',
-              borderColor: '#ABABAB',
-              backgroundColor: 'white',
-              flexShrink: 0, // Prevent shrinking in the scrollable flex container
-            }}
-          >
-            <Box
-              className="image-wrapper"
-              sx={{
-                width: '100%',
-                height: '120px',
-                marginBottom: '10px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                overflow: 'hidden',
-                borderRadius: '8px',
-              }}
-            >
-              <img
-                src={item.icon}
-                alt={item.name}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
-            </Box>
-            <CardContent
-              sx={{
-                padding: '0',
-                textAlign: 'left',
-                paddingBottom: '0',
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{
-                  textAlign: 'left',
-                  wordBreak: 'break-word',
-                  whiteSpace: 'normal',
-                  fontSize: '14px',
-                  fontWeight: 'bold',
-                }}
-              >
-                {item.name}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  textAlign: 'left',
-                  fontSize: '12px',
-                  color: 'textSecondary',
-                }}
-              >
-                by {item.seller}
-              </Typography>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  </CardContent>
-</div>
-
-
-
-  <div className="OnProgressWrapper" style={{ width: '100%' }}>
-      <Typography
-        variant="h6"
-        style={{
-          color: 'white',
-          textAlign: 'left',
-          padding: '2px 17px',
-          backgroundColor: '#3CB232',
-        }}
-      >
-        On Progress
-      </Typography>
-
-      <CardContent>
-        <div className="scrollable-grid" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            {progressData.map((item) => (
-              <Card
-                key={item.id}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  overflow: 'hidden',
-                  border: '1px solid #ABABAB',
-                  borderRadius: '8px',
-                  margin: '10px',
-                  width: 200,
-                  flexShrink: 0,
-                }}
-              >
-                <CardContent className="progress-card" sx={{ padding: '8px' }}>
-                  <Grid container spacing={0}>
-                    <Grid
-                      item
-                      xs={6}
-                      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    >
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontSize: '14px',
-                          marginLeft: '2px',
-                          wordBreak: 'break-word',
-                          whiteSpace: 'normal',
-                        }}
-                      >
-                        {item.name}
-                      </Typography>
-                    </Grid>
-
-                    <Grid
-                      item
-                      xs={6}
-                      sx={{
-                        marginTop: '1px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                        justifyContent: 'flex-start',
-                      }}
-                    >
-                      <Box>
-                        <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
-                          Next Meeting:
-                        </Typography>
-                        <Typography
-                          variant="h6"
-                          sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}
-                        >
-                          {item.nextMeeting}
-                        </Typography>
-                      </Box>
-                      <Box mt={1}>
-                        <Typography variant="body2" color="textSecondary" sx={{ fontSize: '12px' }}>
-                          Completion in:
-                        </Typography>
-                        <Typography
-                          variant="h6"
-                          sx={{ fontWeight: 'bold', fontSize: '14px', color: '#0094FF' }}
-                        >
-                          {item.completion}
-                        </Typography>
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </CardContent>
-    </div>
-
+      <Dialog open={modalOpen} onClose={() => setModalOpen(false)} fullWidth>
+  <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+    <DialogTitle>Select Image Source</DialogTitle>
+    <IconButton edge="end" color="inherit" onClick={() => setModalOpen(false)} aria-label="close">
+      <CloseIcon />
+    </IconButton>
+  </Toolbar>
+  
+  <DialogContent dividers>
+    {previewImage && (
+      <img
+        src={previewImage}
+        alt="Preview"
+        style={{ width: '100%', height: 'auto', marginBottom: '16px' }}
+      />
+    )}
+    <input
+      type="file"
+      accept="image/*"
+      onChange={handleProfileImageUpload}
+      style={{ display: 'none' }}
+      id="profile-image-input"
+    />
+    <label htmlFor="profile-image-input">
+      <Button variant="outlined" color="secondary" component="span" fullWidth>
+        Choose File
+      </Button>
+    </label>
+    <Button variant="contained" fullWidth onClick={handleCamera} sx={{ mb: 2 }}>
+      Take Photo with Camera
+    </Button>
+    <Button variant="contained" fullWidth onClick={handleGallery} sx={{ mb: 2 }}>
+      Upload from Gallery
+    </Button>
+    {previewImage && (
+      <Button variant="contained" color="success" fullWidth onClick={confirmImage}>
+        Confirm Profile Picture
+      </Button>
+    )}
+  </DialogContent>
+</Dialog>
 
         {/* Menu List */}
         <List>
