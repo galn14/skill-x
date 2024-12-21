@@ -76,7 +76,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
                         isRead: value.isRead,
                     }));
     
-                    // Sort messages by timestamp in ascending order
+                    // Sort messages by timestamp
                     parsedMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
     
                     setMessages(parsedMessages);
@@ -86,8 +86,16 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
             }
         };
     
+        // Set up polling
+        const interval = setInterval(loadMessages, 3000); // Refresh every 3 seconds
+    
+        // Initial load
         loadMessages();
+    
+        // Clear interval on component unmount
+        return () => clearInterval(interval);
     }, [conversationID]);
+    
     
 
     const handleSendMessage = async () => {
