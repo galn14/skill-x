@@ -42,7 +42,7 @@ const MessagePage: React.FC = () => {
         const loadConversations = async () => {
             try {
                 const response = await fetchConversations();
-
+    
                 if (response.success && Array.isArray(response.data)) {
                     const processedConversations = await Promise.all(
                         response.data.map(async (conversation: Conversation) => {
@@ -50,18 +50,18 @@ const MessagePage: React.FC = () => {
                                 const otherParticipantId = conversation.participants.find(
                                     (participant) => participant !== userId
                                 );
-
+    
                                 if (!otherParticipantId) {
                                     console.warn(
                                         `No other participant found for conversation ${conversation.id}`
                                     );
                                     return null;
                                 }
-
+    
                                 const participantDetails: ParticipantDetails = await fetchUserDetails(
                                     otherParticipantId
                                 );
-
+    
                                 return {
                                     id: conversation.id,
                                     participantName: participantDetails.name || 'Unknown',
@@ -75,7 +75,7 @@ const MessagePage: React.FC = () => {
                                         !conversation.lastMessage.isRead
                                             ? 1
                                             : 0,
-                                    updatedAt: conversation.updatedAt,
+                                    updatedAt: conversation.lastMessage?.timestamp || conversation.updatedAt,
                                 };
                             } catch (error) {
                                 console.error(
@@ -86,12 +86,13 @@ const MessagePage: React.FC = () => {
                             }
                         })
                     );
-
-                    setConversations(
-                        processedConversations.filter(
-                            (conversation) => conversation !== null
-                        ) as ConversationDisplay[]
-                    );
+    
+                    // Filter out null conversations and sort by timestamp (newest first)
+                    const sortedConversations = processedConversations
+                        .filter((conversation) => conversation !== null) // Remove nulls
+                        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+    
+                    setConversations(sortedConversations);
                 } else {
                     console.error('Invalid response format from fetchConversations');
                 }
@@ -99,9 +100,15 @@ const MessagePage: React.FC = () => {
                 console.error('Error loading conversations:', error);
             }
         };
-
+    
         loadConversations();
+    
+        // Set up polling for auto-refresh every 3 seconds
+        const interval = setInterval(loadConversations, 3000);
+    
+        return () => clearInterval(interval); // Cleanup interval on unmount
     }, [userId]);
+    
 
     const navigateToChatRoom = (conversationID: string, participantName: string, participantPhoto: string) => {
         history.push(`/chat/${conversationID}`, {
