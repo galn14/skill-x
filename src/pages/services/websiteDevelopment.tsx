@@ -25,6 +25,30 @@ const WebsiteDevelopment: React.FC = () => {
   const handleBack = () => history.goBack();
   const isLoggedIn = !!localStorage.getItem('userToken');
 
+  const handleMessageButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/messages'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
+  const handleNotificationButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/notification'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+};
+
+const handleCartButtonClick = () => {
+  if (isLoggedIn) {
+    history.push('/cart'); // Redirect ke halaman message
+  } else {
+    history.push('/login'); // Redirect ke halaman login
+  }
+};
+
   const sponsoredContent = [
     {
       id: 1,
@@ -97,13 +121,13 @@ const WebsiteDevelopment: React.FC = () => {
                 className="logo"
                 style={{ marginRight: 'auto', height: '40px' }}
               />
-              <IconButton color="primary">
+              <IconButton color="primary" onClick={handleCartButtonClick}>
                 <ShoppingCartIcon />
               </IconButton>
-              <IconButton color="primary">
+              <IconButton color="primary" onClick={handleNotificationButtonClick}>
                 <NotificationsIcon />
               </IconButton>
-              <IconButton color="primary">
+              <IconButton color="primary" onClick={handleMessageButtonClick}>
                 <MailIcon />
               </IconButton>
             </Box>
