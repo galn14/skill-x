@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IonContent, IonPage, IonGrid, IonRow, IonCol, IonButton } from '@ionic/react';
 import { Grid, AppBar, Toolbar, Box, Card, CardContent, CardMedia, Typography, Button, TextField, IconButton } from '@mui/material';
 import SortIcon from '@mui/icons-material/Sort';
@@ -8,17 +8,39 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'; // Next Icon
 import NotificationsIcon from '@mui/icons-material/Notifications'; // Notification Icon
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Account Icon
 import SidebarAdmin from './sidebarAdmin';
+import { fetchSellers, verifySeller } from '../api.service'; // Import the service function
 
 const sellerApproval: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<string>('Seller Approval'); // Track selected item
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true); // Track sidebar visibility
+  const [sellers, setSellers] = useState<any[]>([]); // State to hold seller data
+  useEffect(() => {
+    const getSellers = async () => {
+        try {
+            const fetchedSellers = await fetchSellers();
+            // Filter the sellers with status "pending" and verified=false
+            const filteredSellers = fetchedSellers.filter(
+                (seller: any) => seller.status === 'pending' && !seller.verified
+            );
+            setSellers(filteredSellers);
+        } catch (error) {
+            console.error('Error fetching sellers:', error);
+        }
+    };
+    
+    getSellers();
+}, []);
 
-  // Contoh data seller
-  const sellers = Array(12).fill({
-    name: 'Aileen Angelica Lee',
-    major: 'BINUS University | Computer Science',
-    img: '', // URL gambar jika ada
-  });
+const handleSellerAction = async (uid: string, status: string) => {
+  try {
+      const response = await verifySeller(uid, status); // Call the verifySeller function from the API service
+      console.log('Seller verification status:', response.message);
+      // Remove the seller from the list once action is done
+      setSellers(sellers.filter(seller => seller.uid !== uid));
+  } catch (error) {
+      console.error('Error verifying seller:', error);
+  }
+};
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen); // Toggle sidebar visibility
@@ -136,7 +158,7 @@ const sellerApproval: React.FC = () => {
         <CardMedia
           component="img"
           height="140"
-          image={seller.img || '/assets/placeholder.png'}
+          image={seller.photoURL || '/assets/placeholder.png'}
           alt="Seller Thumbnail"
         />
         <CardContent>
@@ -148,12 +170,14 @@ const sellerApproval: React.FC = () => {
           </Typography>
           <Grid container spacing={1}>
   <Grid item xs={6}>
-    <Button variant="contained" color="error" fullWidth size="small">
+    <Button onClick={() => handleSellerAction(seller.uid, 'denied')}
+      variant="contained" color="error" fullWidth size="small">
       Decline
     </Button>
   </Grid>
   <Grid item xs={6}>
-    <Button variant="contained" color="success" fullWidth size="small">
+    <Button onClick={() => handleSellerAction(seller.uid, 'accepted')}
+     variant="contained" color="success" fullWidth size="small">
       Accept
     </Button>
   </Grid>

@@ -4,6 +4,51 @@ import axios from './axiosConfig';
 
 const baseUrl = 'http://localhost:8080'; // Replace with your API base URL
 
+export const verifySeller = async (uid: string, status: string) => {
+  try {
+      const token = localStorage.getItem('userToken');
+      if (!token) throw new Error('Authentication token is missing.');
+
+      const config = {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      };
+
+      const response = await axios.post(
+          `${baseUrl}/admin/verify-seller`,
+          {
+              uid,
+              status, // 'accepted' or 'denied'
+          },
+          config
+      );
+
+      return response.data; // Return response data
+  } catch (error) {
+      console.error('Error verifying seller:', error);
+      throw error;
+  }
+};
+
+export const fetchSellers = async () => {
+  try {
+      const token = localStorage.getItem('userToken');
+      if (!token) throw new Error('Authentication token is missing.');
+
+      const config = {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      };
+
+      const response = await axios.get(`${baseUrl}/admin/regsiterSeller`, config); // Assuming endpoint is /api/sellers
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching sellers:', error);
+      throw error;
+  }
+};
 
 // Fetch all conversations
 export const fetchConversations = async () => {
