@@ -31,7 +31,7 @@ const FullstackDevelopment: React.FC = () => {
   const { product } = state || {};
   const history = useHistory();
   const handleBack = () => history.goBack();
-
+  const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
 
   const productData = product || {
     image: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
@@ -56,6 +56,22 @@ const FullstackDevelopment: React.FC = () => {
   const [userInfo, setUserInfo] = React.useState(() => {
     return JSON.parse(localStorage.getItem('userInfo') || '{}');
   });
+
+  const handleMessageButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/messages'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
+  const handleCartButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/cart'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -85,10 +101,10 @@ const FullstackDevelopment: React.FC = () => {
               <IconButton color="primary">
                 <SearchIcon />
               </IconButton>
-              <IconButton color="primary">
+              <IconButton color="primary" onClick={handleCartButtonClick}>
                 <ShoppingCartIcon />
               </IconButton>
-              <IconButton color="primary">
+              <IconButton color="primary" onClick={handleMessageButtonClick}>
                 <MailIcon />
               </IconButton>
             </Box>

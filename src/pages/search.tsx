@@ -33,7 +33,7 @@ const SearchPage: React.FC = () => {
   };
   const handleMessageButtonClick = () => {
     if (isLoggedIn) {
-      history.push('/message');
+      history.push('/messages');
     } else {
       history.push('/login');
     }

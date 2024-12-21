@@ -208,6 +208,22 @@ const Categories: React.FC = () => {
     }
   };
 
+  const handleMessageButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/messages'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
+  const handleCartButtonClick = () => {
+    if (isLoggedIn) {
+      history.push('/cart'); // Redirect ke halaman message
+    } else {
+      history.push('/login'); // Redirect ke halaman login
+    }
+  };
+
   const getCategoryColor = (categoryName: string) => {
     switch (categoryName.toUpperCase()) {
       case 'COMPUTER SCIENCE':
@@ -251,10 +267,10 @@ const Categories: React.FC = () => {
                 <Typography sx={{ flex: 1, color: '#333', padding: '10px', fontSize: '11px' }}>Search</Typography>
               </Box>
             </Box>
-            <IconButton color="primary">
+            <IconButton color="primary" onClick={handleCartButtonClick}>
               <ShoppingCartIcon />
             </IconButton>
-            <IconButton color="primary">
+            <IconButton color="primary" onClick={handleMessageButtonClick}>
               <MailIcon />
             </IconButton>
           </Box>

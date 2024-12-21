@@ -276,7 +276,7 @@ const profileSeller: React.FC = () => {
 
   const handleMessageButtonClick = () => {
     if (isLoggedIn) {
-      history.push('/message'); // Redirect ke halaman message
+      history.push('/messages'); // Redirect ke halaman message
     } else {
       history.push('/login'); // Redirect ke halaman login
     }

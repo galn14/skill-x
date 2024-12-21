@@ -120,7 +120,14 @@ const MessagePage: React.FC = () => {
 
     return (
         <IonPage>
-            <AppBar position="fixed" style={{ backgroundColor: '#fff', height: '82px' }}>
+            <AppBar position="fixed"
+                    sx={{
+                        backgroundColor: 'white',
+                        borderBottomLeftRadius: '30px',
+                        borderBottomRightRadius: '30px',
+                        height: '82px',
+                        paddingTop: '25px',
+                    }}>
                 <Toolbar>
                     <IconButton onClick={handleBack} color="primary">
                         <ArrowBackIcon />
