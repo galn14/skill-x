@@ -68,36 +68,37 @@ const NotificationPage: React.FC = () => {
         },
     });
 
-    const notifications = [
-      {
-          id: 1,
-          type: 'Promo',
-          time: '2 hours ago',
-          description: 'Exclusive promo for today only!',
-          product: {
-              image: 'https://via.placeholder.com/60',
-              title: 'Product A',
-              seller: 'Seller A',
-              originalPrice: 'Rp 150,000',
-              discountedPrice: 'Rp 120,000',
-          },
-          isRead: false, // Card belum ditekan
-      },
-      {
-          id: 2,
-          type: 'Waiting Payment',
-          time: '5 hours ago',
-          description: 'Please complete your payment for Product B.',
-          product: {
-              image: 'https://via.placeholder.com/60',
-              title: 'Product B',
-              seller: 'Seller B',
-              originalPrice: 'Rp 200,000',
-              discountedPrice: 'Rp 170,000',
-          },
-          isRead: true, // Card sudah ditekan
-      },
-  ];
+    const [notifications, setNotifications] = useState([
+        {
+            id: 1,
+            type: 'Promo',
+            time: '2 hours ago',
+            description: 'Exclusive promo for today only!',
+            product: {
+                image: 'https://via.placeholder.com/60',
+                title: 'Product A',
+                seller: 'Seller A',
+                originalPrice: 'Rp 150,000',
+                discountedPrice: 'Rp 120,000',
+            },
+            isRead: false,
+        },
+        {
+            id: 2,
+            type: 'Waiting Payment',
+            time: '5 hours ago',
+            description: 'Please complete your payment for Product B.',
+            product: {
+                image: 'https://via.placeholder.com/60',
+                title: 'Product B',
+                seller: 'Seller B',
+                originalPrice: 'Rp 200,000',
+                discountedPrice: 'Rp 170,000',
+            },
+            isRead: true,
+        },
+    ]);
+    
 
     return (
         <ThemeProvider theme={theme}>
@@ -227,15 +228,21 @@ const NotificationPage: React.FC = () => {
                     </Box>
 
                     <Box sx={{ padding: '20px', backgroundColor: '#F4F4F4' }}>
-                        {notifications.map((notification) => (
+                        {notifications.map((notification, index) => (
                             <Card
                                 key={notification.id}
+                                onClick={() => {
+                                    const updatedNotifications = [...notifications];
+                                    updatedNotifications[index].isRead = true; // Ubah status isRead menjadi true
+                                    setNotifications(updatedNotifications); // Update state
+                                }}
                                 sx={{
                                     backgroundColor: notification.isRead ? '#3CB23257' : '#FFFFFF',
                                     borderRadius: '16px',
                                     marginBottom: '10px',
                                     padding: '16px',
-                                    border: '2px solid #3CB232',
+                                    border: notification.isRead ? '2px solid #3CB232' : '2px solid transparent',
+                                    cursor: 'pointer', // Tunjukkan bahwa card bisa diklik
                                 }}
                             >
                                 <Box
@@ -271,7 +278,7 @@ const NotificationPage: React.FC = () => {
                                         backgroundColor: notification.isRead ? '#EAF7E9' : '#3CB23257',
                                         borderRadius: '12px',
                                         padding: '6px',
-                                        height: '60px', // Mengurangi tinggi card dalam
+                                        height: '60px',
                                     }}
                                 >
                                     <CardMedia
@@ -285,56 +292,56 @@ const NotificationPage: React.FC = () => {
                                         }}
                                     />
                                     <CardContent
-                                      sx={{
-                                          flex: 1,
-                                          padding: '8px 16px',
-                                          display: 'flex',
-                                          flexDirection: 'column',
-                                          justifyContent: 'space-between',
-                                      }}
-                                  >
-                                      <Box
-                                          sx={{
-                                              display: 'flex',
-                                              justifyContent: 'space-between', // Membuat judul dan harga sejajar
-                                              alignItems: 'center',
-                                          }}
-                                      >
-                                          <Typography sx={{ fontSize: '14px', fontWeight: 'bold', color: '#000' }}>
-                                              {notification.product.title}
-                                          </Typography>
-                                          <Typography
-                                              sx={{
-                                                  fontSize: '14px',
-                                                  color: '#0094FF',
-                                                  fontWeight: 'bold',
-                                              }}
-                                          >
-                                              {notification.product.originalPrice}
-                                          </Typography>
-                                      </Box>
-                                      <Box
-                                          sx={{
-                                              display: 'flex',
-                                              justifyContent: 'space-between', // Membuat seller dan harga diskon sejajar
-                                              alignItems: 'center',
-                                              marginTop: '4px', // Jarak antara baris atas dan bawah
-                                          }}
-                                      >
-                                          <Typography sx={{ fontSize: '12px', color: '#666' }}>
-                                              {notification.product.seller}
-                                          </Typography>
-                                          <Typography
-                                              sx={{
-                                                  fontSize: '12px',
-                                                  color: 'red',
-                                                  textDecoration: 'line-through',
-                                              }}
-                                          >
-                                              {notification.product.discountedPrice}
-                                          </Typography>
-                                      </Box>
-                                  </CardContent>
+                                        sx={{
+                                            flex: 1,
+                                            padding: '8px 16px',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'space-between',
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Typography sx={{ fontSize: '14px', fontWeight: 'bold', color: '#000' }}>
+                                                {notification.product.title}
+                                            </Typography>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: '14px',
+                                                    color: '#0094FF',
+                                                    fontWeight: 'bold',
+                                                }}
+                                            >
+                                                {notification.product.originalPrice}
+                                            </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                marginTop: '4px',
+                                            }}
+                                        >
+                                            <Typography sx={{ fontSize: '12px', color: '#666' }}>
+                                                {notification.product.seller}
+                                            </Typography>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: '12px',
+                                                    color: 'red',
+                                                    textDecoration: 'line-through',
+                                                }}
+                                            >
+                                                {notification.product.discountedPrice}
+                                            </Typography>
+                                        </Box>
+                                    </CardContent>
                                 </Card>
                             </Card>
                         ))}
