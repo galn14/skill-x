@@ -75,15 +75,20 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
                         timestamp: value.timestamp,
                         isRead: value.isRead,
                     }));
+    
+                    // Sort messages by timestamp in ascending order
+                    parsedMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    
                     setMessages(parsedMessages);
                 }
             } catch (error) {
                 console.error('Error fetching messages:', error);
             }
         };
-
+    
         loadMessages();
     }, [conversationID]);
+    
 
     const handleSendMessage = async () => {
         if (newMessage.trim()) {
