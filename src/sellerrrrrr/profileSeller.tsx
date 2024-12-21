@@ -15,6 +15,8 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from "@mui/lab";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useHistory } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -882,31 +884,72 @@ const profileSeller: React.FC = () => {
           </Typography>
         </IonCardTitle>
         
-        <Box sx={{  display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Grid container spacing={2}>
-            {products.map((product) => (
-              <Grid item xs={6} key={product.id}> {/* Selalu dua kolom */}
-                <Card sx={{ height: "100%", padding:'10px' }}>
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "150px",
-                      backgroundColor: "#e0e0e0",
-                    }}
-                  />
-                  <CardContent>
-                    <Typography variant="subtitle1" sx={{ fontWeight: "bold", fontSize:'0.89rem' }}>
-                      {product.title}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary" sx={{ fontSize:'0.75rem' }}>
-                      {product.price}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  <Grid container spacing={2}>
+    {products.map((product) => (
+      <Grid item xs={6} key={product.id}> {/* Selalu dua kolom */}
+        <Card sx={{ height: "100%", padding: '10px' }}>
+          <Box sx={{ position: 'relative' }}>
+            
+           
+
+            <Box
+              sx={{
+                width: "100%",
+                height: "150px",
+                backgroundColor: "#e0e0e0",
+              }}
+            />
+          </Box>
+          
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', padding: 2 }}>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "bold", fontSize: '1rem', marginBottom: 0.5, color: 'text.primary' }}
+            >
+              {product.title}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ fontSize: '0.875rem', marginBottom: 1 }}
+            >
+              {product.price}
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              {/* Edit Icon */}
+              <IconButton
+                onClick={() => history.push(`/EditProductModal`)}
+                sx={{
+                  backgroundColor: 'transparent',
+                  '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.1)' },
+                  padding: 1,
+                }}
+                size="small"
+              >
+                <EditIcon sx={{ fontSize: 20, color: 'primary.main' }} />
+              </IconButton>
+
+              {/* Delete Icon */}
+              <IconButton
+          //      onClick={() => handleDeleteProduct(product.id)} // Handle delete product
+                sx={{
+                  backgroundColor: 'transparent',
+                  '&:hover': { backgroundColor: 'rgba(7, 14, 133, 0.1)' },
+                  padding: 1,
+                }}
+                size="small"
+              >
+                <DeleteIcon sx={{ fontSize: 20 }} />
+              </IconButton>
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+    ))}
+  </Grid>
+</Box>
+
        <div>
         <IconButton
               onClick={ openAddProduct}
@@ -938,6 +981,7 @@ const profileSeller: React.FC = () => {
             width: 'calc(100% - 32px)',
             margin: '16px auto',
             padding: '10px',
+            marginLeft: ' 20px'
           }}
         >
           {isChangingRole ? 'Switching...' : 'Back to Buyer'}

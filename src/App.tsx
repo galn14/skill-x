@@ -87,6 +87,8 @@ import profileSeller from './sellerrrrrr/profileSeller';
 import EditProfileModal from './sellerrrrrr/EditProfileModal';
 import EditAboutMe from './sellerrrrrr/EditAboutMe';
 import EditPortoModal from './sellerrrrrr/EditPortoModal';
+import EditProductModal from './sellerrrrrr/EditProductModal';
+
 import AddProduct from './sellerrrrrr/AddProduct';
 import AddSkill from './sellerrrrrr/AddSkill';
 import AddPortoModal from './sellerrrrrr/AddPortoModal';
@@ -190,6 +192,7 @@ const App: React.FC = () => {
           <Route path="/AddSkill" component={AddSkill}/>
           <Route path="/AddPortoModal" component={AddPortoModal}/>
           <Route path="/search" component={SearchPage}/>
+          <Route path="/EditProductModal" component={EditProductModal}/>
 
           <Route path="/DetailTransactionProgress" component={DetailTransactionProgress}/>
           <Route path="/profileSellerCust" component={profileSellerCust}/>
