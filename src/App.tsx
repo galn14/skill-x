@@ -92,6 +92,8 @@ import AddSkill from './sellerrrrrr/AddSkill';
 import AddPortoModal from './sellerrrrrr/AddPortoModal';
 import SearchPage from './pages/search'
 
+import profileSellerCust from './pages/profileSellerCust';
+
 import DetailTransactionProgress from './sellerrrrrr/DetailTransactionProgress';
 
 type RouteParams = {
@@ -190,6 +192,7 @@ const App: React.FC = () => {
           <Route path="/search" component={SearchPage}/>
 
           <Route path="/DetailTransactionProgress" component={DetailTransactionProgress}/>
+          <Route path="/profileSellerCust" component={profileSellerCust}/>
 
          {/* Redirect root to messages */}
          <Route exact path="/">
