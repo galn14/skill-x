@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IonPage, IonContent } from '@ionic/react';
-import { Box, TextField, Button, IconButton, Typography } from '@mui/material';
+import { Box, TextField, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
-import { fetchMessages, fetchConversations, sendMessage, fetchUserDetails } from '../api.service';
+import { fetchMessages, fetchConversations, sendMessage } from '../api.service';
 
 type Message = {
     id: string;
@@ -19,67 +19,92 @@ type ChatRoomProps = {
     userName: string;
     profileImage: string;
     initialMessages: Message[];
-    participants: string[];
 };
 
-const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileImage, initialMessages, participants }) => {
+const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileImage, initialMessages }) => {
     const [messages, setMessages] = useState<Message[]>(initialMessages || []);
     const [newMessage, setNewMessage] = useState<string>('');
+    const [receiverID, setReceiverID] = useState<string>('');
     const history = useHistory();
     const currentUserId = JSON.parse(localStorage.getItem('userInfo') || '{}').uid || '';
 
-    // Receiver ID derived from participants
-    const receiverID = participants.find((id) => id !== currentUserId) || '';
-
-    // Ref to track the chat container
-    const chatContainerRef = useRef<HTMLDivElement>(null);
-
-    // Scroll to the bottom of the chat container
-    const scrollToBottom = () => {
-        if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        }
-    };
-
-    // Scroll to the bottom on message updates
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
-
-    // Fetch all messages for the conversation
+    // Fetch participants and determine receiverID
     useEffect(() => {
         const loadConversation = async () => {
             try {
                 const response = await fetchConversations();
-    
-                if (response.success && Array.isArray(response.data)) {
+                if (response.success && response.data) {
                     const conversation = response.data.find(
                         (conv: any) => conv.id === conversationID
                     );
-    
-                    if (!conversation) {
-                        console.warn('Conversation not found:', conversationID);
-                        return;
-                    }
-    
-                    if (!Array.isArray(conversation.participants)) {
-                        console.error('Invalid participants in conversation:', conversation);
+
+                    if (conversation && conversation.participants && Array.isArray(conversation.participants)) {
+                        const foundReceiverID = conversation.participants.find(
+                            (p: string) => p !== currentUserId
+                        );
+                        if (foundReceiverID) {
+                            setReceiverID(foundReceiverID);
+                        } else {
+                            console.error('Receiver ID not found in participants');
+                        }
+                    } else {
+                        console.error('Conversation not found or invalid');
                     }
                 } else {
-                    console.error('Failed to fetch conversations or invalid response format:', response);
+                    console.error('Failed to fetch conversations');
                 }
             } catch (error) {
                 console.error('Error fetching conversation:', error);
             }
         };
-    
+
         loadConversation();
+    }, [conversationID, currentUserId]);
+
+    // Fetch all messages for the conversation
+    useEffect(() => {
+        const loadMessages = async () => {
+            try {
+                const response = await fetchMessages(conversationID);
+                if (response.success && response.data) {
+                    const parsedMessages: Message[] = Object.entries(response.data).map(([key, value]: [string, any]) => ({
+                        id: key,
+                        senderID: value.senderID,
+                        receiverID: value.receiverID,
+                        messageContent: value.messageContent,
+                        timestamp: value.timestamp,
+                        isRead: value.isRead,
+                    }));
+    
+                    // Sort messages by timestamp
+                    parsedMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    
+                    setMessages(parsedMessages);
+                }
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        };
+    
+        // Set up polling
+        const interval = setInterval(loadMessages, 3000); // Refresh every 3 seconds
+    
+        // Initial load
+        loadMessages();
+    
+        // Clear interval on component unmount
+        return () => clearInterval(interval);
     }, [conversationID]);
     
     
 
     const handleSendMessage = async () => {
         if (newMessage.trim()) {
+            if (!receiverID) {
+                console.error('Receiver ID is missing. Please ensure participants are loaded.');
+                return;
+            }
+
             try {
                 const messageData = {
                     receiverID,
@@ -140,41 +165,38 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
                 </Box>
 
                 {/* Messages Display */}
-                <IonContent style={{ backgroundColor: '#F5F5F5' }}>
-                    <Box
-                        ref={chatContainerRef}
-                        style={{
-                            flexGrow: 1,
-                            padding: '16px',
-                            overflowY: 'auto',
-                            height: '100%',
-                        }}
-                    >
-                        {messages.map((msg) => (
+                <Box
+                    style={{
+                        flexGrow: 1,
+                        padding: '16px',
+                        overflowY: 'auto',
+                        backgroundColor: '#F5F5F5',
+                    }}
+                >
+                    {messages.map((msg) => (
+                        <Box
+                            key={msg.id}
+                            style={{
+                                display: 'flex',
+                                justifyContent: msg.senderID === currentUserId ? 'flex-end' : 'flex-start',
+                                marginBottom: '8px',
+                            }}
+                        >
                             <Box
-                                key={msg.id}
                                 style={{
-                                    display: 'flex',
-                                    justifyContent: msg.senderID === currentUserId ? 'flex-end' : 'flex-start',
-                                    marginBottom: '8px',
+                                    maxWidth: '70%',
+                                    padding: '10px',
+                                    borderRadius: '8px',
+                                    backgroundColor: msg.senderID === currentUserId ? '#0094FF' : '#E0E0E0',
+                                    color: msg.senderID === currentUserId ? 'white' : 'black',
+                                    wordWrap: 'break-word',
                                 }}
                             >
-                                <Box
-                                    style={{
-                                        maxWidth: '70%',
-                                        padding: '10px',
-                                        borderRadius: '8px',
-                                        backgroundColor: msg.senderID === currentUserId ? '#0094FF' : '#E0E0E0',
-                                        color: msg.senderID === currentUserId ? 'white' : 'black',
-                                        wordWrap: 'break-word',
-                                    }}
-                                >
-                                    {msg.messageContent}
-                                </Box>
+                                {msg.messageContent}
                             </Box>
-                        ))}
-                    </Box>
-                </IonContent>
+                        </Box>
+                    ))}
+                </Box>
 
                 {/* Input Section */}
                 <Box
