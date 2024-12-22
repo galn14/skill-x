@@ -1,5 +1,6 @@
 import React from 'react';
 import { Toolbar, AppBar, IconButton, Typography, Box } from '@mui/material';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonSearchbar, IonIcon, IonCard, IonCardContent, IonButton, IonFooter, IonTabBar, IonTabButton, IonCardHeader, IonCardSubtitle, IonCardTitle, IonLabel } from '@ionic/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
@@ -12,10 +13,12 @@ const RegisterSellerWait: React.FC = () => {
   });
 
   const history = useHistory();
+  
   const handleBack = () => history.goBack();
 
   return (
     <ThemeProvider theme={theme}>
+      <IonPage>
       <AppBar
         position="fixed"
         sx={{
@@ -38,7 +41,8 @@ const RegisterSellerWait: React.FC = () => {
           </Box>
         </Toolbar>
       </AppBar>
-
+      
+      <IonContent>
       <div
         style={{
           display: 'flex',
@@ -124,6 +128,8 @@ const RegisterSellerWait: React.FC = () => {
 </button>
 
       </div>
+      </IonContent>
+      </IonPage>
     </ThemeProvider>
   );
 };

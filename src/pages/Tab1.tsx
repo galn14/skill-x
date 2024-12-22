@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonSearchbar, IonIcon, IonCard, IonCardContent, IonButton, IonFooter, IonTabBar, IonTabButton, IonCardHeader, IonCardSubtitle, IonCardTitle, IonLabel } from '@ionic/react';
 import { notificationsOutline, mailOutline, menuOutline, desktopOutline, colorPaletteOutline, constructOutline, videocamOutline, brushOutline, globeOutline } from 'ionicons/icons';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { AppBar, Toolbar, IconButton, Card, CardContent, CardMedia, Typography, Box, Button, InputBase, Avatar, CardActionArea} from '@mui/material';
+import { AppBar, Toolbar, IconButton, Card, CardContent, CardMedia, Typography, Box, Button, InputBase, Avatar, CardActionArea, CircularProgress} from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import SearchIcon from '@mui/icons-material/Search';
 import { Autoplay, Grid, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper/modules';
 import './Tab1.css';
-import { fetchMajors,fetchServices, searchProducts} from '../api.service';
+import { fetchMajors,fetchServices, searchProducts, searchUsers} from '../api.service';
+import searchControllerAPI from '../api.users';
 import '@fontsource/poppins';
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import '@fontsource/poppins';  // Import the font
@@ -153,18 +154,24 @@ const CategoriesComponent = () => {
     }, []); 
 
     const handleSearch = async () => {
-      if (!searchQuery.trim()) return; // Jangan jalankan jika query kosong
+      if (!searchQuery.trim()) return; // Prevent empty searches
       setIsLoading(true);
+  
       try {
-        const response = await searchProducts(searchQuery);
+        // Call the searchControllerAPI
+        const response = await searchControllerAPI(searchQuery);
+  
         if (response.success) {
-          setSearchResults(response.data); // Update hasil pencarian
+          setSearchResults([
+            ...(response.users || []), // Append users if available
+            ...(response.products || []), // Append products if available
+          ]);
         } else {
-          setSearchResults([]);
+          setSearchResults([]); // Clear results on failure
         }
       } catch (error) {
-        console.error('Error searching products:', error);
-        setSearchResults([]);
+        console.error("Error searching:", error);
+        setSearchResults([]); // Clear results on error
       } finally {
         setIsLoading(false);
       }
@@ -232,65 +239,77 @@ const CategoriesComponent = () => {
           </Box>
 
           {/* Search Bar */}
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            sx={{
-              backgroundColor: 'white',
-              borderRadius: '10px',
-              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-              padding: '5px 10px',
-              width: '95%',
-              maxWidth: '100%',
-              margin: '5px auto'
-            }}
-          >
-            <SearchIcon sx={{ color: '#007bff', marginRight: '10px' }} />
-            <InputBase
-              placeholder="Search the right services"
-              sx={{ flex: 1, color: '#333' }}
-              inputProps={{ 'aria-label': 'search the right services' }}
-              value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()} // Jalankan saat enter ditekan
-            />
-          </Box>
+          <Box sx={{ padding: "16px" }}>
+      {/* Search Bar */}
+      <Box
+        display="flex"
+        alignItems="center"
+        sx={{
+          backgroundColor: "white",
+          borderRadius: "10px",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          padding: "5px 10px",
+          width: "95%",
+          maxWidth: "100%",
+          margin: "5px auto",
+        }}
+      >
+        <SearchIcon sx={{ color: "#007bff", marginRight: "10px" }} />
+        <InputBase
+          placeholder="Search for users or products"
+          sx={{ flex: 1, color: "#333" }}
+          inputProps={{ "aria-label": "search for users or products" }}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyPress={(e) => e.key === "Enter" && handleSearch()} // Trigger on Enter
+        />
+      </Box>
 
-          {/* Loading Indicator */}
-        {isLoading && (
-          <Typography sx={{ textAlign: 'center', marginTop: '10px' }}>
-            Loading...
-          </Typography>
-        )}
+      {/* Loading Indicator */}
+      {isLoading && (
+        <Typography sx={{ textAlign: "center", marginTop: "10px" }}>
+          <CircularProgress size={24} />
+          Loading...
+        </Typography>
+      )}
 
-        {/* Search Results */}
-        {!isLoading && searchResults && searchResults.length > 0 ? (
-          <Box sx={{ marginTop: '10px', padding: '10px' }}>
-            {searchResults.map((product) => (
-              <Box
-                key={product.uid}
-                sx={{
-                  border: '1px solid #ddd',
-                  borderRadius: '10px',
-                  padding: '10px',
-                  marginBottom: '10px',
-                  boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                <Typography variant="h6">{product.nameProduct}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {product.description}
-                </Typography>
+      {/* Search Results */}
+      {!isLoading && searchResults && searchResults.length > 0 ? (
+        <Box sx={{ marginTop: "10px", padding: "10px" }}>
+          {searchResults.map((result: any, index: number) => (
+            <Box
+              key={index}
+              sx={{
+                border: "1px solid #ddd",
+                borderRadius: "10px",
+                padding: "10px",
+                marginBottom: "10px",
+                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              {/* User or Product Details */}
+              <Typography variant="h6">
+                {result.name || result.nameProduct}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                {result.email || result.description || "No additional info"}
+              </Typography>
+              {result.price && (
                 <Typography variant="body1" color="primary">
-                  Price: {product.price}
+                  Price: {result.price}
                 </Typography>
-              </Box>
-            ))}
-          </Box>
-        ) : (
-          !isLoading && <Typography>No products found</Typography>
-        )}
-          
+              )}
+            </Box>
+          ))}
+        </Box>
+      ) : (
+        !isLoading && (
+          <Typography sx={{ textAlign: "center", marginTop: "10px" }}>
+            No results found
+          </Typography>
+        )
+      )}
+    </Box>
           {/* Categories */}
 <Box
   sx={{
