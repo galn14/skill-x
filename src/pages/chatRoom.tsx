@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { IonPage, IonContent } from '@ionic/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { IonPage } from '@ionic/react';
 import { Box, TextField, Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useHistory } from 'react-router-dom';
@@ -27,6 +27,25 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
     const [receiverID, setReceiverID] = useState<string>('');
     const history = useHistory();
     const currentUserId = JSON.parse(localStorage.getItem('userInfo') || '{}').uid || '';
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
+
+    // Scroll to the bottom of the messages container
+    const scrollToBottom = (smooth: boolean = true) => {
+        messagesEndRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
+    };
+
+    // Check if the user is near the bottom of the chat
+    const isNearBottom = () => {
+        if (!chatContainerRef.current) return true;
+        const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+        return scrollHeight - scrollTop <= clientHeight + 50; // Allow 50px tolerance
+    };
+
+    // Scroll to the bottom instantly on component mount
+    useEffect(() => {
+        scrollToBottom(false); // Instant scroll
+    }, []);
 
     // Fetch participants and determine receiverID
     useEffect(() => {
@@ -61,7 +80,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
         loadConversation();
     }, [conversationID, currentUserId]);
 
-    // Fetch all messages for the conversation
+    // Fetch all messages for the conversation with interval
     useEffect(() => {
         const loadMessages = async () => {
             try {
@@ -75,28 +94,32 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
                         timestamp: value.timestamp,
                         isRead: value.isRead,
                     }));
-    
+
                     // Sort messages by timestamp
                     parsedMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-    
-                    setMessages(parsedMessages);
+
+                    // Update messages only if they are different
+                    if (JSON.stringify(parsedMessages) !== JSON.stringify(messages)) {
+                        setMessages(parsedMessages);
+
+                        // Scroll to bottom only if user is near the bottom
+                        if (isNearBottom()) {
+                            scrollToBottom(false); // Instant scroll for new messages
+                        }
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching messages:', error);
             }
         };
-    
-        // Set up polling
-        const interval = setInterval(loadMessages, 3000); // Refresh every 3 seconds
-    
-        // Initial load
+
+        // Initial load and set interval
         loadMessages();
-    
+        const interval = setInterval(loadMessages, 3000); // Refresh every 3 seconds
+
         // Clear interval on component unmount
         return () => clearInterval(interval);
-    }, [conversationID]);
-    
-    
+    }, [conversationID, messages]);
 
     const handleSendMessage = async () => {
         if (newMessage.trim()) {
@@ -124,6 +147,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
 
                     setMessages((prevMessages) => [...prevMessages, newMsg]);
                     setNewMessage('');
+                    scrollToBottom(false); // Instant scroll after sending a message
                 } else {
                     console.error('Invalid response from server:', response);
                 }
@@ -166,6 +190,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
 
                 {/* Messages Display */}
                 <Box
+                    ref={chatContainerRef}
                     style={{
                         flexGrow: 1,
                         padding: '16px',
@@ -196,6 +221,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ conversationID, userName, profileIm
                             </Box>
                         </Box>
                     ))}
+                    <div ref={messagesEndRef} />
                 </Box>
 
                 {/* Input Section */}

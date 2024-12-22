@@ -540,3 +540,30 @@ export const searchUsers = async (query: string) => {
     throw error;
   }
 };
+
+export const createChatroom = async (participantID: string) => {
+  try {
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      throw new Error('Authentication token is missing.');
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = await axios.post(
+      `${baseUrl}/new-chatroom`,
+      { participantID },
+      config
+    );
+
+    return response.data; // Return the response data
+  } catch (error) {
+    console.error('Error creating chatroom:', error);
+    throw error; // Propagate the error
+  }
+};
