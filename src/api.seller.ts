@@ -98,3 +98,61 @@ export const searchProducts = async (query: string) => {
         throw error;
     }
 };
+
+
+// Ambil semua produk pengguna
+export const fetchProducts = async (token: string) => {
+    const response = await axios.get(`${baseUrl}/products`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  };
+  
+  // Ambil detail produk
+  export const viewProduct = async (token: string, uid: string) => {
+    const response = await axios.get(`${baseUrl}/products/view`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: { uid },
+    });
+    return response.data;
+  };
+  
+  // Update produk
+  export const updateProduct = async (
+    token: string,
+    uid: string,
+    updatedFields: {
+      description?: string;
+      photo_url?: string[];
+      price?: string;
+      idCategory?: string;
+      idService?: string;
+    }
+  ) => {
+    const response = await axios.put(
+      `${baseUrl}/products/update`,
+      updatedFields,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: { uid },
+      }
+    );
+    return response.data;
+  };
+  
+  // Hapus produk
+  export const deleteProduct = async (token: string, uid: string) => {
+    const response = await axios.delete(`${baseUrl}/products/delete`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: { uid },
+    });
+    return response.data;
+  };
