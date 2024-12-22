@@ -15,7 +15,7 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from "@mui/lab";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import { useHistory } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
@@ -30,8 +30,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useEffect } from 'react';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage } from '../firebaseConfig'; // Sesuaikan path dengan file konfigurasi Firebase Anda
+import { useParams } from 'react-router-dom';
 
-const profileSeller: React.FC = () => {
+interface ProfileSellerCustProps {
+  id: string; // `id` passed from the route
+}
+
+const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
   const [isChangingRole, setIsChangingRole] = useState(false);
   const [userData, setUserData] = useState<any>(null);
   const [sellerData, setSellerData] = useState<any>(null);
@@ -42,6 +47,7 @@ const profileSeller: React.FC = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
 
+  console.log('Seller ID:', id);
           
   const AboutmetoggleCard = () => {
     setAboutMeIsOpen(prevState => !prevState);
@@ -826,4 +832,4 @@ const profileSeller: React.FC = () => {
   );
 };
 
-export default profileSeller;
+export default ProfileSellerCust;

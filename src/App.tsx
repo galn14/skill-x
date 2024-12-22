@@ -100,6 +100,7 @@ import DetailTransactionProgress from './sellerrrrrr/DetailTransactionProgress';
 import ModalAddMajor from './admin/modalAddMajor';
 import modalUpdateMajor from './admin/modalUpdateMajor';
 import ProfileSeller from './pages/profileSellerCust';
+import ProfileSellerCust from './pages/profileSellerCust';
 
 type RouteParams = {
   id: string;
@@ -248,6 +249,20 @@ const App: React.FC = () => {
                         );
                     }}
                 />
+
+              {/* Route for ProfileSellerCust */}
+              <Route
+                exact
+                path="/profileSellerCust/:id"
+                render={(props) => {
+                  const { id } = props.match.params;
+                  console.log("Dynamic route accessed with ID:", id); // Log the ID from the URL
+                  return <ProfileSellerCust id={id} {...props} />;
+                }}
+              />
+              
+
+
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>

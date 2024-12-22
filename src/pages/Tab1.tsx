@@ -177,8 +177,6 @@ const CategoriesComponent = () => {
       }
     };
 
-    
-
   return (
     <ThemeProvider theme={theme}>
     <CssBaseline />
@@ -266,68 +264,72 @@ const CategoriesComponent = () => {
   </Box>
 
   {/* Dropdown for Search Results */}
-  {!isLoading && searchResults.length > 0 && (
+{!isLoading && searchResults.length > 0 && (
+  <Box
+    sx={{
+      position: "relative",
+      marginTop: "8px",
+      width: "95%",
+      maxWidth: "100%",
+      margin: "0 auto",
+    }}
+  >
     <Box
       sx={{
-        position: "relative",
-        marginTop: "8px",
-        width: "95%",
-        maxWidth: "100%",
-        margin: "0 auto",
+        position: "absolute",
+        zIndex: 999,
+        backgroundColor: "white",
+        borderRadius: "8px",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        width: "100%",
       }}
     >
-      <Box
-        sx={{
-          position: "absolute",
-          zIndex: 999,
-          backgroundColor: "white",
-          borderRadius: "8px",
-          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-          width: "100%",
-        }}
-      >
-        {searchResults.map((result: any, index: number) => (
-          <Button
-            key={index}
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-              textAlign: "left",
-              padding: "10px 15px",
-              borderBottom: "1px solid #f0f0f0",
-              color: "#333",
-              "&:hover": {
-                backgroundColor: "#f9f9f9",
-              },
-            }}
-            onClick={() => {
-              // Navigate to the link for the result
-              if (result.link) {
-                history.push(result.link);
-              } else {
-                console.warn("No link available for this result");
-              }
-            }}
-          >
-            <Box>
-              <Typography variant="body1" fontWeight="bold">
-                {result.name || result.nameProduct}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {result.email || result.description || "No additional info"}
-              </Typography>
-            </Box>
-            {result.price && (
-              <Typography variant="body1" color="primary">
-                ${result.price}
-              </Typography>
-            )}
-          </Button>
-        ))}
-      </Box>
+      {searchResults.map((result: any, index: number) => (
+        <Button
+          key={index}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            textAlign: "left",
+            padding: "10px 15px",
+            borderBottom: "1px solid #f0f0f0",
+            color: "#333",
+            "&:hover": {
+              backgroundColor: "#f9f9f9",
+            },
+          }}
+          onClick={() => {
+      console.log("Result object:", result); // Log the result object
+      if (result.id) {
+        console.log("Navigating to profileSellerCust with ID:", result.id);
+        history.push(`/profileSellerCust/${result.id}`);
+      } else if (result.link) {
+        console.log("Navigating to product link:", result.link);
+        history.push(result.link);
+      } else {
+        console.warn("No link or ID available for this result");
+      }
+    }}
+        >
+          <Box>
+            <Typography variant="body1" fontWeight="bold">
+              {result.name || result.nameProduct}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {result.email || result.description || "No additional info"}
+            </Typography>
+          </Box>
+          {result.price && (
+            <Typography variant="body1" color="primary">
+              ${result.price}
+            </Typography>
+          )}
+        </Button>
+      ))}
     </Box>
-  )}
+  </Box>
+)}
 
   {/* Loading Indicator */}
   {isLoading && (
