@@ -97,6 +97,8 @@ import SearchPage from './pages/search'
 import profileSellerCust from './pages/profileSellerCust';
 
 import DetailTransactionProgress from './sellerrrrrr/DetailTransactionProgress';
+import ModalAddMajor from './admin/modalAddMajor';
+import modalUpdateMajor from './admin/modalUpdateMajor';
 
 type RouteParams = {
   id: string;
@@ -112,8 +114,13 @@ const theme = createTheme({
 const App: React.FC = () => {
   //const { user } = useAuth(); // Contoh auth check
   //const isAdmin = user?.role === 'admin';
-  const routesWithTabs = ['/tab1', '/tab2', '/tab3', '/tab4'];
-  const showTabs = routesWithTabs.includes(location.pathname);
+
+  
+  // Define the routes where tabs should appear
+  const routesWithTabs = ['/tab1', '/tab2', '/tab3', '/tab4', '/ProfileSeller'];
+
+  // Show tabs only on certain paths, and also make sure it's not an admin path
+  const showTabs = routesWithTabs.includes(location.pathname) ;
 
   return (
   <ThemeProvider theme={theme}>
@@ -139,6 +146,8 @@ const App: React.FC = () => {
         <Route path="/subscription"  component={subscription}/>
         <Route path="/reportManagement"  component={reportManagement}/>
         <Route path="/helpAndSupport"  component={helpAndSupport}/>
+        <Route path="/modalAddMajor"  component={ModalAddMajor}/>
+        <Route path="/modalEditMajor"  component={modalUpdateMajor}/>
 
 
           <Route exact path="/login">
@@ -147,6 +156,7 @@ const App: React.FC = () => {
           <Route path="/register">
             <RegisterPage />
           </Route>
+          
           <Route exact path="/tab1">
             <Tab1 />
           </Route>
@@ -172,7 +182,7 @@ const App: React.FC = () => {
           </Route>
 
           {/* Route untuk Detailed Service*/}
-          <Route path="/service/Full Stack Development"> 
+          <Route path="/service/FullStackDevelopment"> 
             <FullstackDevelopment/>
           </Route>
           <Route path="/notification" component={NotificationPage} exact/>

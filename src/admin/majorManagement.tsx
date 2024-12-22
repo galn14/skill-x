@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IonContent, IonPage, IonGrid, IonRow, IonCol, IonButton } from '@ionic/react';
 import { Avatar, AppBar, Toolbar, Box, Card, CardContent, Typography, Button, TextField, IconButton } from '@mui/material';
 import SortIcon from '@mui/icons-material/Sort';
@@ -10,25 +10,79 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // Account Ic
 import SidebarAdmin from './sidebarAdmin';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import { fetchMajors } from '../api.service';
+import { createMajor } from './api.admin';
+import ModalAddMajor from './modalAddMajor';
+import { Route, BrowserRouter } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
+import ModalEditMajor from './modalUpdateMajor';
 
-const majorManagement: React.FC = () => {
-  const [selectedItem, setSelectedItem] = useState<string>('Seller Approval'); // Track selected item
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true); // Track sidebar visibility
 
-  // Contoh data seller
-  const sellers = Array(12).fill({
-    name: 'Aileen Angelica Lee',
-    img: '', // URL gambar jika ada
+const MajorManagement: React.FC = () => {
+  const [selectedItem, setSelectedItem] = useState<string>('Major Management');
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const [majors, setMajors] = useState<any[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setNewMajor({ titleMajor: '', iconUrl: '' }); // Reset form saat modal ditutup
+  };
+  const [selectedMajor, setSelectedMajor] = useState<any | null>(null); // State for selected major to edit
+
+  const [newMajor, setNewMajor] = useState({
+    titleMajor: '',
+    iconUrl: '',
   });
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setMajors((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const history = useHistory();  // Hook untuk navigasi
+  const openAddMajor = () => {
+    history.push('/modalAddMajor');  // Arahkan ke rute modal
+  };
+  const openEditMajorModal = (major: any) => {
+    setSelectedMajor(major); // Set the selected major data
+    history.push(`/modalEditMajor?id=${major.id}`);  // Pindahkan ke rute modal dan bawa data major
+  };
+
+  const closeEditMajorModal = () => {
+    setSelectedMajor(null);
+    setIsModalOpen(false);  // Close the modal
+  };
+  
+  const handleSubmit = async () => {
+    try {
+      const response = await createMajor(newMajor);
+      console.log('Major created successfully:', response);
+      alert('Major created successfully!');
+      setNewMajor({ titleMajor: '', iconUrl: '' }); // Reset form
+    } catch (error) {
+      console.error('Error creating major:', error);
+      alert('Failed to create major.');
+    }
+  };
+
+  useEffect(() => {
+ const loadMajors = async () => {
+          try {
+            const majorsData = await fetchMajors(); // Ambil data dari API
+            setMajors(majorsData); // Simpan di state
+          } catch (error) {
+            console.error('Error fetching majors:', error);
+          }
+        };
+    
+        loadMajors();  }, []);
+  
+  
+  
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen); // Toggle sidebar visibility
   };
-  const majors = [
-    { id: 1, name: 'Entrepreneur Business Creation', icon: '📘' },
-    { id: 2, name: 'Computer Science', icon: '💻' },
-    // Tambahkan data lainnya jika diperlukan
-  ];
 
   return (
     <IonPage>
@@ -36,8 +90,8 @@ const majorManagement: React.FC = () => {
         style={{
           display: 'flex',
           position: 'relative',
-          overflowY: 'scroll', // Make the content scrollable
-          height: 'calc(100vh - 82px)', // Make sure to account for the app bar height
+          overflowY: 'scroll',
+          height: 'calc(100vh - 82px)',
         }}
       >
         <div style={{ display: 'flex', position: 'relative' }}>
@@ -47,14 +101,14 @@ const majorManagement: React.FC = () => {
               style={{
                 width: '250px',
                 backgroundColor: '#E9F3FF',
-                height: '100vh', // Make sidebar full height
+                height: '100vh',
                 padding: '10px',
-                position: 'fixed', // Keep sidebar fixed when scrolling
+                position: 'fixed',
                 top: 0,
                 left: 0,
-                bottom: 0, // Sidebar will stretch to full height
-                zIndex: 100, // Make sure sidebar is above other content
-                overflowY: 'auto', // Make the sidebar scrollable if the content exceeds the viewport height
+                bottom: 0,
+                zIndex: 100,
+                overflowY: 'auto',
               }}
             >
               <SidebarAdmin setSelectedItem={setSelectedItem} />
@@ -71,8 +125,8 @@ const majorManagement: React.FC = () => {
               height: '82px',
               paddingTop: '25px',
               transition: 'all 0.3s ease',
-              width: sidebarOpen ? 'calc(100% - 275px)' : '100%', // Lebar dinamis
-              marginLeft: sidebarOpen ? '250px' : '0', // Sesuai sidebar
+              width: sidebarOpen ? 'calc(100% - 275px)' : '100%',
+              marginLeft: sidebarOpen ? '250px' : '0',
               zIndex: 110,
             }}
           >
@@ -106,24 +160,23 @@ const majorManagement: React.FC = () => {
             </Toolbar>
           </AppBar>
 
-          {/* Main Content (using IonContent) */}
+          {/* Main Content */}
           <IonGrid
             style={{
               flex: 1,
               padding: '20px',
-              marginLeft: sidebarOpen ? '300px' : '50px', // Shift content based on sidebar visibility
-              transition: 'margin-left 0.3s ease', // Smooth transition for content shift
-              marginTop: '82px', // Offset the content below the AppBar
+              marginLeft: sidebarOpen ? '300px' : '50px',
+              transition: 'margin-left 0.3s ease',
+              marginTop: '82px',
             }}
           >
-            {/* Header */}
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 mb: 2,
-                flexDirection: { xs: 'column', sm: 'row' }, // Responsive layout
+                flexDirection: { xs: 'column', sm: 'row' },
                 gap: 2,
               }}
             >
@@ -131,7 +184,7 @@ const majorManagement: React.FC = () => {
                 Major Management
               </Typography>
 
-              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}> {/* Wrap for smaller screens */}
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Button variant="outlined" startIcon={<SortIcon />}>
                   Sort
                 </Button>
@@ -140,7 +193,6 @@ const majorManagement: React.FC = () => {
             </Box>
 
             <Box sx={{ p: 3, border: '1px solid #bdbdbd', borderRadius: 4, bgcolor: '#ffffff', minHeight: '100vh' }}>
-              {/* Major Management Section */}
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 {/* Add New Button */}
                 <Box sx={{ alignSelf: 'start' }}>
@@ -148,29 +200,47 @@ const majorManagement: React.FC = () => {
                     variant="contained"
                     startIcon={<AddIcon />}
                     sx={{ bgcolor: '#1976d2', '&:hover': { bgcolor: '#1565c0' } }}
+                    onClick={openAddMajor}
                   >
                     Add New
                   </Button>
+                  <Route path="/ModalAddMajor" component={ModalAddMajor}/>
+
                 </Box>
+                
+                
+               
 
                 {/* Major Cards */}
+                
                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 2 }}>
-                  {majors.map((major) => (
-                    <Card key={major.id} sx={{ display: 'flex', alignItems: 'center', p: 2, bgcolor: '#ffffff', boxShadow: 1 }}>
-                      <Avatar sx={{ mr: 2, width: 64, height: 64, fontSize: 32, bgcolor: 'transparent' }}>
-                        {major.icon}
-                      </Avatar>
-                      <CardContent sx={{ flexGrow: 1 }}>
-                        <Typography variant="body1" fontWeight="bold">
-                          {major.name}
-                        </Typography>
-                      </CardContent>
-                      <IconButton color="primary">
-                        <EditIcon />
-                      </IconButton>
-                    </Card>
-                  ))}
-                </Box>
+  {majors.length > 0 ? (
+    majors.map((major) => (
+      < Card key={major.index} sx={{ display: 'flex', alignItems: 'center', p: 2, boxShadow: 2 }}>
+  <Avatar 
+    sx={{ mr: 2, width: 64, height: 64 }} 
+    src={major.icon || 'default-icon.png'} 
+    alt={major.name}
+  />
+  <CardContent sx={{ flexGrow: 1 }}>
+    <Typography variant="body1" fontWeight="bold">
+      {major.titleMajor || 'No Name'}
+    </Typography>
+  </CardContent>
+  <IconButton color="primary"  onClick={() => openEditMajorModal(major)}>
+    <EditIcon />
+  </IconButton>
+</Card>
+
+    ))
+  ) : (
+    <Typography>No majors available</Typography>
+  )}
+</Box>
+
+
+                          
+                
               </Box>
             </Box>
           </IonGrid>
@@ -180,4 +250,4 @@ const majorManagement: React.FC = () => {
   );
 };
 
-export default majorManagement;
+export default MajorManagement;
