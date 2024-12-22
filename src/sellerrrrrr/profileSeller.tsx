@@ -28,7 +28,6 @@ import EditPortoModal from './EditPortoModal';
 
 import AddPortoModal from './AddPortoModal';
 import { getUserAndSellerData, changeUserRole, getUserPortfolios, addPortfolio, editPortfolio, deletePortfolio  } from '../api.service';
-import { searchProducts } from '../api.seller';
 import AddProduct from './AddProduct';
 import AddSkill from './AddSkill';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -49,8 +48,8 @@ const profileSeller: React.FC = () => {
   const [portfolios, setPortfolios] = useState<any[]>([]); // Pastikan ini array kosong
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
-  const [products, setProducts] = useState<any[]>([]);
 
+          
   const AboutmetoggleCard = () => {
     setAboutMeIsOpen(prevState => !prevState);
   };
@@ -279,6 +278,30 @@ const profileSeller: React.FC = () => {
       tools: "React | Oktober 2024",
     },
   ];
+
+  const products = [
+    {
+      id: 1,
+      title: "PACKAGE PHOTO PRODUCTS - 100 PHOTOS",
+      price: "Rp500.000",
+      author: "AileenLiexiuxai",
+      certified: true,
+    },
+    {
+      id: 2,
+      title: "PACKAGE PHOTO PRODUCTS - 100 PHOTOS",
+      price: "Rp500.000",
+      author: "AileenLiexiuxai",
+      certified: true,
+    },
+    {
+      id: 3,
+      title: "PACKAGE PHOTO PRODUCTS - 100 PHOTOS",
+      price: "Rp500.000",
+      author: "AileenLiexiuxai",
+      certified: true,
+    },
+  ];
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
 
   const handleMessageButtonClick = () => {
@@ -463,26 +486,6 @@ const profileSeller: React.FC = () => {
       alert(`Failed to delete the profile image: ${error.message}`);
     }
   };
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-        try {
-            const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-            const userName = userInfo.name; // Ambil nama pengguna dari localStorage
-            if (!userName) throw new Error('User name is missing from localStorage.');
-
-            const data = await searchProducts(userName);
-            setProducts(data || []); // Set state produk dengan hasil pencarian
-        } catch (error) {
-            console.error('Error fetching products:', error);
-            alert('Failed to fetch products.');
-            setProducts([]); // Set array kosong jika terjadi error
-        }
-    };
-
-    fetchProducts();
-}, []);
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -872,63 +875,101 @@ const profileSeller: React.FC = () => {
       )}
     </IonCard>
 
-    <IonCard style={{ padding: '15px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', cursor: 'pointer' }}>
-    <IonCardTitle>
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+    <IonCard style={{ padding:'15px',
+          boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', cursor: 'pointer'
+        }}>
+        <IonCardTitle>
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             Products
-        </Typography>
-    </IonCardTitle>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Grid container spacing={2}>
-            {products.length > 0 ? (
-                products.map((product) => (
-                    <Grid item xs={6} key={product.id}>
-                        <Card sx={{ height: '100%', padding: '10px' }}>
-                            <Box
-                                sx={{
-                                    width: '100%',
-                                    height: '150px',
-                                    backgroundColor: '#e0e0e0',
-                                    backgroundImage: `url(${product.photo_url[0]})`, // Pastikan field sesuai dengan API
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                }}
-                            />
-                            <CardContent>
-                                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontSize: '0.89rem' }}>
-                                    {product.nameProduct} {/* Pastikan field sesuai dengan API */}
-                                </Typography>
-                                <Typography variant="body1" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
-                                    {product.price}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))
-            ) : (
-                <Typography>No products available. Add one to get started!</Typography>
-            )}
-        </Grid>
-    </Box>
-    <div>
+          </Typography>
+        </IonCardTitle>
+        
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  <Grid container spacing={2}>
+    {products.map((product) => (
+      <Grid item xs={6} key={product.id}> {/* Selalu dua kolom */}
+        <Card sx={{ height: "100%", padding: '10px' }}>
+          <Box sx={{ position: 'relative' }}>
+            
+           
+
+            <Box
+              sx={{
+                width: "100%",
+                height: "150px",
+                backgroundColor: "#e0e0e0",
+              }}
+            />
+          </Box>
+          
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', padding: 2 }}>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "bold", fontSize: '1rem', marginBottom: 0.5, color: 'text.primary' }}
+            >
+              {product.title}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ fontSize: '0.875rem', marginBottom: 1 }}
+            >
+              {product.price}
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              {/* Edit Icon */}
+              <IconButton
+                onClick={() => history.push(`/EditProductModal`)}
+                sx={{
+                  backgroundColor: 'transparent',
+                  '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.1)' },
+                  padding: 1,
+                }}
+                size="small"
+              >
+                <EditIcon sx={{ fontSize: 20, color: 'primary.main' }} />
+              </IconButton>
+
+              {/* Delete Icon */}
+              <IconButton
+          //      onClick={() => handleDeleteProduct(product.id)} // Handle delete product
+                sx={{
+                  backgroundColor: 'transparent',
+                  '&:hover': { backgroundColor: 'rgba(7, 14, 133, 0.1)' },
+                  padding: 1,
+                }}
+                size="small"
+              >
+                <DeleteIcon sx={{ fontSize: 20 }} />
+              </IconButton>
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+    ))}
+  </Grid>
+</Box>
+
+       <div>
         <IconButton
-            onClick={openAddProduct}
-            sx={{
+              onClick={ openAddProduct}
+              sx={{
                 position: 'absolute',
                 bottom: '10px',
                 right: '10px',
-                backgroundColor: '#ff4081',
+                backgroundColor: '#ff4081', // Customize the button color
                 color: 'white',
                 '&:hover': {
-                    backgroundColor: '#e33575',
+                  backgroundColor: '#e33575', // Hover effect
                 },
-            }}
-        >
-            <AddIcon />
-            <Route path="/AddProduct" component={AddProduct} />
-        </IconButton>
-    </div>
-</IonCard>
+              }}
+            >
+              <AddIcon />
+              <Route path="/AddProduct" component={AddProduct}/>
+
+            </IconButton>
+            </div>
+      </IonCard>
         </div>
         <Button
           variant="contained"
