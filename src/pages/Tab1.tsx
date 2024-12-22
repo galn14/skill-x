@@ -238,78 +238,113 @@ const CategoriesComponent = () => {
             </Typography>
           </Box>
 
-          {/* Search Bar */}
+
           <Box sx={{ padding: "16px" }}>
-      {/* Search Bar */}
+  {/* Search Bar */}
+  <Box
+    display="flex"
+    alignItems="center"
+    sx={{
+      backgroundColor: "white",
+      borderRadius: "10px",
+      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+      padding: "5px 10px",
+      width: "95%",
+      maxWidth: "100%",
+      margin: "5px auto",
+    }}
+  >
+    <SearchIcon sx={{ color: "#007bff", marginRight: "10px" }} />
+    <InputBase
+      placeholder="Search for users or products"
+      sx={{ flex: 1, color: "#333" }}
+      inputProps={{ "aria-label": "search for users or products" }}
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      onKeyPress={(e) => e.key === "Enter" && handleSearch()} // Trigger on Enter
+    />
+  </Box>
+
+  {/* Dropdown for Search Results */}
+  {!isLoading && searchResults.length > 0 && (
+    <Box
+      sx={{
+        position: "relative",
+        marginTop: "8px",
+        width: "95%",
+        maxWidth: "100%",
+        margin: "0 auto",
+      }}
+    >
       <Box
-        display="flex"
-        alignItems="center"
         sx={{
+          position: "absolute",
+          zIndex: 999,
           backgroundColor: "white",
-          borderRadius: "10px",
-          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-          padding: "5px 10px",
-          width: "95%",
-          maxWidth: "100%",
-          margin: "5px auto",
+          borderRadius: "8px",
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+          width: "100%",
         }}
       >
-        <SearchIcon sx={{ color: "#007bff", marginRight: "10px" }} />
-        <InputBase
-          placeholder="Search for users or products"
-          sx={{ flex: 1, color: "#333" }}
-          inputProps={{ "aria-label": "search for users or products" }}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && handleSearch()} // Trigger on Enter
-        />
-      </Box>
-
-      {/* Loading Indicator */}
-      {isLoading && (
-        <Typography sx={{ textAlign: "center", marginTop: "10px" }}>
-          <CircularProgress size={24} />
-          Loading...
-        </Typography>
-      )}
-
-      {/* Search Results */}
-      {!isLoading && searchResults && searchResults.length > 0 ? (
-        <Box sx={{ marginTop: "10px", padding: "10px" }}>
-          {searchResults.map((result: any, index: number) => (
-            <Box
-              key={index}
-              sx={{
-                border: "1px solid #ddd",
-                borderRadius: "10px",
-                padding: "10px",
-                marginBottom: "10px",
-                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              {/* User or Product Details */}
-              <Typography variant="h6">
+        {searchResults.map((result: any, index: number) => (
+          <Button
+            key={index}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              textAlign: "left",
+              padding: "10px 15px",
+              borderBottom: "1px solid #f0f0f0",
+              color: "#333",
+              "&:hover": {
+                backgroundColor: "#f9f9f9",
+              },
+            }}
+            onClick={() => {
+              // Navigate to the link for the result
+              if (result.link) {
+                history.push(result.link);
+              } else {
+                console.warn("No link available for this result");
+              }
+            }}
+          >
+            <Box>
+              <Typography variant="body1" fontWeight="bold">
                 {result.name || result.nameProduct}
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 {result.email || result.description || "No additional info"}
               </Typography>
-              {result.price && (
-                <Typography variant="body1" color="primary">
-                  Price: {result.price}
-                </Typography>
-              )}
             </Box>
-          ))}
-        </Box>
-      ) : (
-        !isLoading && (
-          <Typography sx={{ textAlign: "center", marginTop: "10px" }}>
-            No results found
-          </Typography>
-        )
-      )}
+            {result.price && (
+              <Typography variant="body1" color="primary">
+                ${result.price}
+              </Typography>
+            )}
+          </Button>
+        ))}
+      </Box>
     </Box>
+  )}
+
+  {/* Loading Indicator */}
+  {isLoading && (
+    <Typography sx={{ textAlign: "center", marginTop: "10px" }}>
+      <CircularProgress size={24} />
+      Loading...
+    </Typography>
+  )}
+
+  {/* No Results Message */}
+  {!isLoading && searchResults.length === 0 && searchQuery.trim() && (
+    <Typography sx={{ textAlign: "center", marginTop: "10px", color: "#666" }}>
+      No results found
+    </Typography>
+  )}
+</Box>
+
           {/* Categories */}
 <Box
   sx={{
