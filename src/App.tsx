@@ -45,7 +45,7 @@ import Categories from './pages/category/categories';
 import WebsiteDevelopment from './pages/services/websiteDevelopment';
 
 // ROUTE UNTUK DETAILED SERVICE
-import FullstackDevelopment from './pages/detail_services/websiteDevelopment/fullstackDevelopment';
+import DetailProduct from './pages/detail_services/detail_product';
 
 import ChatRoom from './pages/chatRoom';
 
@@ -182,8 +182,8 @@ const App: React.FC = () => {
           </Route>
 
           {/* Route untuk Detailed Service*/}
-          <Route path="/service/FullStackDevelopment"> 
-            <FullstackDevelopment/>
+          <Route path="/service/detail-product"> 
+            <DetailProduct/>
           </Route>
           <Route path="/notification" component={NotificationPage} exact/>
 
