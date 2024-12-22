@@ -25,7 +25,7 @@ import '@fontsource/poppins';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 
-const FullstackDevelopment: React.FC = () => {
+const detail_product: React.FC = () => {
   const [isFavorited, setIsFavorited] = useState(false);
   const { state } = useLocation<any>();
   const { product } = state || {};
@@ -498,4 +498,4 @@ const FullstackDevelopment: React.FC = () => {
   );
 };
 
-export default FullstackDevelopment;
+export default detail_product;
