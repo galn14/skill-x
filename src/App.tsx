@@ -117,7 +117,7 @@ const App: React.FC = () => {
 
   
   // Define the routes where tabs should appear
-  const routesWithTabs = ['/tab1', '/tab2', '/tab3', '/tab4', '/ProfileSeller'];
+  const routesWithTabs = ['/tab1', '/tab2', '/tab3', '/tab4', '/profileSeller'];
 
   // Show tabs only on certain paths, and also make sure it's not an admin path
   const showTabs = routesWithTabs.includes(location.pathname) ;

@@ -318,13 +318,7 @@ const profileSeller: React.FC = () => {
     "Problem Solving",
     "Web Development",
     "Data Science",
-    "Machine Learning",
-    "Mobile Development",
-    "AI Research",
-    "Cybersecurity",
-    "Cloud Computing",
-    "Game Development",
-    "UI/UX Design"
+    
   ];
 
   const [skills, setSkills] = useState(initialSkills);
@@ -344,7 +338,7 @@ const profileSeller: React.FC = () => {
 
   // Fungsi untuk menambah skill baru
   const handleAddSkill = () => {
-    if (skills.length < 12) {
+    if (skills.length < 5) {
       // Navigate to the AddSkill page if there are less than 12 skills
       history.push('/AddSkill'); // Navigate to the AddSkill page
     } else {
@@ -673,65 +667,56 @@ const profileSeller: React.FC = () => {
   </IonCardContent>
 </IonCard>
 
-<IonCard style={{ cursor: "pointer" }}>
-      {/* Header Card */}
-      <IonCardHeader>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          {/* Judul Card */}
-          <IonCardTitle>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Skills
-            </Typography>
-          </IonCardTitle>
+<IonCard style={{ cursor: "pointer", boxShadow: "none", border: "none" }}>
+  {/* Header Card */}
+  <IonCardHeader>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      {/* Judul Card */}
+      <IonCardTitle>
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          Skills
+        </Typography>
+      </IonCardTitle>
 
-          {/* Box containing Add Icon, Edit Icon, and Arrow */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
-            <div>
-              {/* Add Icon */}
-              <IconButton onClick={handleAddSkill} sx={{ marginLeft: '1px' }} size="small">
-                <AddIcon />
-              </IconButton>
+      {/* Box containing Add Icon and Edit Icon */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
+        <div>
+          {/* Add Icon */}
+          <IconButton onClick={handleAddSkill} sx={{ marginLeft: '1px' }} size="small">
+            <AddIcon />
+          </IconButton>
 
-              {/* Edit Icon */}
-              <IconButton onClick={() => alert("Edit skill functionality")} sx={{ marginLeft: "1px" }} size="small">
-                <EditIcon />
-              </IconButton>
+          {/* Edit Icon */}
+          <IconButton onClick={() => alert("Edit skill functionality")} sx={{ marginLeft: "1px" }} size="small">
+            <EditIcon />
+          </IconButton>
+        </div>
+      </Box>
+    </Box>
+  </IonCardHeader>
 
-              {/* Arrow Icon based on state */}
-              {isSkillOpen ? (
-                <ArrowDropUpIcon sx={{ color: "gray" }} onClick={SkilltoggleCard} />
-              ) : (
-                <ArrowDropDownIcon sx={{ color: "gray" }} onClick={SkilltoggleCard} />
-              )}
-            </div>
-          </Box>
-        </Box>
-      </IonCardHeader>
-
-      {/* Konten Card (Hanya tampil jika isOpen true) */}
-      {isSkillOpen && (
-        <IonCardContent>
-          <Box>
-            {/* Chips Konten dengan tombol Hapus */}
-            {skills.map((skill, index) => (
-              <Chip
-                key={index}
-                label={skill}
-                onDelete={() => handleDeleteSkill(skill)}
-                style={{ marginRight: "8px", marginBottom: "8px" }}
-                deleteIcon={<CloseIcon />}
-              />
-            ))}
-          </Box>
-        </IonCardContent>
-      )}
-    </IonCard>
+  {/* Konten Card */}
+  <IonCardContent>
+    <Box>
+      {/* Chips Konten dengan tombol Hapus */}
+      {skills.map((skill, index) => (
+        <Chip
+          key={index}
+          label={skill}
+          onDelete={() => handleDeleteSkill(skill)}
+          style={{ marginRight: "8px", marginBottom: "8px" }}
+          deleteIcon={<CloseIcon />}
+        />
+      ))}
+    </Box>
+  </IonCardContent>
+</IonCard>
 
 
    
@@ -784,7 +769,7 @@ const profileSeller: React.FC = () => {
       {/* Content (Hanya muncul jika isOpen true) */}
       {isPortoOpen && (
   <IonCardContent>
-    <Timeline sx={{ marginLeft: "-150px" }}>
+    <Timeline sx={{ marginLeft: "-250px" }}>
       {portfolios && portfolios.length > 0 ? (
         portfolios.map((portfolio, index) => (
           <TimelineItem key={portfolio.id} sx={{ marginLeft: "-20px" }}>
