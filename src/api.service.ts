@@ -515,3 +515,28 @@ export const searchProducts = async (query: string) => {
     throw error;
   }
 };
+export const searchUsers = async (query: string) => {
+  const token = localStorage.getItem('userToken'); // Get the token from localStorage
+  if (!token) {
+    throw new Error('No token found');
+  }
+
+  try {
+    const response = await fetch(`http://localhost:8080/user-search?query=${query}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error searching users:', error);
+    throw error;
+  }
+};
