@@ -515,3 +515,28 @@ export const searchProducts = async (query: string) => {
     throw error;
   }
 };
+
+// Fungsi untuk mencari produk
+export const searchUser = async (query: string) => {
+
+  const token = localStorage.getItem('userToken'); // Get the token from localStorage
+  if (!token) {
+    throw new Error('No token found');
+  }
+  
+  try {
+    const response = await axios.get(`${baseUrl}/user-search`,
+    {
+      params: { query },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+  },
+}
+);
+    return response.data; // Mengembalikan hasil pencarian
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    throw error;
+  }
+};
