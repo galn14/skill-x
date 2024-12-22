@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -22,29 +22,47 @@ import PersonIcon from '@mui/icons-material/Person';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { IonPage, IonContent } from '@ionic/react';
 import '@fontsource/poppins';
-import { useLocation } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+import { getUserAndSellerData, searchProducts } from '../../api.service';
 
-const detail_product: React.FC = () => {
+const DetailProduct: React.FC = () => {
+  const { username, productName } = useParams<{ username: string; productName: string }>();
   const [isFavorited, setIsFavorited] = useState(false);
-  const { state } = useLocation<any>();
-  const { product } = state || {};
+  const [productData, setProductData] = useState<any>(null);
+  const [sellerData, setSellerData] = useState<any>(null);
   const history = useHistory();
-  const handleBack = () => history.goBack();
-  const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
+  const isLoggedIn = !!localStorage.getItem('userToken');
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
 
-  const productData = product || {
-    image: 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
-    name: 'Full Stack Development',
-    priceRange: 'Rp. 1.000.000 - Rp. 1.500.000',
-    sold: 10,
-    rating: 4.5,
-    totalRatings: 20,
-  };
+  const handleBack = () => history.goBack();
 
   const handleFavoriteToggle = () => {
     setIsFavorited(!isFavorited);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userToken = localStorage.getItem('userToken');
+        if (!userToken) {
+          history.push('/login');
+          return;
+        }
+
+        const sellerInfo = await getUserAndSellerData(userToken);
+        const productsResponse = await searchProducts(username);
+        const products = Array.isArray(productsResponse) ? productsResponse : productsResponse.data || [];
+        const selectedProduct = products.find((product: any) => product.nameProduct === productName);
+
+        setSellerData(sellerInfo.registerSeller || {});
+        setProductData(selectedProduct || {});
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [username, productName, history]);
 
   const theme = createTheme({
     typography: {
@@ -52,25 +70,12 @@ const detail_product: React.FC = () => {
     },
   });
 
-
-  const [userInfo, setUserInfo] = React.useState(() => {
-    return JSON.parse(localStorage.getItem('userInfo') || '{}');
-  });
-
   const handleMessageButtonClick = () => {
-    if (isLoggedIn) {
-      history.push('/messages'); // Redirect ke halaman message
-    } else {
-      history.push('/login'); // Redirect ke halaman login
-    }
+    isLoggedIn ? history.push('/messages') : history.push('/login');
   };
 
   const handleCartButtonClick = () => {
-    if (isLoggedIn) {
-      history.push('/cart'); // Redirect ke halaman message
-    } else {
-      history.push('/login'); // Redirect ke halaman login
-    }
+    isLoggedIn ? history.push('/cart') : history.push('/login');
   };
 
   return (
@@ -89,9 +94,9 @@ const detail_product: React.FC = () => {
         >
           <Toolbar style={{ height: '100%', alignItems: 'flex-end', paddingBottom: '10px' }}>
             <Box display="flex" alignItems="center" sx={{ width: '100%' }}>
-            <IconButton onClick={handleBack} color="primary">
-                            <ArrowBackIcon />
-                        </IconButton>
+              <IconButton onClick={handleBack} color="primary">
+                <ArrowBackIcon />
+              </IconButton>
               <img
                 src="../public/SkillXLogo.png"
                 alt="SkillEx Logo"
@@ -125,8 +130,8 @@ const detail_product: React.FC = () => {
             {/* Fullscreen Image */}
             <Box
               component="img"
-              src={productData.image}
-              alt={productData.name}
+              src={productData?.photo_url?.[0] || 'https://via.placeholder.com/150'}
+              alt={productData?.nameProduct || 'Product Image'}
               sx={{
                 width: '100%',
                 height: '70vw',
@@ -148,7 +153,7 @@ const detail_product: React.FC = () => {
                 borderBottom: '1px solid black',
               }}
             >
-              {productData.priceRange}
+              {productData?.price || 'Price not available'}
             </Typography>
 
             {/* Title, Favorite Icon, Sold, and Rating */}
@@ -176,7 +181,7 @@ const detail_product: React.FC = () => {
                     fontSize: '20px',
                   }}
                 >
-                  {productData.name}
+                  {productData?.nameProduct || 'Unknown Product'}
                 </Typography>
 
                 {/* Favorite Icon */}
@@ -199,7 +204,7 @@ const detail_product: React.FC = () => {
                 }}
               >
                 <Typography variant="body2" sx={{ fontSize: '14px', color: 'gray' }}>
-                  Sold: {productData.sold}
+                  Sold: {productData?.sold || 'N/A'}
                 </Typography>
                 <Box
                   sx={{
@@ -216,22 +221,12 @@ const detail_product: React.FC = () => {
                   >
                     ★
                   </Typography>
-                  <Typography variant="body2" sx={{ fontSize: '14px', color: '#333' }}>
-                    {productData.rating} ({productData.totalRatings})
+                  <Typography variant="body2">
+                    {productData?.rating || 'N/A'} ({productData?.totalRatings || '0'})
                   </Typography>
                 </Box>
               </Box>
             </Box>
-
-            {/* Border */}
-            <Box
-              sx={{
-                width: '100%',
-                height: '1px',
-                backgroundColor: 'black',
-                marginY: '16px',
-              }}
-            />
 
             {/* Additional Info */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
@@ -261,16 +256,7 @@ const detail_product: React.FC = () => {
               </Typography>
             </Box>
 
-            {/* Border */}
-            <Box
-              sx={{
-                width: '100%',
-                height: '1px',
-                backgroundColor: 'black',
-                marginY: '16px',
-              }}
-            />
-
+            {/* Profile Info */}
             <Grid
               container
               spacing={3}
@@ -280,222 +266,34 @@ const detail_product: React.FC = () => {
                 alignItems: 'center',
               }}
             >
-              {/* Avatar Section */}
-              <Grid
-                item
-                xs="auto"
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: '16px', // Margin kiri untuk keselarasan
-                }}
-              >
+              <Grid item xs="auto">
                 <Box
                   component="img"
-                  src="https://via.placeholder.com/80" // Placeholder untuk gambar profil
+                  src={userInfo?.photoURL || 'https://via.placeholder.com/80'}
                   alt="Profile Picture"
                   sx={{
                     width: '80px',
                     height: '80px',
-                    borderRadius: '50%', // Membuat gambar bulat
+                    borderRadius: '50%',
                     objectFit: 'cover',
                   }}
                 />
               </Grid>
 
-              {/* Profil Informasi */}
-              <Grid
-                item
-                xs
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  textAlign: 'left',
-                  marginLeft: '16px', // Memberi ruang dari avatar
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontWeight: 'bold',
-                    marginBottom: '2px',
-                    fontSize: { xs: '12px', sm: '14px', md: '16px' }, // Responsif berdasarkan layar
-                  }}
-                >
-                  {userInfo.name || 'Nama Pengguna'}
+              <Grid item xs>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', marginBottom: '2px' }}>
+                  {userInfo?.name || 'User Name'}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
-                  sx={{
-                    marginBottom: '6px',
-                    fontSize: { xs: '11px', sm: '13px', md: '14px' }, // Responsif berdasarkan layar
-                  }}
-                >
-                  {userInfo.organization || 'Universitas'} | {userInfo.major || 'Major'}
+                <Typography variant="body2" color="textSecondary">
+                  {userInfo?.organization || 'Organization'} | {userInfo?.major || 'Major'}
                 </Typography>
-
-                {/* Negara dan Informasi Tambahan */}
-                <Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
-                    <LanguageIcon fontSize="small" sx={{ marginRight: 0.5 }} />
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      sx={{
-                        fontSize: { xs: '11px', sm: '12px', md: '14px' }, // Responsif berdasarkan layar
-                      }}
-                    >
-                      {userInfo.language || 'Indonesia'}
-                    </Typography>
-                  </Box>
-
-                  {/* Informasi Tambahan */}
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    sx={{
-                      fontSize: { xs: '11px', sm: '12px', md: '14px' }, // Responsif berdasarkan layar
-                    }}
-                  >
-                    Rating: {userInfo.rating || '4.8'} | Products: {userInfo.products || '12'} | Total Orders:{' '}
-                    {userInfo.orders || '150'}
-                  </Typography>
-                </Box>
-              </Grid>
-
-              {/* Tombol Follow dan Message */}
-              <Grid
-                item
-                xs="auto"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginRight: '16px', // Memberi ruang di kanan
-                  height: '80px', // Menyesuaikan tinggi keseluruhan
-                }}
-              >
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    width: '80px',
-                    maxWidth: '100px',
-                    borderRadius: '10px',
-                    textTransform: 'none',
-                    fontSize: { xs: '10px', sm: '12px', md: '14px' }, // Responsif berdasarkan layar
-                    marginBottom: '10px',
-                    backgroundColor: '#FF4081', // Warna background kustom
-                    color: '#FFFFFF', // Warna teks (putih agar kontras)
-                    '&:hover': {
-                      backgroundColor: '#E73370', // Warna saat tombol di-hover
-                    },
-                  }}
-                >
-                  Follow
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  sx={{
-                    width: '80px',
-                    maxWidth: '100px',
-                    borderRadius: '10px',
-                    textTransform: 'none',
-                    fontSize: { xs: '10px', sm: '12px', md: '14px' }, // Responsif berdasarkan layar
-                    backgroundColor: '#43A047', // Warna border untuk tombol outlined
-                    color: '#FFFFFF', // Warna teks
-                    '&:hover': {
-                      borderColor: '#388E3C', // Warna border saat di-hover
-                      color: '#388E3C', // Warna teks saat di-hover
-                    },
-                  }}
-                >
-                  Message
-                </Button>
               </Grid>
             </Grid>
           </Box>
-
-          <AppBar
-            position="fixed"
-            sx={{
-              top: 'auto',
-              bottom: 0,
-              backgroundColor: 'white',
-              boxShadow: '0px -1px 5px rgba(0,0,0,0.1)', // Bayangan di bagian atas untuk transisi
-              height: '80px',
-              zIndex: 1300, // Pastikan AppBar berada di atas konten lain
-            }}
-          >
-            <Toolbar
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                paddingX: '16px',
-              }}
-            >
-              {/* Tombol Buy Now */}
-              <Button
-                variant="contained"
-                size="large"
-                sx={{
-                  width: '50%',
-                  marginRight: '20px',
-                  borderRadius: '10px',
-                  backgroundColor: '#43A047',
-                  color: 'white',
-                  textTransform: 'none',
-                  fontWeight: 'bold',
-                  fontSize: { xs: '14px', sm: '16px' }, // Responsif untuk layar kecil
-                  '&:hover': {
-                    backgroundColor: '#388E3C', // Warna hover
-                  },
-                }}
-              >
-                Buy Now
-              </Button>
-
-              {/* Tombol Add to Cart */}
-              <Button
-                variant="contained"
-                size="large"
-                sx={{
-                  width: '50%',
-                  backgroundColor: '#0094FF',
-                  borderRadius: '10px',
-                  color: 'white',
-                  textTransform: 'none',
-                  fontWeight: 'bold',
-                  fontSize: { xs: '14px', sm: '16px' }, // Responsif untuk layar kecil
-                  '&:hover': {
-                    backgroundColor: '#0077CC', // Warna hover
-                  },
-                }}
-              >
-                Add to Cart
-              </Button>
-            </Toolbar>
-          </AppBar>
-
-          {/* Konten Utama */}
-          <Box
-            sx={{
-              paddingBottom: '80px', // Memberikan ruang di bawah agar tidak tertutup AppBar
-              overflowY: 'auto', // Pastikan konten bisa discroll
-            }}
-          >
-            {/* Konten lainnya */}
-          </Box>
-
         </IonContent>
       </IonPage>
     </ThemeProvider>
   );
 };
 
-export default detail_product;
+export default DetailProduct;

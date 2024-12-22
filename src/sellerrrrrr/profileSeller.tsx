@@ -873,6 +873,7 @@ const profileSeller: React.FC = () => {
                 <Grid item xs={6} key={product.id}>
                     <Card sx={{ height: '100%', padding: '10px' }}>
                         <Box
+                          onClick={() => history.push(`/${sellerData?.name}/${product.nameProduct}`)}
                             sx={{
                                 width: '100%',
                                 height: '150px',

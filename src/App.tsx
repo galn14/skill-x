@@ -99,6 +99,7 @@ import profileSellerCust from './pages/profileSellerCust';
 import DetailTransactionProgress from './sellerrrrrr/DetailTransactionProgress';
 import ModalAddMajor from './admin/modalAddMajor';
 import modalUpdateMajor from './admin/modalUpdateMajor';
+import ProfileSeller from './pages/profileSellerCust';
 
 type RouteParams = {
   id: string;
@@ -180,6 +181,10 @@ const App: React.FC = () => {
           <Route path="/service/website-development"> 
             <WebsiteDevelopment/>
           </Route>
+
+          <Route path="/:username/:productName" component={DetailProduct} />
+        <Route path="/profile-seller" component={ProfileSeller} />
+        {/* Tambahkan route lain di sini */}
 
           {/* Route untuk Detailed Service*/}
           <Route path="/service/detail-product"> 
