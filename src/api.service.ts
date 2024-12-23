@@ -413,6 +413,7 @@ export const getUserAndSellerData = async (userToken: string) => {
   }
 };
 
+
 export const changeUserRole = async (userToken: string, role: string) => {
   try {
     const response = await axios.post(

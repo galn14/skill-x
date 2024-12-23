@@ -156,3 +156,58 @@ export const fetchProducts = async (token: string) => {
     });
     return response.data;
   };
+
+
+  // Update about me
+  export const updateAboutMe = async (aboutMe: string): Promise<void> => {
+    try {
+        // Get the authentication token from localStorage
+        const token = localStorage.getItem('userToken');
+        if (!token) throw new Error('Authentication token is missing.');
+
+        // Configure headers with the Bearer token
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        // Request body containing the new "about_me"
+        const body = {
+            about_me: aboutMe,
+        };
+
+        // Make the PUT request to update "about_me"
+        await axios.put(`${baseUrl}/update-aboutme`, body, config);
+
+        console.log('About Me updated successfully.');
+    } catch (error) {
+        console.error('Error updating About Me:', error);
+        throw error;
+    }
+};
+
+// Fetch user and seller data by ID
+export const fetchUserAndSellerDataByID = async (id: string) => {
+  try {
+    const token = localStorage.getItem('userToken');
+    if (!token) throw new Error('Authentication token is missing.');
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response = await axios.get(`${baseUrl}/user-seller-data`, {
+      ...config,
+      params: { id }, // Pass `id` as a query parameter
+    });
+
+    return response.data; // Return the combined user and seller data
+  } catch (error) {
+    console.error('Error fetching user and seller data by ID:', error);
+    throw error;
+  }
+};

@@ -6,17 +6,14 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonCardSubtitle,
 } from '@ionic/react';
 import {   Button,  Toolbar, AppBar, IconButton, Box, Typography, Card, CardContent, Grid, Avatar, Chip, Icon } from '@mui/material';
-import { notificationsOutline } from 'ionicons/icons';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from "@mui/lab";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useHistory } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -24,14 +21,11 @@ import MailIcon from '@mui/icons-material/Mail';
 import EditProfileModal from './EditProfileModal'; // import modal yang baru dibuat
 import { Route, BrowserRouter } from "react-router-dom";
 import EditAboutMe from './EditAboutMe';
-import EditPortoModal from './EditPortoModal';
-
 import AddPortoModal from './AddPortoModal';
 import { getUserAndSellerData, changeUserRole, getUserPortfolios, addPortfolio, editPortfolio, deletePortfolio  } from '../api.service';
-import { searchProducts } from '../api.seller';
+import { searchProducts, updateAboutMe } from '../api.seller';
 
 import AddProduct from './AddProduct';
-import AddSkill from './AddSkill';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Dialog, DialogTitle, DialogContent, DialogActions} from '@mui/material';
 import { Preferences } from '@capacitor/preferences';
@@ -45,20 +39,33 @@ const profileSeller: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
   const [sellerData, setSellerData] = useState<any>(null);
   const [image, setImage] = useState<string | undefined>(undefined); 
-  const [isAboutMeOpen, setAboutMeIsOpen] = useState(true);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [portfolios, setPortfolios] = useState<any[]>([]); // Pastikan ini array kosong
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
   const [products, setProducts] = useState<any[]>([]);
 
-          
-  const AboutmetoggleCard = () => {
-    setAboutMeIsOpen(prevState => !prevState);
-  };
-  
-  
   const history = useHistory();
+
+  const [aboutMe, setAboutMe] = useState<string>(''); // State for "About Me"
+    const [loading, setLoading] = useState<boolean>(false); // Loading state
+    const [showToast, setShowToast] = useState<{ show: boolean; message: string; color: string }>({
+        show: false,
+        message: '',
+        color: '',
+    });
+
+    const handleUpdateAboutMe = async () => {
+        try {
+            setLoading(true); // Show loading spinner
+            await updateAboutMe(aboutMe); // Call API to update "about_me"
+            setShowToast({ show: true, message: 'About Me updated successfully!', color: 'success' });
+        } catch (error) {
+            setShowToast({ show: true, message: 'Failed to update About Me.', color: 'danger' });
+        } finally {
+            setLoading(false); // Hide loading spinner
+        }
+    };
 
   const handleBackToBuyer = async () => {
     try {
@@ -165,7 +172,10 @@ const profileSeller: React.FC = () => {
       try {
         const { user, registerSeller } = await getUserAndSellerData(userToken);
         setUserData(user);
+        console.log(user)
         setSellerData(registerSeller);
+        console.log(registerSeller)
+        
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
@@ -659,9 +669,7 @@ const profileSeller: React.FC = () => {
   <IonCardContent>
     <Box>
       <Typography variant="body1" sx={{ marginBottom: '10px' }}>
-        As a BINUS University Computer Science major graduating in 2026, I am a highly motivated
-        individual with a keen interest in exploring new opportunities, particularly in the realms of
-        personal development and relationships.
+        {sellerData?.about_me || 'About Me'}
       </Typography>
     </Box>
   </IonCardContent>
