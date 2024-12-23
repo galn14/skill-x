@@ -21,7 +21,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import { Route, BrowserRouter } from "react-router-dom";
 
-import { getUserAndSellerData, changeUserRole, getUserPortfolios, addPortfolio, editPortfolio, deletePortfolio  } from '../api.service';
+import { getUserAndSellerData, changeUserRole, getUserPortfolios, addPortfolio, editPortfolio, deletePortfolio, fetchUserDetails  } from '../api.service';
 
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Dialog, DialogTitle, DialogContent, DialogActions} from '@mui/material';
@@ -47,6 +47,8 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
 
+
+
   console.log('Seller ID:', id);
           
   const AboutmetoggleCard = () => {
@@ -55,6 +57,27 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
   
   
   const history = useHistory();
+
+  useEffect(() => {
+    const fetchSellerData = async () => {
+      try {
+        console.log("Fetching data for user ID:", id); // Log the user ID
+        const data = await fetchUserDetails(id);
+        console.log("Fetched user data:", data); // Log fetched data
+        setSellerData(data);
+        console.log(data)
+        if (data.photo_url) {
+          setProfileImage(data.photo_url);
+        }
+      } catch (error) {
+        console.error("Error fetching seller data:", error);
+      }
+    };
+
+    if (id) {
+      fetchSellerData();
+    }
+  }, [id]);
 
   const handleBackToBuyer = async () => {
     try {
@@ -127,25 +150,7 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
   };
   
  
-  useEffect(() => {
-    const fetchData = async () => {
-      const userToken = localStorage.getItem('userToken');
-      if (!userToken) {
-        history.push('/login'); // Redirect ke login jika token tidak ada
-        return;
-      }
-  
-      try {
-        const { user, registerSeller } = await getUserAndSellerData(userToken);
-        setUserData(user);
-        setSellerData(registerSeller);
-      } catch (error) {
-        console.error('Failed to fetch data:', error);
-      }
-    };
-  
-    fetchData();
-  }, [history]);
+
 
 
   const openModal = () => {
@@ -311,10 +316,6 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
     setIsSkillOpen(!isSkillOpen);
   };
 
-  
-
-  
-
   const handleNotificationButtonClick = () => {
     if (isLoggedIn) {
       history.push('/notification'); // Redirect ke halaman message
@@ -345,109 +346,6 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [skillName, setSkillName] = useState("");
   const [skillLevel, setSkillLevel] = useState("");
-
-  // Open modal
-  const openEditSkill = () => {
-    setEditModalOpen(true);
-  };
-
-  const fetchProfileImage = async () => {
-    try {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-      const userId = userInfo.uid;
-
-      if (!userId) {
-        console.error('User ID not found');
-        setProfileImage('/default-profile-image.png');
-        return;
-      }
-
-      // Cek di localStorage untuk cache
-      const cachedImage = localStorage.getItem('profileImage');
-      if (cachedImage) {
-        setProfileImage(cachedImage);
-        return;
-      }
-
-      // Ambil URL dari Firebase Storage
-      const storageRef = ref(storage, `profile_photos/${userId}/profile_photo.jpg`);
-      const downloadURL = await getDownloadURL(storageRef);
-      setProfileImage(downloadURL);
-      localStorage.setItem('profileImage', downloadURL); // Simpan URL untuk caching
-    } catch (error) {
-      console.error('Error fetching profile image:', error);
-      setProfileImage('/default-profile-image.png');
-    }
-  };
-  
-  useEffect(() => {
-    fetchProfileImage(); // Panggil saat komponen dimuat
-  }, []);
-
-  const handleProfileImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const validFormats = ['image/jpeg', 'image/png'];
-    const maxSizeInMB = 2;
-
-    if (!validFormats.includes(file.type)) {
-      alert('Please upload a JPEG or PNG image.');
-      return;
-    }
-    if (file.size > maxSizeInMB * 1024 * 1024) {
-      alert('File size must not exceed 2MB.');
-      return;
-    }
-
-    try {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-      const userId = userInfo.uid;
-
-      if (!userId) {
-        alert('User ID not found in userInfo. Please log in again.');
-        return;
-      }
-
-      const storageRef = ref(storage, `profile_photos/${userId}/profile_photo.jpg`);
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-
-      setProfileImage(downloadURL);
-      localStorage.setItem('profileImage', downloadURL);
-
-      const updatedUserData = { ...userInfo, photo_url: downloadURL };
-      localStorage.setItem('userInfo', JSON.stringify(updatedUserData));
-
-      alert('Profile image uploaded successfully!');
-    } catch (error: any) {
-      console.error('Error uploading file:', error.message);
-      alert(`Failed to upload the file: ${error.message}`);
-    }
-  };
-
-  const handleProfileImageDelete = async () => {
-    try {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-      const userId = userInfo.uid;
-
-      if (!userId) {
-        alert('User ID not found in userInfo. Please log in again.');
-        return;
-      }
-
-      const storageRef = ref(storage, `profile_photos/${userId}/profile_photo.jpg`);
-      await deleteObject(storageRef);
-
-      setProfileImage('/default-profile-image.png');
-      localStorage.removeItem('profileImage');
-
-      alert('Profile image deleted successfully!');
-    } catch (error: any) {
-      console.error('Error deleting profile image:', error.message);
-      alert(`Failed to delete the profile image: ${error.message}`);
-    }
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -491,42 +389,6 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
     </IconButton>
   </Toolbar>
   
-  <DialogContent dividers>
-    {previewImage && (
-      <img
-        src={previewImage}
-        alt="Preview"
-        style={{ width: '100%', height: 'auto', marginBottom: '16px' }}
-      />
-    )}
-    <input
-      type="file"
-      accept="image/*"
-      onChange={handleProfileImageUpload}
-      style={{ display: 'none' }}
-      id="profile-image-input"
-    />
-    <label htmlFor="profile-image-input">
-      <Button variant="outlined" color="secondary" component="span" fullWidth>
-        Choose File
-      </Button>
-    </label>
-    <Button variant="contained" fullWidth onClick={handleCamera} sx={{ mb: 2 }}>
-      Take Photo with Camera
-    </Button>
-    <Button variant="contained" fullWidth onClick={handleGallery} sx={{ mb: 2 }}>
-      Upload from Gallery
-    </Button>
-    <Button variant="contained" fullWidth onClick={handleProfileImageDelete} sx={{ mb: 2 }}>
-      Delete Profile Image
-    </Button>
-
-    {previewImage && (
-      <Button variant="contained" color="success" fullWidth onClick={confirmImage}>
-        Confirm Profile Picture
-      </Button>
-    )}
-  </DialogContent>
 </Dialog>
 
       {/* Info */}
@@ -538,7 +400,7 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
           {sellerData?.organization || 'Organisasi'} | {sellerData?.major || 'Jurusan'}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          🌍 {userData?.language || 'Bahasa'}
+          🌍 {sellerData?.language || 'Bahasa'}
         </Typography>
       </Grid>
   </Grid>
