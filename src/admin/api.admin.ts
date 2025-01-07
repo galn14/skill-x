@@ -1,34 +1,39 @@
-import { auth, provider, signInWithPopup } from '../firebaseConfig';
 import axios from '../axiosConfig';
 
 const baseUrl = 'http://localhost:8080'; // Replace with your API base URL
-export const updateMajor = async (
-    id_major: string,
-    title_major: string,
-    icon_url: string
-  ) => {
-    try {
-      const token = localStorage.getItem("userToken");
-      if (!token) throw new Error("Authentication token is missing.");
-  
-      const config = {
+
+export const updateMajor = async (token: string, updatedMajor: Record<string, any>) => {
+  try {
+    // Log the data being sent to the backend
+    console.log('Updating major with data:', updatedMajor); 
+
+    // Send the PUT request to the backend with the updated major data
+    const response = await axios.put(
+      `${baseUrl}/majors/adminupdate?id_major=${updatedMajor.id_major}`, // Correct query parameter
+      {
+        title_major: updatedMajor.title_major, // Ensure the body uses correct field names
+        icon_url: updatedMajor.icon_url // icon_url
+      },
+      {
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+          'Content-Type': 'application/json', // Ensure the correct content type
         },
-      };
-  
-      const majorData = { id_major, title_major, icon_url };
-  
-      const response = await axios.put(`${baseUrl}/majors/update`, majorData, config);
-      console.log("Major updated response:", response);
-      return response.data;
-    } catch (error) {
-      console.error("Error updating major:", error);
-      throw error;
-    }
-  };
-  
+      }
+    );
+
+    // Log the response from the API
+    console.log('API response:', response); 
+
+    // Return the response data from the backend
+    return response.data;
+  } catch (error) {
+    // Log and throw any error that occurs
+    console.error('Error updating major:', error);
+    throw error;
+  }
+};
+
 export const fetchMajorById = async (majorId: string) => {
     try {
       const response = await fetch(`/api/majors/${majorId}`); // Ganti dengan endpoint yang sesuai

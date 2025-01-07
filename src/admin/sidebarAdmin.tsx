@@ -24,6 +24,7 @@ const SidebarAdmin: React.FC<SidebarAdminProps> = ({ setSelectedItem }) => {
   const menuItems = [
     { text: 'Seller Approval', icon: <ApprovalIcon />, path: '/sellerApproval' },
     { text: 'Major Management', icon: <ManageIcon />, path: '/majorManagement' },
+    { text: 'Category Management', icon: <ManageIcon />, path: '/categoryManagement' },
     { text: 'Service Management', icon: <BuildIcon />, path: '/serviceManagement' },
     { text: 'Skills Management', icon: <CategoryIcon />, path: '/skillManagement' },
     { text: 'Review Management', icon: <RateReviewIcon />, path: '/reviewManagement' },

@@ -11,58 +11,76 @@ import SidebarAdmin from './sidebarAdmin';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { fetchMajors } from '../api.service';
-import { createMajor } from './api.admin';
 import ModalAddMajor from './modalAddMajor';
-import { Route, BrowserRouter } from "react-router-dom";
+import { Route, useLocation } from "react-router-dom";
 import { useHistory } from 'react-router-dom';
-import ModalEditMajor from './modalUpdateMajor';
+import ModalUpdateMajor from './modalUpdateMajor';
 
+export interface Major {
+  idMajor: string;
+  titleMajor: string;
+  iconUrl: string;
+}
 
 const MajorManagement: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<string>('Major Management');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
-  const [majors, setMajors] = useState<any[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setNewMajor({ titleMajor: '', iconUrl: '' }); // Reset form saat modal ditutup
-  };
+  const [majors, setMajors] = useState<Major[]>([]); // Tipe data lebih spesifik
+  
   const [selectedMajor, setSelectedMajor] = useState<any | null>(null); // State for selected major to edit
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const openModal = () => setIsModalOpen(true); // Open modal by setting state
+  const closeModal = () => setIsModalOpen(false); // Close modal by setting state
 
   const [newMajor, setNewMajor] = useState({
     titleMajor: '',
     iconUrl: '',
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setMajors((prev) => ({ ...prev, [name]: value }));
-  };
+  
 
   const history = useHistory();  // Hook untuk navigasi
   const openAddMajor = () => {
     history.push('/modalAddMajor');  // Arahkan ke rute modal
   };
-  const openEditMajorModal = (major: any) => {
-    setSelectedMajor(major); // Set the selected major data
-    history.push(`/modalEditMajor?id=${major.id}`);  // Pindahkan ke rute modal dan bawa data major
+  
+  const openEditMajorModal = (major: Major) => {
+    if (!major) return; // Hindari membuka modal jika data tidak valid
+    setSelectedMajor(major);
+    //setIsModalOpen(true);
+    history.push(`/modalUpdateMajor?id=${major.idMajor}`);
   };
+  
+  
 
   const closeEditMajorModal = () => {
     setSelectedMajor(null);
     setIsModalOpen(false);  // Close the modal
   };
   
-  const handleSubmit = async () => {
+  
+  const location = useLocation();
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search); // Gunakan useLocation
+    const id = queryParams.get('id');
+  
+    if (id) {
+      const major = majors.find((item) => item.idMajor === id);
+      if (major) {
+        setSelectedMajor(major);
+        setIsModalOpen(true);
+      }
+    
+    }
+  }, [location.search, majors]);
+  
+  const refreshMajors = async () => {
     try {
-      const response = await createMajor(newMajor);
-      console.log('Major created successfully:', response);
-      alert('Major created successfully!');
-      setNewMajor({ titleMajor: '', iconUrl: '' }); // Reset form
+      const updatedMajors = await fetchMajors(); // Refresh data dari API
+      setMajors(updatedMajors);
     } catch (error) {
-      console.error('Error creating major:', error);
-      alert('Failed to create major.');
+      console.error('Error refreshing majors:', error);
     }
   };
 
@@ -79,7 +97,8 @@ const MajorManagement: React.FC = () => {
         loadMajors();  }, []);
   
   
-  
+        
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen); // Toggle sidebar visibility
   };
@@ -212,32 +231,50 @@ const MajorManagement: React.FC = () => {
                
 
                 {/* Major Cards */}
-                
+
                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 2 }}>
-  {majors.length > 0 ? (
-    majors.map((major) => (
-      < Card key={major.index} sx={{ display: 'flex', alignItems: 'center', p: 2, boxShadow: 2 }}>
-  <Avatar 
-    sx={{ mr: 2, width: 64, height: 64 }} 
-    src={major.icon || 'default-icon.png'} 
-    alt={major.name}
-  />
-  <CardContent sx={{ flexGrow: 1 }}>
-    <Typography variant="body1" fontWeight="bold">
-      {major.titleMajor || 'No Name'}
-    </Typography>
-  </CardContent>
-  <IconButton color="primary"  onClick={() => openEditMajorModal(major)}>
-    <EditIcon />
-  </IconButton>
-</Card>
+                  {majors.length > 0 ? (
+                    majors.map((major, index) => (
+                      
+                <Card key={index} sx={{ display: 'flex', alignItems: 'center', p: 2, boxShadow: 2 }}>
+                <Avatar 
+                    sx={{ mr: 2, width: 64, height: 64 }} 
+                    src={major.iconUrl || 'default-icon.png'} 
+                    alt={major.titleMajor}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="body1" fontWeight="bold">
+                      {major.titleMajor || 'No Name'}
+                    </Typography>
+                  </CardContent>
+                  <Button onClick={() => openEditMajorModal(major)}>Edit</Button>
+                            
+                </Card>
 
     ))
   ) : (
     <Typography>No majors available</Typography>
   )}
-</Box>
 
+
+{isModalOpen && selectedMajor ? (
+ <ModalUpdateMajor
+  majorData={selectedMajor}
+  onClose={closeEditMajorModal}
+  onSave={(updatedMajor: Major) => {
+    setMajors((prevMajors) =>
+      prevMajors.map((major) =>
+        major.idMajor === updatedMajor.idMajor ? updatedMajor : major
+      )
+    );
+    closeEditMajorModal();
+  }}
+/>
+
+) : null}
+
+  
+</Box>
 
                           
                 
@@ -247,6 +284,8 @@ const MajorManagement: React.FC = () => {
         </div>
       </IonContent>
     </IonPage>
+
+    
   );
 };
 

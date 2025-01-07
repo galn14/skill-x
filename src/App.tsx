@@ -59,6 +59,8 @@ import '@fontsource/poppins';  // Import the font
 
 import sellerApproval from './admin/sellerApproval';
 import majorManagement from './admin/majorManagement';
+
+import categoryManagement from './admin/categoryManagement';
 import serviceManagement from './admin/serviceManagement';
 import skillManagement from './admin/skillManagement';
 import reviewManagement from './admin/reviewManagement';
@@ -98,7 +100,7 @@ import profileSellerCust from './pages/profileSellerCust';
 
 import DetailTransactionProgress from './sellerrrrrr/DetailTransactionProgress';
 import ModalAddMajor from './admin/modalAddMajor';
-import modalUpdateMajor from './admin/modalUpdateMajor';
+import ModalUpdateMajor from './admin/modalUpdateMajor';
 import ProfileSeller from './pages/profileSellerCust';
 import ProfileSellerCust from './pages/profileSellerCust';
 
@@ -141,6 +143,8 @@ const App: React.FC = () => {
         <Route path="/sellerApproval" component={sellerApproval}/>
         <Route path="/majorManagement" component={majorManagement}/>
         <Route path="/serviceManagement" component={serviceManagement}/>
+        <Route path="/categoryManagement" component={categoryManagement}/>
+
         <Route path="/skillManagement" component={skillManagement}/>
         <Route path="/reviewManagement" component={reviewManagement}/>
         <Route path="/userMonitoring"  component={userMonitoring}/>
@@ -149,7 +153,7 @@ const App: React.FC = () => {
         <Route path="/reportManagement"  component={reportManagement}/>
         <Route path="/helpAndSupport"  component={helpAndSupport}/>
         <Route path="/modalAddMajor"  component={ModalAddMajor}/>
-        <Route path="/modalEditMajor"  component={modalUpdateMajor}/>
+        <Route path="/modalUpdateMajor" component={ModalUpdateMajor} />
 
 
           <Route exact path="/login">
@@ -183,7 +187,7 @@ const App: React.FC = () => {
             <WebsiteDevelopment/>
           </Route>
 
-          <Route path="/:username/:productName" component={DetailProduct} />
+       {/*  <Route path="/:username/:productName" component={DetailProduct} /> */}
         <Route path="/profile-seller" component={ProfileSeller} />
         {/* Tambahkan route lain di sini */}
 
