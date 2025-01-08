@@ -71,27 +71,24 @@ export const createMajor = async (majorData: { titleMajor: string, iconUrl: stri
     }
   };
   
-  // In api.service.ts
-  
-  
-  
-  // Delete Major
-  export const deleteMajor = async (idMajor: string) => {
+  export const deleteMajor = async (idMajor: string): Promise<void> => {
     try {
-      const token = localStorage.getItem("userToken");
-      if (!token) throw new Error("Authentication token is missing.");
+      const token = localStorage.getItem('userToken'); // Pastikan key sesuai
+      if (!token) {
+        throw new Error('User is not authenticated');
+      }
   
-      const config = {
+      const response = await axios.delete(`${baseUrl}/majors/admindelete`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      };
+        data: { idMajor }, // Kirim ID major dalam body
+      });
   
-      const response = await axios.delete(`${baseUrl}/majors/delete/${idMajor}`, config);
-      console.log("Major deleted response:", response);
-      return response.data;
+      console.log('Major deleted successfully:', response.data);
     } catch (error) {
-      console.error("Error deleting major:", error);
+      console.error('Error deleting major:', error);
       throw error;
     }
   };
+  

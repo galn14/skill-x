@@ -25,15 +25,13 @@ const ModalAddMajor = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));  // Change majors to newMajor
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  
 
-  // Handle form submission
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setErrors({}); // Reset errors before submitting
-  
+
     // Validation
     if (!formData.majorName || !formData.linkIcon) {
       setErrors({
@@ -42,7 +40,7 @@ const ModalAddMajor = () => {
       });
       return;
     }
-  
+
     try {
       const userToken = localStorage.getItem('userToken');
       if (!userToken) {
@@ -50,25 +48,27 @@ const ModalAddMajor = () => {
         history.push('/login');
         return;
       }
-  
+
       // Map FormData to the expected format
       const majorData = {
         titleMajor: formData.majorName,
         iconUrl: formData.linkIcon,
       };
-  
-      console.log("Sending request with data:", majorData);  // Add logging here
-  
-      await createMajor(majorData);  // Assuming createMajor function is available
+
+      console.log("Sending request with data:", majorData);
+
+      await createMajor(majorData); // Assuming createMajor function is available
       alert('Major added successfully!');
-      history.push('/majorManagement'); // Redirect to the major management page after success
+      
       setOpen(false); // Close modal
+      // Refresh the major management page
+      history.replace('/majorManagement');
+      window.location.reload(); // Ensure the page reloads to show the new data
     } catch (error) {
       console.error('Error adding major:', error);
       alert('Failed to add major. Please try again.');
     }
   };
-  
 
   const handleClose = () => {
     setOpen(false);

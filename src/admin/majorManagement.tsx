@@ -269,6 +269,7 @@ const MajorManagement: React.FC = () => {
     );
     closeEditMajorModal();
   }}
+  onDeleteSuccess={refreshMajors}
 />
 
 ) : null}
