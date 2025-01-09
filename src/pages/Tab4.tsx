@@ -19,6 +19,7 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import Groups3Icon from '@mui/icons-material/Groups3';
 import { updateUser, logout, getRegisterSellerStatus, changeUserRole, getUserAndSellerData } from '../api.service';
 import { useHistory } from 'react-router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -253,7 +254,10 @@ const handleClose = () => {
     console.log('Navigating to Wishlist');
     history.push('/followingSeller');
   };
-
+  const handleAboutSkillX= () => {
+    console.log('Navigating to About SkillX');
+    history.push('/aboutSkillX');
+  };
   const handleReviewClick= () => {
     console.log('Navigating to Wishlist');
     history.push('/review');
@@ -707,6 +711,13 @@ const handleClose = () => {
           <HelpIcon />
         </ListItemIcon>
         <ListItemText primary="Help and Support" />
+      </ListItemButton>
+      <Divider />
+      <ListItemButton onClick={handleAboutSkillX} component="li">
+        <ListItemIcon>
+          <Groups3Icon />
+        </ListItemIcon>
+        <ListItemText primary="About SkillX" />
       </ListItemButton>
     </List>
 

@@ -247,8 +247,9 @@ const MajorManagement: React.FC = () => {
                       {major.titleMajor || 'No Name'}
                     </Typography>
                   </CardContent>
-                  <Button onClick={() => openEditMajorModal(major)}>Edit</Button>
-                            
+                  <IconButton color="primary" onClick={() => openEditMajorModal(major)}>
+                        <EditIcon />
+                      </IconButton>
                 </Card>
 
     ))

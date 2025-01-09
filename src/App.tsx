@@ -19,6 +19,8 @@ import Tab3 from './pages/Tab3';
 import Tab4 from './pages/Tab4';
 import Wishlist from './pages/wishlist';
 import FollowingSeller from './pages/followingSeller';
+import AboutSkillX from './pages/aboutSkillX';
+
 import Review from './pages/review';
 
 import LoginPage from './pages/Login';
@@ -101,6 +103,9 @@ import profileSellerCust from './pages/profileSellerCust';
 import DetailTransactionProgress from './sellerrrrrr/DetailTransactionProgress';
 import ModalAddMajor from './admin/modalAddMajor';
 import ModalUpdateMajor from './admin/modalUpdateMajor';
+import ModalAddCategory from './admin/modalAddCategory';
+import ModalUpdateCategory from './admin/modalUpdateCategory';
+
 import ProfileSeller from './pages/profileSellerCust';
 import ProfileSellerCust from './pages/profileSellerCust';
 
@@ -121,7 +126,7 @@ const App: React.FC = () => {
 
   
   // Define the routes where tabs should appear
-  const routesWithTabs = ['/tab1', '/tab2', '/tab3', '/tab4', '/profileSeller'];
+  const routesWithTabs = ['/tab1', '/tab2', '/tab3', '/tab4', '/profileSeller', '/profileSellerCust', '/wishlist', '/aboutSkillX', '/followingseller', '/review', '/JoinAsSeller', '/JoinAsSellerWait', '/EditProfileModal', '/EditAboutMe', '/EditPortoModal', '/AddProduct', '/AddSkill', '/AddPortoModal', '/search', '/EditProductModal', '/DetailTransactionProgress', '/notification', '/messages', '/chat/:conversationID', '/profileSellerCust/:id'];
 
   // Show tabs only on certain paths, and also make sure it's not an admin path
   const showTabs = routesWithTabs.includes(location.pathname) ;
@@ -154,6 +159,8 @@ const App: React.FC = () => {
         <Route path="/helpAndSupport"  component={helpAndSupport}/>
         <Route path="/modalAddMajor"  component={ModalAddMajor}/>
         <Route path="/modalUpdateMajor" component={ModalUpdateMajor} />
+        <Route path="/modalAddCategory" component={ModalAddCategory}/>
+        <Route path="/modalUpdateCategory" component={ModalUpdateCategory} />
 
 
           <Route exact path="/login">
@@ -200,6 +207,8 @@ const App: React.FC = () => {
           <Route path="/tab4" exact><Tab4 /></Route>
           <Route path="/logout" component={LogoutPage} exact />
           <Route path="/wishlist" component={Wishlist} />
+          <Route path="/aboutSkillX" component={AboutSkillX} />
+
           <Route path="/followingseller" component={FollowingSeller} />
           <Route path="/review" component={Review} />
           <Route path="/JoinAsSeller" component={JoinAsSeller}/>
