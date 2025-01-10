@@ -308,7 +308,7 @@ const CategoriesComponent = () => {
         console.log("Navigating to product link:", result.link);
         history.push(result.link);
       } else {
-        console.warn("No link or ID available for this result");
+        history.push(`/services/detail-product/${result.id}`);
       }
     }}
         >

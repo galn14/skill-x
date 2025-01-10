@@ -199,9 +199,16 @@ const App: React.FC = () => {
         {/* Tambahkan route lain di sini */}
 
           {/* Route untuk Detailed Service*/}
-          <Route path="/service/detail-product"> 
-            <DetailProduct/>
-          </Route>
+          <Route
+                exact
+                path="/services/detail-product/:id/:productId"
+                render={(props) => {
+                  const { id } = props.match.params;
+                  const { productId } = props.match.params;
+                  console.log("Dynamic route accessed with ID:", id); // Log the ID from the URL
+                  return <DetailProduct id={id} productId = {productId}  {...props} />;
+                }}
+              />
           <Route path="/notification" component={NotificationPage} exact/>
 
           <Route path="/tab4" exact><Tab4 /></Route>

@@ -21,7 +21,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import { Route, BrowserRouter } from "react-router-dom";
 
-import { getUserAndSellerData, changeUserRole, getUserPortfolios, addPortfolio, editPortfolio, deletePortfolio, fetchUserDetails  } from '../api.service';
+import { getUserAndSellerData, changeUserRole, getUserPortfolios, addPortfolio, editPortfolio, deletePortfolio, fetchUserDetails, fetchProductByUserID  } from '../api.service';
 
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Dialog, DialogTitle, DialogContent, DialogActions} from '@mui/material';
@@ -46,7 +46,9 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
   const [portfolios, setPortfolios] = useState<any[]>([]); // Pastikan ini array kosong
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | undefined | null>(null);
-
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
 
   console.log('Seller ID:', id);
@@ -78,25 +80,6 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
       fetchSellerData();
     }
   }, [id]);
-
-  const handleBackToBuyer = async () => {
-    try {
-      setIsChangingRole(true);
-      const userToken = localStorage.getItem('userToken');
-      if (!userToken) {
-        alert('User is not logged in.');
-        return;
-      }
-
-      const response = await changeUserRole(userToken, 'buyer');
-      alert(response.message || 'Role changed to Buyer successfully!');
-      history.push('/tab4'); // Redirect ke halaman utama Buyer
-    } catch (error: any) {
-      alert(error.message || 'Failed to change role.');
-    } finally {
-      setIsChangingRole(false);
-    }
-  };
 
   const fetchPortfolios = async () => {
     try {
@@ -149,13 +132,24 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
     }
   };
   
- 
+   // Fetch data produk dari backend
+   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetchProductByUserID(id);
+        setProducts(response.data); // Menyimpan data produk dari backend
+        console.log("Fetched products data:", response.data); // Log data yang berhasil di-fetch
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch products.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchProducts();
+  }, [id]);
 
-
-  const openModal = () => {
-    history.push('/EditProfileModal'); // Rute untuk modal
-  };
 
   useEffect(() => {
     const loadImage = async () => {
@@ -260,29 +254,6 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
     },
   ];
 
-  const products = [
-    {
-      id: 1,
-      title: "PACKAGE PHOTO PRODUCTS - 100 PHOTOS",
-      price: "Rp500.000",
-      author: "AileenLiexiuxai",
-      certified: true,
-    },
-    {
-      id: 2,
-      title: "PACKAGE PHOTO PRODUCTS - 100 PHOTOS",
-      price: "Rp500.000",
-      author: "AileenLiexiuxai",
-      certified: true,
-    },
-    {
-      id: 3,
-      title: "PACKAGE PHOTO PRODUCTS - 100 PHOTOS",
-      price: "Rp500.000",
-      author: "AileenLiexiuxai",
-      certified: true,
-    },
-  ];
   const isLoggedIn = !!localStorage.getItem('userToken'); // Misalnya token disimpan di localStorage
 
   const handleMessageButtonClick = () => {
@@ -663,7 +634,18 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
           <Grid container spacing={2}>
             {products.map((product) => (
               <Grid item xs={6} key={product.id}> {/* Selalu dua kolom */}
-                <Card sx={{ height: "100%", padding:'10px' }}>
+                <Card sx={{ height: "100%", padding:'10px' }}
+                  onClick={() => {
+                    console.log("Result object:", product); // Log product object
+                    if (product.uid) {
+                      history.push(`/services/detail-product/${id}/${product.uid}`);
+                    } else {
+                      console.log("Navigating to product link:", product.link);
+                      history.push(product.link);
+                    }
+                  }}
+                >
+                  
                   <Box
                     sx={{
                       width: "100%",
@@ -673,7 +655,7 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
                   />
                   <CardContent>
                     <Typography variant="subtitle1" sx={{ fontWeight: "bold", fontSize:'0.89rem' }}>
-                      {product.title}
+                      {product.nameProduct}
                     </Typography>
                     <Typography variant="body1" color="text.secondary" sx={{ fontSize:'0.75rem' }}>
                       {product.price}

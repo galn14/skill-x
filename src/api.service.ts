@@ -50,6 +50,36 @@ export const fetchSellers = async () => {
   }
 };
 
+// Product by user id
+export const fetchProductByUserID = async (userID: string) => {
+  try {
+    // Ambil token autentikasi dari localStorage
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      throw new Error('Authentication token is missing.');
+    }
+
+    // Konfigurasi header dengan token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    // Lakukan request GET ke endpoint backend
+    const response = await axios.get(`${baseUrl}/products/view-seller-product?uid=${userID}`, {
+      params: { userID }, // Kirim userID sebagai query parameter
+      ...config, // Sertakan konfigurasi header
+    });
+
+    // Kembalikan data respons
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching products by user ID:', error);
+    throw error; // Lemparkan error untuk penanganan di sisi frontend
+  }
+};
+
 // Fetch all conversations
 export const fetchConversations = async () => {
     try {

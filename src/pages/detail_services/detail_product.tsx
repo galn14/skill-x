@@ -25,7 +25,12 @@ import '@fontsource/poppins';
 import { useHistory, useParams } from 'react-router-dom';
 import { getUserAndSellerData, searchProducts } from '../../api.service';
 
-const DetailProduct: React.FC = () => {
+interface DetailProductProps {
+  id: string; // `id` passed from the route
+  productId : string;
+}
+  
+const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
   const { username, productName } = useParams<{ username: string; productName: string }>();
   const [isFavorited, setIsFavorited] = useState(false);
   const [productData, setProductData] = useState<any>(null);
