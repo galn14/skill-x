@@ -15,6 +15,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MailIcon from '@mui/icons-material/Mail';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import SearchIcon from '@mui/icons-material/Search';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -40,6 +41,11 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
 
   const handleBack = () => history.goBack();
+
+  const handleAddToCart = () => {
+    // Logic untuk menambahkan produk ke keranjang (jika ada)
+    isLoggedIn ? history.push('/cart') : history.push('/login');
+  };
 
   const handleFavoriteToggle = () => {
     setIsFavorited(!isFavorited);
@@ -136,7 +142,7 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
         <IonContent>
           <Box
             sx={{
-              marginTop: '90px',
+              marginTop: '120px',
               paddingX: '15px',
               display: 'flex',
               flexDirection: 'column',
@@ -154,7 +160,7 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
                 height: '70vw',
                 borderRadius: '15px',
                 objectFit: 'cover',
-                marginBottom: '16px',
+                marginBottom: '35px',
               }}
             />
 
@@ -164,13 +170,13 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
               sx={{
                 fontWeight: 'bold',
                 marginBottom: '8px',
-                color: '#333',
-                fontSize: '18px',
+                color: '#0072CC',
+                fontSize: '30px',
                 alignItems: 'flex-start',
                 borderBottom: '1px solid black',
               }}
             >
-              {productData?.price || 'Price not available'}
+              Rp. {productData?.price || 'Price not available'}
             </Typography>
 
             {/* Title, Favorite Icon, Sold, and Rating */}
@@ -278,6 +284,7 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
               container
               spacing={3}
               sx={{
+                marginTop: '10px',
                 flexGrow: 1,
                 display: 'flex',
                 alignItems: 'center',
@@ -307,6 +314,42 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
               </Grid>
             </Grid>
           </Box>
+          
+          <Box
+    sx={{
+      marginTop: '90px',
+      paddingX: '15px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'left',
+      justifyContent: 'center',
+    }}
+  >
+    {/* Komponen lainnya */}
+    
+    {/* Tombol Add to Cart */}
+    <Button
+      variant="contained"
+      startIcon={<ShoppingCartCheckoutIcon />}
+      onClick={handleAddToCart}
+      sx={{
+        backgroundColor: '#0072CC', // Warna biru lebih tua
+        color: '#fff',
+        fontWeight: 'bold',
+        paddingX: '16px',
+        paddingY: '8px',
+        fontSize: '14px',
+        borderRadius: '8px',
+        marginTop: '16px',
+        ':hover': {
+          backgroundColor: '#005BBB', // Warna biru lebih gelap untuk efek hover
+        },
+      }}
+    >
+      Add to Cart
+    </Button>
+  </Box>
+          
         </IonContent>
       </IonPage>
     </ThemeProvider>
