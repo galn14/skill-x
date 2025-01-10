@@ -647,11 +647,14 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
                 >
                   
                   <Box
-                    sx={{
-                      width: "100%",
-                      height: "150px",
-                      backgroundColor: "#e0e0e0",
-                    }}
+                        sx={{
+                        width: '100%',
+                        height: '150px',
+                        backgroundColor: '#e0e0e0',
+                        backgroundImage: `url(${product.photo_url[0]})`, // Pastikan field sesuai dengan API
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        }}
                   />
                   <CardContent>
                     <Typography variant="subtitle1" sx={{ fontWeight: "bold", fontSize:'0.89rem' }}>

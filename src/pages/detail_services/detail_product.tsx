@@ -23,7 +23,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { IonPage, IonContent } from '@ionic/react';
 import '@fontsource/poppins';
 import { useHistory, useParams } from 'react-router-dom';
-import { getUserAndSellerData, searchProducts } from '../../api.service';
+import { fetchUserDetails, getUserAndSellerData, searchProducts, fetchProductDetails } from '../../api.service';
 
 interface DetailProductProps {
   id: string; // `id` passed from the route
@@ -46,28 +46,40 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+  
+    const fetchSellerData = async () => {
       try {
-        const userToken = localStorage.getItem('userToken');
-        if (!userToken) {
-          history.push('/login');
-          return;
-        }
+        console.log("Fetching data for user ID:", id);
+        const sellerData = await fetchUserDetails(id);
 
-        const sellerInfo = await getUserAndSellerData(userToken);
-        const productsResponse = await searchProducts(username);
-        const products = Array.isArray(productsResponse) ? productsResponse : productsResponse.data || [];
-        const selectedProduct = products.find((product: any) => product.nameProduct === productName);
-
-        setSellerData(sellerInfo.registerSeller || {});
-        setProductData(selectedProduct || {});
+        setSellerData(sellerData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching seller data:", error);
       }
     };
+    console.log(sellerData);
+    fetchSellerData();
+  
+    return () => {
+    };
+  }, [id, productId]);
 
-    fetchData();
-  }, [username, productName, history]);
+  useEffect(() => {
+  
+    const fetchProductData = async () => {
+      try {
+        const productsData = await fetchProductDetails(id, productId);
+        setProductData(productsData);
+      } catch (error) {
+        console.error("Error fetching seller data:", error);
+      }
+    };
+    console.log(productData);
+    fetchProductData();
+  
+    return () => {
+    };
+  }, [id, productId]);
 
   const theme = createTheme({
     typography: {
@@ -274,7 +286,7 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
               <Grid item xs="auto">
                 <Box
                   component="img"
-                  src={userInfo?.photoURL || 'https://via.placeholder.com/80'}
+                  src={sellerData?.photoURL || 'https://via.placeholder.com/80'}
                   alt="Profile Picture"
                   sx={{
                     width: '80px',
@@ -287,10 +299,10 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
 
               <Grid item xs>
                 <Typography variant="body2" sx={{ fontWeight: 'bold', marginBottom: '2px' }}>
-                  {userInfo?.name || 'User Name'}
+                  {sellerData?.name || 'User Name'}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  {userInfo?.organization || 'Organization'} | {userInfo?.major || 'Major'}
+                  {sellerData?.organization || 'Organization'} | {sellerData?.major || 'Major'}
                 </Typography>
               </Grid>
             </Grid>

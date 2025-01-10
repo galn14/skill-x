@@ -140,7 +140,36 @@ export const sendMessage = async (messageData: { receiverID: string; messageCont
     }
 };
 
+// Fetch product details by userID and productID
+export const fetchProductDetails = async (userID: string, productID: string) => {
+  try {
+      const token = localStorage.getItem('userToken'); // Fetch token from localStorage
+      if (!token) {
+          throw new Error("Authentication token is missing.");
+      }
 
+      if (!userID || !productID) {
+          throw new Error("Both userID and productID are required."); // Ensure userID and productID are provided
+      }
+
+      const config = {
+          headers: {
+              Authorization: `Bearer ${token}`, // Attach token to the request
+              'Content-Type': 'application/json',
+          },
+      };
+
+      console.log(userID, productID);
+
+      // Make the GET request to fetch product details
+      const response = await axios.get(`${baseUrl}/products/viewid?user_id=${userID}&product_id=${productID}`, config);
+      return response.data.data; // Return the product details data
+      
+  } catch (error) {
+      console.error('Error fetching product details:', error);
+      throw error; // Propagate error for handling
+  }
+};
 
 // Fetch user details by their UID
 export const fetchUserDetails = async (uid: string) => {
@@ -161,8 +190,10 @@ export const fetchUserDetails = async (uid: string) => {
       },
     };
 
+    console.log(uid);
     // Make the GET request to fetch user details
     const response = await axios.get(`${baseUrl}/user?uid=${uid}`, config);
+    console.log('User Details Response:', response); // Debug response
     return response.data; // Return the user details data
   } catch (error) {
     console.error('Error fetching user details:', error);
