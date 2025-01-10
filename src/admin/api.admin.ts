@@ -1,6 +1,11 @@
 import axios from '../axiosConfig';
 
 const baseUrl = 'http://localhost:8080'; // Replace with your API base URL
+export interface Major {
+  idMajor: string;
+  titleMajor: string;
+  iconUrl: string;
+}
 
 export const updateMajor = async (token: string, updatedMajor: Record<string, any>) => {
   try {
@@ -187,25 +192,34 @@ export const createMajor = async (majorData: { titleMajor: string, iconUrl: stri
     }
 };
 
-  
+export const updateCategory = async (id_category: string, categoryData: any) => {
+  const userToken = localStorage.getItem("userToken");
+  if (!userToken) {
+    throw new Error("User token is missing");
+  }
 
-  // Update an existing category
-  export const updateCategory = async (idCategory: string, updatedData: {
-    title?: string;
-    photo_url?: string;
-    title_major?: string;
-  }) => {
-    try {
-      const response = await axios.put(
-        `${baseUrl}/category/adminepdate?id_category=${idCategory}`,
-        updatedData
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Failed to update category:", error);
-      throw new Error("Failed to update category.");
-    }
-  };
+  try {
+    const response = await axios.put(
+      `${baseUrl}/categories/adminupdate?id_category=${id_category}`,
+      categoryData,
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`, // Ensure the token is passed here
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return response.data;
+    console.log('Response dari backend:', response.data); // Debugging log
+
+  } catch (error) {
+    console.error("Failed to update category:", error);
+    throw error;
+  }
+  
+};
+
+
   
   // Delete a category
   export const deleteCategory = async (id: string) => {

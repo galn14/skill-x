@@ -13,6 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { fetchCategories, fetchMajors } from './api.admin'; // Pastikan path ini sesuai dengan lokasi file API Anda
 import ModalAddCategory from './modalAddCategory';
 import { useHistory } from 'react-router-dom';
+import ModalUpdateCategory from './modalUpdateCategory';
 
 export interface Category {
   id_category: string;
@@ -75,7 +76,10 @@ const CategoryManagement: React.FC = () => {
 
     fetchData();
   }, []);
-
+  const closeEditMajorModal = () => {
+    setSelectedCategory(null);
+    setIsModalOpen(false);  // Close the modal
+  };
   return (
     <IonPage>
       <IonContent
@@ -255,7 +259,26 @@ const CategoryManagement: React.FC = () => {
                       );
                     })
                   )}
+{selectedCategory && isModalOpen ? (
+  <ModalUpdateCategory
+  categoryData={selectedCategory} // Pass the selected category as a prop
+  onClose={() => closeEditMajorModal()} // Close the modal correctly by calling the function
+  onSave={(updatedCategory) => {
+    console.log("Updated Category:", updatedCategory);
+    setCategories((prevCategories) =>
+      prevCategories.map((category) =>
+        category.id_category === updatedCategory.id_category // Use updatedCategory instead of categoryData
+          ? { ...category, ...updatedCategory } // Merge the updated fields
+          : category
+      )
+    );
+    closeEditMajorModal(); // Close the modal after saving
+  }}
+/>
+
+): null}
                 </Box>
+                
               </Box>
             </Box>
           </IonGrid>

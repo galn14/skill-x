@@ -11,14 +11,13 @@ import {
   InputLabel,
   SelectChangeEvent,
 } from "@mui/material";
-import { updateCategory } from "./api.admin"; // Assuming this function is for category update
+import { updateCategory, fetchMajors } from "./api.admin"; // Assuming these functions exist
 import { useHistory } from "react-router-dom";
-import { fetchMajors } from "./api.admin"; // Function to fetch majors
 
 type FormData = {
   categoryName: string;
   iconLink: string;
-  title_major: string; // Store major title (not majorId)
+  id_major: string; // Store major ID (not major title)
 };
 
 interface EditCategoryModalProps {
@@ -36,17 +35,19 @@ const ModalUpdateCategory: React.FC<EditCategoryModalProps> = ({
   const [formData, setFormData] = useState<FormData>({
     categoryName: "",
     iconLink: "",
-    title_major: "",
+    id_major: "", // Initialize with empty ID
   });
   const [majors, setMajors] = useState<any[]>([]); // Store majors data
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const history = useHistory();
 
-  // Fetching the majors
+  // Fetch majors and pre-fill form data
   useEffect(() => {
     const getMajors = async () => {
       try {
         const response = await fetchMajors(); // Fetch the majors list
+        console.log("Fetched Majors:", response); // Check if majors data is correct
+
         setMajors(response); // Set the majors to state
       } catch (error) {
         console.error("Failed to fetch majors", error);
@@ -58,9 +59,11 @@ const ModalUpdateCategory: React.FC<EditCategoryModalProps> = ({
     if (categoryData) {
       setFormData({
         categoryName: categoryData.title || "",
-        iconLink: categoryData.iconUrl || "",
-        title_major: categoryData.title_major || "",
+        iconLink: categoryData.photo_url || "",
+        id_major: categoryData.id_major || "", // Use id_major instead of title_major
       });
+      console.log('Form data after setting:', categoryData.id_major);  // Debugging log
+
     }
   }, [categoryData]);
 
@@ -70,64 +73,59 @@ const ModalUpdateCategory: React.FC<EditCategoryModalProps> = ({
   };
 
   const handleSelectChange = (event: SelectChangeEvent<string>) => {
-    const selectedMajorTitle = event.target.value; // Get selected major title
+    const selectedMajorId = event.target.value; // Get selected major ID
+    console.log('Selected Major ID:', selectedMajorId); // Debugging log
     setFormData((prev) => ({
       ...prev,
-      title_major: selectedMajorTitle, // Update formData with title_major (major title)
+      id_major: selectedMajorId, // Update formData with id_major (major ID)
     }));
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setErrors({}); // Reset errors before submitting
-  
-    // Validation
-    if (!formData.categoryName || !formData.iconLink || !formData.title_major) {
+    setErrors({});
+
+    if (!formData.categoryName || !formData.iconLink || !formData.id_major) {
       setErrors({
         categoryName: formData.categoryName ? "" : "Category name is required.",
         iconLink: formData.iconLink ? "" : "Icon link is required.",
-        title_major: formData.title_major ? "" : "Major is required.",
+        id_major: formData.id_major ? "" : "Major is required.",
       });
       return;
     }
-  
+
     try {
       const userToken = localStorage.getItem("userToken");
       if (!userToken) {
-        alert("You are not logged in!");
+        alert("You are not logged in. Please log in again.");
         history.push("/login");
         return;
       }
-  
-      // Map title_major to id_major if necessary
-      const selectedMajor = majors.find(major => major.titleMajor === formData.title_major);
+
+      const selectedMajor = majors.find((major) => major.idMajor === formData.id_major);
       if (!selectedMajor) {
         alert("Invalid major selected.");
         return;
       }
-  
+
       const categoryDataToUpdate = {
         title: formData.categoryName,
         iconUrl: formData.iconLink,
-        id_major: selectedMajor.idMajor, // Send id_major to the backend
+        id_major: formData.id_major, // Pastikan ini adalah ID yang benar
       };
-  
-      console.log("Request data:", categoryDataToUpdate);
-  
-      await updateCategory(categoryData.id_category, categoryDataToUpdate); // Pass both arguments (id_category and updatedData)
+      console.log('Data yang dikirim:', categoryDataToUpdate); // Debugging log
+      
+      await updateCategory(categoryData.id_category, categoryDataToUpdate);
       alert("Category updated successfully!");
-  
-      setOpen(false); // Close modal
-      onSave(categoryDataToUpdate); // Notify parent component
-      history.replace("/categoryManagement"); // Redirect to category management page
-      window.location.reload(); // Ensure the page reloads to show the updated data
+      setOpen(false);
+      onSave(categoryDataToUpdate);
+      history.replace("/categoryManagement");
+      window.location.reload();
     } catch (error) {
       console.error("Error updating category:", error);
       alert("Failed to update category. Please try again.");
     }
   };
-  
-  
 
   const handleClose = () => {
     setOpen(false);
@@ -216,13 +214,13 @@ const ModalUpdateCategory: React.FC<EditCategoryModalProps> = ({
             <InputLabel>Major</InputLabel>
             <Select
               name="majorId"
-              value={formData.title_major} // Value should now be title_major (title of selected major)
+              value={formData.id_major} // Use id_major here
               onChange={handleSelectChange}
               label="Major"
             >
               {majors.length > 0 ? (
                 majors.map((major) => (
-                  <MenuItem key={major.idMajor} value={major.titleMajor}>
+                  <MenuItem key={major.idMajor} value={major.idMajor}>
                     {major.titleMajor}
                   </MenuItem>
                 ))
@@ -233,7 +231,13 @@ const ModalUpdateCategory: React.FC<EditCategoryModalProps> = ({
           </FormControl>
 
           {/* Submit and Cancel Buttons */}
-          <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: "30px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: "30px",
+            }}
+          >
             <Button variant="contained" color="error" onClick={handleClose}>
               Cancel
             </Button>
