@@ -45,7 +45,14 @@ const CategoryManagement: React.FC = () => {
     history.push(`/modalUpdateCategory?id=${category.id_category}`);
 
   };
-
+const refreshCategory = async () => {
+    try {
+      const updatedMajors = await fetchCategories(); // Refresh data dari API
+      setMajors(updatedMajors);
+    } catch (error) {
+      console.error('Error refreshing categories:', error);
+    }
+  };
   const openAddCategory = () => {
     history.push('/modalAddCategory'); // Arahkan ke rute modal
   };
@@ -274,6 +281,8 @@ const CategoryManagement: React.FC = () => {
     );
     closeEditMajorModal(); // Close the modal after saving
   }}
+  onDeleteSuccess={refreshCategory}
+
 />
 
 ): null}

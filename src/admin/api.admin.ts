@@ -221,15 +221,30 @@ export const updateCategory = async (id_category: string, categoryData: any) => 
 
 
   
-  // Delete a category
-  export const deleteCategory = async (id: string) => {
+  export const deleteCategory = async (id_category: string) => {
     try {
-      const response = await axios.post(`${baseUrl}/category/admindelete`, {
-        id,
+      const token = localStorage.getItem('userToken'); // Pastikan key sesuai
+      if (!token) {
+        throw new Error('User is not authenticated');
+      }
+  
+      // Log the request data to verify it's correct
+      console.log("Attempting to delete category with id:", id_category);
+  
+      const response = await axios.delete(`${baseUrl}/category/admindelete`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json', // Ensure content type is JSON
+        },
+        data: { id: id_category }, // Send the ID in the request body
       });
+  
+      console.log('Category deleted successfully:', response.data);
       return response.data;
+  
     } catch (error) {
       console.error("Failed to delete category:", error);
-      throw new Error("Failed to delete category.");
+      throw error;
     }
   };
+  
