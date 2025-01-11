@@ -158,7 +158,7 @@ const handleSellerAction = async (uid: string, status: string) => {
         <CardMedia
           component="img"
           height="140"
-          image={seller.photoURL || '/assets/placeholder.png'}
+          image={seller.photo_url || '/assets/placeholder.png'}
           alt="Seller Thumbnail"
         />
         <CardContent>

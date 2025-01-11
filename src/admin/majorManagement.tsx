@@ -19,7 +19,7 @@ import ModalUpdateMajor from './modalUpdateMajor';
 export interface Major {
   idMajor: string;
   titleMajor: string;
-  iconUrl: string;
+  photo_url: string;
 }
 
 const MajorManagement: React.FC = () => {
@@ -239,7 +239,7 @@ const MajorManagement: React.FC = () => {
                 <Card key={index} sx={{ display: 'flex', alignItems: 'center', p: 2, boxShadow: 2 }}>
                 <Avatar 
                     sx={{ mr: 2, width: 64, height: 64 }} 
-                    src={major.iconUrl || 'default-icon.png'} 
+                    src={major.photo_url || 'default-icon.png'} 
                     alt={major.titleMajor}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
