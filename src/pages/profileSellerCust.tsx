@@ -81,29 +81,29 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
     }
   }, [id]);
   useEffect(() => {
-    const fetchPortfolios = async () => {
-      try {
-        console.log("Fetching portfolios for user ID:", id); // Log the user ID
-        const portfolios = await fetchPortfolioByUID(id); // Ambil data portofolio
-        console.log("Fetched portfolios:", portfolios);
-  
-        if (portfolios && portfolios.length > 0) {
-          setPortfolios(portfolios); // Simpan portofolio dalam state
-        } else {
-          console.warn("No portfolios found for user ID:", id);
-          setPortfolios([]); // Fallback jika tidak ada data
-        }
-      } catch (error: any) {
-        console.error("Error fetching portfolios:", error);
-        setError(error.message || "Failed to fetch portfolios.");
+  const fetchPortfolios = async () => {
+    try {
+      console.log("Fetching portfolios for user ID:", id); // Log the user ID
+      const portfolios = await fetchPortfolioByUID(id); // Ambil data portofolio
+      console.log("Fetched portfolios:", portfolios);
+
+      if (portfolios && portfolios.length > 0) {
+        setPortfolios(portfolios); // Simpan portofolio dalam state
+      } else {
+        console.warn("No portfolios found for user ID:", id);
+        setPortfolios([]); // Fallback jika tidak ada data
       }
-    };
-  
-    if (id) {
-      fetchPortfolios();
+    } catch (error: any) {
+      console.error("Error fetching portfolios:", error);
+      setError(error.message || "Failed to fetch portfolios.");
     }
-  }, [id]);
-  
+  };
+
+  if (id) {
+    fetchPortfolios();
+  }
+}, [id]);
+
   
   // Tambah portofolio baru
   const handleAddPortfolio = async (newPortfolio: any) => {
@@ -506,15 +506,6 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
                 <Typography variant="h3" sx={{ fontWeight: 700 }}>
                   {portfolio.title || "Untitled"}
                 </Typography>
-                <Box>
-                  <IconButton
-                    onClick={() =>
-                      history.push(`/EditPortoModal?id=${portfolio.id}`)
-                    }
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Box>
               </Box>
 
               {/* Status */}
