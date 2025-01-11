@@ -137,12 +137,12 @@ const CategoriesComponent = () => {
           console.log("Fetched services data:", data); // Log the fetched data to check it
   
           const formattedServices: Service[] = data.map((service: any) => ({
-            id: service.idService,
-            name: service.titleService,
-            icon: service.iconUrl,
+            id: service.id_service,
+            name: service.title_service,
+            icon: service.icon_url,
             link: service.link,
           }));
-  
+ 
           setServices(formattedServices); // Update state with formatted services
         } catch (error) {
           console.error('Error loading services:', error);
@@ -431,11 +431,14 @@ const CategoriesComponent = () => {
             >
               Popular Services
         </Typography>
+        {services.length === 0 ? (
+  <Typography sx={{ color: 'white' }}>No services available</Typography>
+) : (
             <Swiper slidesPerView={3} freeMode={true} spaceBetween={10}>
               {services.map((service) => (
                 <SwiperSlide key={service.id} style={{ width: 'auto', flexShrink: 0 }}>
                   <Card sx={{ width: '100%', height: 200, margin: '10px', borderRadius: '10px',  }}>
-                    <CardActionArea href={service.link} style={{ height: '100%' }}>
+                    <CardActionArea href={service.iconUrl} style={{ height: '100%' }}>
                       <CardContent
                         sx={{
                           display: 'flex',
@@ -450,10 +453,10 @@ const CategoriesComponent = () => {
                           },
                         }}
                       >
-                          <img src={service.icon} alt={service.name} style={{ width: '80px', height: '70px', marginBottom: '30px' }} />
+                          <img src={service.icon || 'https://via.placeholder.com/80'} alt={service.name} style={{ width: '80px', height: '70px', marginBottom: '30px' }} />
                           <Typography variant="body2" component="div" sx={{ marginTop: '10px', textAlign: 'center', color:'white', 
                             fontWeight: 600, fontFamily: 'Inter, sans-serif' }}>
-                          {service.name}
+                          {service.name|| 'title'}
                         </Typography>
                       </CardContent>
                     </CardActionArea>
@@ -461,6 +464,7 @@ const CategoriesComponent = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
+            )}
           </div>
         </Box>
           
