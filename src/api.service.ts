@@ -629,3 +629,31 @@ export const createChatroom = async (participantID: string) => {
     throw error; // Propagate the error
   }
 };
+
+export const createTransaction = async (productId: string, quantity: number) => {
+  try {
+    const token = localStorage.getItem("userToken"); // Ambil token dari localStorage
+    if (!token) {
+      throw new Error("Authentication token is missing.");
+    }
+
+    const payload = {
+      product_id: productId,
+      quantity: quantity,
+    };
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`, // Sertakan token untuk autentikasi
+        "Content-Type": "application/json",
+      },
+    };
+
+    // Kirim request POST ke backend
+    const response = await axios.post(`${baseUrl}/api/transactions`, payload, config);
+    return response.data; // Kembalikan respons data dari server
+  } catch (error) {
+    console.error("Error creating transaction:", error);
+    throw error; // Lempar error untuk ditangani di komponen
+  }
+};

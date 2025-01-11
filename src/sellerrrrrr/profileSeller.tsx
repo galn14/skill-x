@@ -77,7 +77,7 @@ const profileSeller: React.FC = () => {
       }
 
       const response = await changeUserRole(userToken, 'buyer');
-      alert(response.message || 'Role changed to Buyer successfully!');
+      // alert(response.message || 'Role changed to Buyer successfully!');
       history.push('/tab4'); // Redirect ke halaman utama Buyer
     } catch (error: any) {
       alert(error.message || 'Failed to change role.');

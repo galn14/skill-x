@@ -101,7 +101,7 @@ const handleJoinSellerClick = async () => {
       }
 
       const response = await changeUserRole(userToken, 'seller');
-      alert(response.message || 'Switched to Seller successfully!');
+      // alert(response.message || 'Switched to Seller successfully!');
       history.push('/profileSeller'); // Redirect ke halaman profil seller
     } catch (error: any) {
       alert(error.message || 'Failed to switch role.');
