@@ -39,6 +39,7 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
   const history = useHistory();
   const isLoggedIn = !!localStorage.getItem('userToken');
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+  const [quantity, setQuantity] = useState(1); // Default quantity = 1
 
   const handleBack = () => history.goBack();
 
@@ -314,10 +315,61 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
               </Grid>
             </Grid>
           </Box>
+
+          <Box
+  sx={{
+    marginTop: '16px',
+    paddingX: '15px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  {/* Quantity Selector */}
+  <Box
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      border: '1px solid #0072CC', // Outline biru
+      borderRadius: '8px',
+      padding: '13px 16px',
+      width: '90%',
+    }}
+  >
+    <IconButton
+      onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))} // Tidak bisa kurang dari 1
+      sx={{
+        color: '#0072CC', // Warna biru
+        ':hover': {
+          color: '#005BBB', // Biru lebih gelap untuk efek hover
+        },
+      }}
+    >
+      -
+    </IconButton>
+    <Typography variant="body1" sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+      {quantity}
+    </Typography>
+    <IconButton
+      onClick={() => setQuantity((prev) => prev + 1)}
+      sx={{
+        color: '#0072CC', // Warna biru
+        ':hover': {
+          color: '#005BBB', // Biru lebih gelap untuk efek hover
+        },
+      }}
+    >
+      +
+    </IconButton>
+  </Box>
+</Box>
+
           
           <Box
     sx={{
-      marginTop: '90px',
+      marginTop: '10px',
       paddingX: '15px',
       display: 'flex',
       flexDirection: 'column',
@@ -346,7 +398,7 @@ const DetailProduct: React.FC<DetailProductProps> = ({id, productId}) => {
         },
       }}
     >
-      Add to Cart
+      Order Now🔥
     </Button>
   </Box>
           

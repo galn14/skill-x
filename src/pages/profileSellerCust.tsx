@@ -21,7 +21,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MailIcon from '@mui/icons-material/Mail';
 import { Route, BrowserRouter } from "react-router-dom";
 
-import { getUserAndSellerData, changeUserRole, getUserPortfolios, addPortfolio, editPortfolio, deletePortfolio, fetchUserDetails, fetchProductByUserID  } from '../api.service';
+import { getUserAndSellerData, changeUserRole, getUserPortfolios, addPortfolio, editPortfolio, deletePortfolio, fetchUserDetails, fetchProductByUserID, fetchPortfolioByUID  } from '../api.service';
 
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Dialog, DialogTitle, DialogContent, DialogActions} from '@mui/material';
@@ -80,36 +80,30 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
       fetchSellerData();
     }
   }, [id]);
-
-  const fetchPortfolios = async () => {
-    try {
-      const userToken = localStorage.getItem('userToken');
-      if (!userToken) {
-        alert('You are not logged in!');
-        history.push('/login');
-        return;
-      }
-  
-      const data = await getUserPortfolios(userToken);
-      console.log('Portfolios fetched:', data);
-  
-      // Pastikan state selalu berupa array
-      setPortfolios(data || []);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error('Error fetching portfolios:', error.message);
-      } else {
-        console.error('Error fetching portfolios:', error);
-      }
-      alert('Failed to fetch portfolios.');
-      setPortfolios([]); // Set array kosong jika terjadi error
-    }
-  };
-  
-
   useEffect(() => {
-    fetchPortfolios();
-  }, []);
+    const fetchPortfolios = async () => {
+      try {
+        console.log("Fetching portfolios for user ID:", id); // Log the user ID
+        const portfolios = await fetchPortfolioByUID(id); // Ambil data portofolio
+        console.log("Fetched portfolios:", portfolios);
+  
+        if (portfolios && portfolios.length > 0) {
+          setPortfolios(portfolios); // Simpan portofolio dalam state
+        } else {
+          console.warn("No portfolios found for user ID:", id);
+          setPortfolios([]); // Fallback jika tidak ada data
+        }
+      } catch (error: any) {
+        console.error("Error fetching portfolios:", error);
+        setError(error.message || "Failed to fetch portfolios.");
+      }
+    };
+  
+    if (id) {
+      fetchPortfolios();
+    }
+  }, [id]);
+  
   
   // Tambah portofolio baru
   const handleAddPortfolio = async (newPortfolio: any) => {
@@ -201,38 +195,6 @@ const ProfileSellerCust: React.FC<ProfileSellerCustProps> = ({id}) => {
       console.error('Error selecting image from gallery', error);
     }
   };
-
-  const confirmImage = async () => {
-    if (previewImage) {
-      setImage(previewImage); // Set the confirmed image as the profile image
-  
-      // Save to preferences
-      await Preferences.set({
-        key: 'profileImage',
-        value: previewImage,
-      });
-  
-      setModalOpen(false); // Close modal after confirming
-    }
-  };
-
-  const openAboutMeModal = () => {
-    history.push('/EditAboutMe'); // Rute untuk modal
-  };
-  const openPortoMeModal = () => {
-    history.push('/EditPortoModal'); // Rute untuk modal
-  };
-  const openAddPortoModal = () => {
-    history.push('/AddPortoModal'); // Rute untuk modal
-  };
-  const openAddProduct = () => {
-    history.push('/AddProduct'); // Rute untuk modal
-  };
-
-  const openAddSkill = () => {
-    history.push('/AddSkill'); // Rute untuk modal
-  };
-
  
   const [isPortoOpen, setPortoIsOpen] = useState(true);
 

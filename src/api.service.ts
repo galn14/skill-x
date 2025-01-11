@@ -100,6 +100,43 @@ export const fetchConversations = async () => {
     }
 };
 
+// Fetch portfolios by UID
+export const fetchPortfolioByUID = async (uid: string) => {
+  try {
+    // Ambil token autentikasi dari localStorage
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      throw new Error('Authentication token is missing.');
+    }
+
+    if (!uid) {
+      throw new Error('UID is required.'); // Pastikan UID diberikan
+    }
+
+    // Konfigurasi header dengan token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    console.log(`Fetching portfolios for UID: ${uid}`); // Debug UID
+
+    // Lakukan request GET ke endpoint backend
+    const response = await axios.get(`${baseUrl}/user/portfolios/view-uid?uid=${uid}`, config);
+
+    console.log('Portfolio Response:', response); // Debug respons
+
+    // Kembalikan data portfolio
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching portfolios by UID:', error);
+    throw error; // Lemparkan error untuk penanganan di sisi frontend
+  }
+};
+
+
 // Fetch messages for a specific conversation
 export const fetchMessages = async (conversationID: string) => {
     try {
